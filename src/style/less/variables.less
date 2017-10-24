@@ -1,0 +1,99 @@
+// GRID
+@desktop-hd-point-x:1444px;
+@desktop-hd-point:  1200px;
+@desktop-point:     992px;
+@tablet-point:      766px; // not 768
+@mobile-point:      480px;
+@mobile-point-x:    320px;
+
+
+// FONTS
+@font-family-sans-serif:  Helvetica, Arial, sans-serif;
+@font-family-serif:       Georgia, "Times New Roman", Times, serif;
+@font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
+
+@font-weight-black:  800;
+@font-weight-bold:   600;
+@font-weight-regular:500;
+@font-weight-book:   400;
+@font-weight-light:  300;
+@font-weight-thin:   200;
+
+@font-size-h1:       56px;
+@font-size-h2:       36px;
+@font-size-h3:       16px; //20// 28
+@font-size-h4:       14px; // 18
+@font-size-h5:       12px; // 16
+@font-size-h6:       11px; // 15
+@font-size-h7:       10px; // 13
+@font-size-h8:       8px;
+
+@font-size-regular:  14px;
+@font-size-light:    12px;
+
+@font-family-base:     "JF-Flat", "Open Sans", @font-family-sans-serif;
+@font-size-base:    @font-size-regular;
+@font-weight-base:  @font-weight-book;
+@line-height-base:  1.428571429; // 20/14
+
+//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
+@line-height-computed:    floor((@font-size-base * @line-height-base)); // ~20px
+
+@font-family-head:  "JF-Flat", "Open Sans", @font-family-sans-serif;
+@font-size-head:    @font-size-h1;
+@line-height-head:  1.1667;
+
+
+// COLORS
+@black:             #000000;
+@grey:              #98A2AD;
+@white:             #FFFFFF;
+
+// GREY
+@grey-shade-0: darken(@white, 10%);
+@grey-shade-1: #F0F0F0;
+@grey-shade-2: #E0E0E0;
+@grey-shade-3: #C6C6C6;
+@grey-shade-4: lighten(@grey, 10%);
+@grey-shade-5: @grey;
+@grey-shade-6: darken(@grey, 10%);
+@grey-shade-7: #3D4248;
+@grey-shade-8: #1D1D1D;
+@grey-shade-9: lighten(@black, 10%);
+@grey-shade-10: #898d90;
+
+// COLORS
+@red:               #EC1B24;
+@pink:              #FF3057;
+@blue:              #2196f3;
+@bluish:            #E9F6FC;
+@yellow:            #FFAC29;
+@purple:            #9c27b0;
+@green:             #70B871;
+@green-aqua:        #4DBFA3;
+@dark-green-aqua:   #19BBA2;
+@orange:            #E7927A;
+@light-blue:        #00B3E4;
+@blue-green:        #7BBDA2;
+@lighten-purple:    #702277;
+@dark-purple:       #7A3DCE;
+@brown:             #292929;
+
+// TEXT
+@base-text:         @grey-shade-8;
+@inverse-text:      darken(@grey-shade-1, 15.8%);//@grey-shade-1
+@muted-text:        @grey;
+@alm-muted-text:    #4b4b4b; //@grey-shade-7
+@palliated-text:    darken(@grey-shade-3, 18.8%); // =#969696 //@grey-shade-8;
+
+// LINK
+@link-color:        darken(@grey-shade-1, 15.8%);//@grey-shade-1
+@link-hover-color:  @grey-shade-2;
+
+// OFFSETS // padding: @vertical-offset @horizontal-offset;
+@vertical-offset: 7px;
+@horizontal-offset: 12px;
+
+// Modal
+@zindex-modal-background:  1040;
+@zindex-modal:             1050;
