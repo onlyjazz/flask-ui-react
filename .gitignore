@@ -1,3 +1,5 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
 # Maven #
 #########
 target/
@@ -26,6 +28,9 @@ target/
 # Logs and databases #
 ######################
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # OS generated files #
 ######################
@@ -62,8 +67,12 @@ design
 
 # local environment config
 environment/local.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # results of build
-test/temp
-dist
+/coverage
+/build
 .tmp
