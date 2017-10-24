@@ -2,6 +2,15 @@
   "name": "flask",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onlyjazz/flask-ui-react.git"
+  },
+  "author": "Sajera: Serhii P <allsajera@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/onlyjazz/flask-ui-react/issues"
+  },
+  "homepage": "https://github.com/onlyjazz/flask-ui-react#readme",
   "dependencies": {
     "axios": "^0.17.0",
     "lodash": "^4.17.4",
