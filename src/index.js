@@ -8,6 +8,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 // local dependencies
+import './style/all.css';
 import reducers from './reducers';
 
 // configuration

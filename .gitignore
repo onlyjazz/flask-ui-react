@@ -76,3 +76,5 @@ environment/local.*
 /coverage
 /build
 .tmp
+src/style/*.css
+src/style/*.map
