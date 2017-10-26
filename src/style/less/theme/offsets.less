@@ -1,0 +1,44 @@
+body {
+
+    // offset (vertical border) which changes with direction (ltr/rtl)
+    // !Attention  offsets for alm-radio sets in alm-radio.less
+
+    .make-alm-offset ( @name, @offset ) {
+        // .offset-{name}
+        .offset-@{name} { margin: @offset; }
+        // .offset-top-{name}
+        .offset-top-@{name} { margin-top: @offset; }
+        // .offset-bottom-{name}
+        .offset-bottom-@{name} { margin-bottom: @offset; }
+        // .offset-left-{name}
+        .offset-left-@{name} { margin-left: @offset; }
+        // .offset-right-{name}
+        .offset-right-@{name} { margin-right: @offset; }
+        // .indent-{name}
+        .indent-@{name} { padding: @offset; }
+        // .indent-top-{name}
+        .indent-top-@{name} { padding-top: @offset; }
+        // .indent-bottom-{name}
+        .indent-bottom-@{name} { padding-bottom: @offset; }
+        // .indent-left-{name}
+        .indent-left-@{name} { padding-left: @offset; }
+        // .indent-right-{name}
+        .indent-right-@{name} { padding-right: @offset; }
+    }
+
+
+    // make help classes
+    .make-alm-offset( neg-3, -15px );
+    .make-alm-offset( neg-2, -10px );
+    .make-alm-offset( neg-1, -5px );
+    .make-alm-offset( 0, 0 );
+    .make-alm-offset( 1, 5px );
+    .make-alm-offset( 2, 10px );
+    .make-alm-offset( 3, 15px );
+    .make-alm-offset( 4, 20px );
+    .make-alm-offset( 5, 25px );
+    .make-alm-offset( 6, 30px );
+    .make-alm-offset( 7, 35px );
+    .make-alm-offset( 8, 40px );
+
+}
