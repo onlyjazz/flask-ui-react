@@ -32,11 +32,13 @@ class Root extends Component {
                         <li><Link to="/some-else"> Some else </Link></li>
                         <li><Link to="/"> Sign In </Link></li>
                         <li><Link to="/signup"> Sign Up </Link></li>
+                        <li><Link to="/forgot"> Forgot Password </Link></li>
                         <li><Link to="/app"> privat App </Link></li>
                     </ul>
                     <Switch>
                         <Route exact={true} path="/" component={ Signin }/>
                         <Route exact={true} path="/signup" component={ Signup }/>
+                        <Route exact={true} path="/forgot" component={ Signup }/>
                         <Route path="/app" component={ App }/>
                     </Switch>
                 </div>
