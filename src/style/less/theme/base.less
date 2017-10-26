@@ -1,0 +1,83 @@
+
+.clearfix { zoom: 1; }
+.clearfix:before,
+.clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+
+* {
+
+    // background
+    // -------------------------
+    
+
+    // text
+    // -------------------------
+
+    .text-nowrap {
+        white-space: nowrap;
+    }
+
+    .text-no {
+        text-decoration: line-through;
+        text-decoration-color: red;
+    }
+    // ADDITION
+    // ----------------------
+
+    #toast-container {
+        z-index: 1000000;
+    }
+
+    .oh { overflow: hidden; }
+    .ov { overflow: visible; }
+
+    .align-middle {
+        vertical-align: middle;
+        &>*{ vertical-align: middle; }
+        &>.align-bottom { vertical-align: bottom; }
+        &:after {
+            content: '';
+            height: 100%;
+            display: inline-block;
+            position: relative;
+            vertical-align: middle;
+        }
+    }
+
+    .border- {
+        @radius: 3px;
+        .radius ( @name, @r ) {
+            &@{name} {
+                .border-radius( @r );
+                &>*:first-child { .border-radius( @r 0 0 0 ); }
+                &>*:last-child { .border-radius( 0 0 0 @r ); }
+            }
+        }
+        // .border-radius-low
+        .radius( radius-low, @radius );
+        // .border-radius-midle
+        .radius( radius-midle, @radius*2 );
+        // .border-radius-huge
+        .radius( radius-huge, @radius*3 );
+    }
+    
+    .transition {
+        .transition();
+    }
+    
+    .no-selection {
+        .user-select ( none );
+    }
+
+    // ability to rotate items
+    // .rotate-45
+    .rotate-helper ( @deg ) { .rotate-@{deg} { .rotate(@deg+0deg); } }
+    .rotate-helper(45);
+    .rotate-helper(90);
+    .rotate-helper(135);
+    .rotate-helper(180);
+    .rotate-helper(225);
+    .rotate-helper(270);
+    .rotate-helper(315);
+}
+
