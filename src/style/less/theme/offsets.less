@@ -1,0 +1,43 @@
+body {
+
+    // make helper to provide different type of offsets
+    .make-offset ( @name, @offset ) {
+        // .offset-{name}
+        .offset-@{name} { margin: @offset; }
+        // .offset-top-{name}
+        .offset-top-@{name} { margin-top: @offset; }
+        // .offset-bottom-{name}
+        .offset-bottom-@{name} { margin-bottom: @offset; }
+        // .offset-left-{name}
+        .offset-left-@{name} { margin-left: @offset; }
+        // .offset-right-{name}
+        .offset-right-@{name} { margin-right: @offset; }
+        // .indent-{name}
+        .indent-@{name} { padding: @offset; }
+        // .top-indent-{name}
+        .top-indent-@{name} { padding-top: @offset; }
+        // .bottom-{name}
+        .bottom-indent-@{name} { padding-bottom: @offset; }
+        // .left-{name}
+        .left-indent-@{name} { padding-left: @offset; }
+        // .right-{name}
+        .right-indent-@{name} { padding-right: @offset; }
+    }
+
+    // make help classes
+    .make-offset( neg-3, -15px );
+    .make-offset( neg-2, -10px );
+    .make-offset( neg-1, -5px );
+    .make-offset( 0, 0 );
+    .make-offset( 1, 5px );
+    .make-offset( 2, 10px );
+    .make-offset( 3, 15px );
+    .make-offset( 4, 20px );
+    .make-offset( 5, 25px );
+    .make-offset( 6, 30px );
+    .make-offset( 7, 35px );
+    .make-offset( 8, 40px );
+    .make-offset( 9, 45px );
+    .make-offset( 10, 50px );
+
+}
