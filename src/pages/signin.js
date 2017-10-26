@@ -6,40 +6,36 @@ import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 // local dependencies
-import logo from './flask_data.png';
+import LogoBig from '../components/logo-big';
 
 class Signin extends Component {
     
     handleFormSubmit () {
         
-        console.log('handleFormSubmit', this);
+        console.log('Signin handleFormSubmit', this);
     }
     
     
     render() {
         
-        const { handleSubmit } = this.props;
+        var { handleSubmit } = this.props;
         
         return (
-            <div className="container">
+            <div className="container top-indent-10 offset-top-10">
         		<div className="row">
         			<div className="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
         				<div className="panel panel-default">
         					<div className="panel-heading">
         						<strong> Sign In </strong>
-                                <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                <i className="fa fa-sign-in" aria-hidden="true"></i>
         					</div>
         					<div className="panel-body">
         						<form name="signInForm" onSubmit={ handleSubmit( this.handleFormSubmit.bind(this) ) }>
         							<fieldset>
-        								<div className="row">
-        									<div className="col-xs-6 col-xs-offset-3 indent-1 offset-bottom-2">
-        										<img className="img-responsive" alt="Flask data" src={logo} />
-        									</div>
-        								</div>
+        								<LogoBig className="row offset-bottom-4" />
         								<div className="row">
         									<div className="col-xs-10 col-xs-offset-1">
-        										<div className="form-group">
+        										<div className="form-group offset-bottom-2">
         											<div className="input-group">
         												<label htmlFor="email" className="input-group-addon"> @ </label> 
                                                         <Field
@@ -52,7 +48,7 @@ class Signin extends Component {
                                                                 />
         											</div>
         										</div>
-        										<div className="form-group">
+        										<div className="form-group offset-bottom-4">
         											<div className="input-group">
         												<label htmlFor="password" className="input-group-addon">
         													<i className="glyphicon glyphicon-lock"></i>
@@ -67,16 +63,23 @@ class Signin extends Component {
                                                                 />
         											</div>
         										</div>
-        										<div className="form-group indent-top-2">
-        											<input type="submit" className="btn btn-lg btn-primary btn-block" value="Sign in" />
+        										<div className="form-group">
+        											<input type="submit" className="btn btn-lg btn-primary btn-block" value="Sign In" />
         										</div>
         									</div>
         								</div>
         							</fieldset>
         						</form>
         					</div>
-        					<div className="panel-footer text-right">
-                                <Link to="/forgot"> Forgot password </Link>
+        					<div className="panel-footer">
+                                <div className="row">
+                                    <div className="col-xs-6">
+                                        <Link to="/signup"> Create an Account </Link>
+                                    </div>
+                                    <div className="col-xs-6 text-right">
+                                        <Link to="/forgot"> Forgot password </Link>
+                                    </div>
+                                </div>
         					</div>
                         </div>
         			</div>
@@ -88,7 +91,6 @@ class Signin extends Component {
 
 export default reduxForm({
     form: 'signInForm',
-    // fields: ['email', 'password'],       // depricated from reduxForm v6+
  // mapStateToProps
 })( connect(state => {
     console.log('Signin mapSteteToProps', state);

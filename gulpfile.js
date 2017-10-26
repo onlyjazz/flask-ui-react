@@ -27,5 +27,5 @@ gulp.task('less', function () {
     WATCHERS
 ---------------------------------------------------*/
 gulp.task('watch-less', ['less'], function ( done ) {
-    gulp.watch('./src/style/*.less', ['less']);
+    gulp.watch('./src/style/**/*.less', ['less']);
 });

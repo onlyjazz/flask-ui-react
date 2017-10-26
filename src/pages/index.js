@@ -8,6 +8,7 @@ import { Redirect, Link, Route, Switch, browserHistory, BrowserRouter as Router 
 // local dependencies
 import Signin from './signin';
 import Signup from './signup';
+import Forgot from './forgot_password';
 import App from './private/index';
 
 class Root extends Component {
@@ -24,6 +25,7 @@ class Root extends Component {
         return (
             <Router>
                 <div>
+                    {/* HELPER FOR DEVELOPING */}
                     <p> help data CONTEXT: { JSON.stringify(this.context) } </p>
                     <p> help data STATE: { JSON.stringify(this.state) }  </p>
                     <p> help data PROPS: { JSON.stringify(this.props) }  </p>
@@ -36,10 +38,10 @@ class Root extends Component {
                         <li><Link to="/app"> privat App </Link></li>
                     </ul>
                     <Switch>
-                        <Route exact={true} path="/" component={ Signin }/>
-                        <Route exact={true} path="/signup" component={ Signup }/>
-                        <Route exact={true} path="/forgot" component={ Signup }/>
-                        <Route path="/app" component={ App }/>
+                        <Route exact={true} path="/" component={ Signin } />
+                        <Route exact={true} path="/signup" component={ Signup } />
+                        <Route exact={true} path="/forgot" component={ Forgot } />
+                        <Route path="/app" component={ App } />
                     </Switch>
                 </div>
             </Router>
