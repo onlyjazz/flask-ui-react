@@ -9,18 +9,21 @@ import { Redirect, Link, Route, Switch, browserHistory, BrowserRouter as Router 
 import Signin from './signin';
 import Signup from './signup';
 import Forgot from './forgot_password';
+
+
+import PrivateRoute from '../components/private-route';
+
 import App from './private/index';
 
 class Root extends Component {
     
-    
     render() {
-        console.log('Root'
-            ,'\n context:', this.context
-            ,'\n state:', this.state
-            ,'\n props:', this.props
-            ,'\n refs:', this.refs
-        );
+        // console.log('Root'
+        //     ,'\n context:', this.context
+        //     ,'\n state:', this.state
+        //     ,'\n props:', this.props
+        //     ,'\n refs:', this.refs
+        // );
         // { JSON.stringify(this) }
         return (
             <Router>
@@ -41,7 +44,7 @@ class Root extends Component {
                         <Route exact={true} path="/" component={ Signin } />
                         <Route exact={true} path="/signup" component={ Signup } />
                         <Route exact={true} path="/forgot" component={ Forgot } />
-                        <Route path="/app" component={ App } />
+                        <PrivateRoute path="/app" component={ App } />
                     </Switch>
                 </div>
             </Router>

@@ -13,9 +13,7 @@ import './style';
 
 // local dependencies
 import Root from './pages/index';
-import actions from './actions';
 import reducers from './reducers';
-import constants from './constants';
 
 // configuration
 // NOTE: this API requires redux@>=3.1.0
