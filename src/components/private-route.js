@@ -50,5 +50,5 @@ class PrivateRoute extends Component {
 export default connect(state => {
     console.log('PrivateRoute mapSteteToProps', state);
     // return ({ authenticated: !!state.authenticated })
-    return ({ authenticated: !state.authenticated })
+    return ({ authenticated: !!state.authenticated })
 }, null)(PrivateRoute)
