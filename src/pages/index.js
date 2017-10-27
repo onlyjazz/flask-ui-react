@@ -2,14 +2,14 @@
 // outsource dependencies
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { Redirect, Link, Route, Switch, browserHistory, BrowserRouter as Router } from 'react-router-dom';
+import { Link, Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
 
 // local dependencies
 import Signin from './signin';
 import Signup from './signup';
+import NoMatch from './no-match';
 import Forgot from './forgot_password';
-
 
 import PrivateRoute from '../components/private-route';
 
@@ -17,14 +17,14 @@ import App from './private/index';
 
 class Root extends Component {
     
-    render() {
-        // console.log('Root'
-        //     ,'\n context:', this.context
-        //     ,'\n state:', this.state
-        //     ,'\n props:', this.props
-        //     ,'\n refs:', this.refs
-        // );
-        // { JSON.stringify(this) }
+    render () {
+        console.log('Root render =>'
+            ,'\n context:', this.context
+            ,'\n state:', this.state
+            ,'\n props:', this.props
+            ,'\n refs:', this.refs
+        );
+
         return (
             <Router>
                 <div>
@@ -44,7 +44,9 @@ class Root extends Component {
                         <Route exact={true} path="/" component={ Signin } />
                         <Route exact={true} path="/signup" component={ Signup } />
                         <Route exact={true} path="/forgot" component={ Forgot } />
-                        <PrivateRoute path="/app" component={ App } />
+                        <PrivateRoute path="/app" component={ App }>
+                        </PrivateRoute>
+                        <Route component={ NoMatch } />
                     </Switch>
                 </div>
             </Router>

@@ -36,7 +36,6 @@ class PrivateRoute extends Component {
             ,'\n state:', this.state
             ,'\n props:', this.props
             ,'\n refs:', this.refs
-            ,'\n this:', this
         );
         
         // allow flag to pass to the private routes
@@ -50,5 +49,6 @@ class PrivateRoute extends Component {
 // export default connect( ( state ) => ({authenticated: state.authenticated}) )(PrivateRoute);
 export default connect(state => {
     console.log('PrivateRoute mapSteteToProps', state);
-    return ({ authenticated: !!state.authenticated })
+    // return ({ authenticated: !!state.authenticated })
+    return ({ authenticated: !state.authenticated })
 }, null)(PrivateRoute)
