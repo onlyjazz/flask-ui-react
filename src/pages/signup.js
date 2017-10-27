@@ -82,7 +82,7 @@ class Signup extends Component {
                                                 <div className="form-group offset-bottom-4">
         											<div className="input-group">
         												<label htmlFor="confirm" className="input-group-addon">
-        													<i class="fa fa-repeat" aria-hidden="true"></i>
+        													<i className="fa fa-repeat" aria-hidden="true"></i>
         												</label>
                                                         <Field
                                                             id="confirm"
