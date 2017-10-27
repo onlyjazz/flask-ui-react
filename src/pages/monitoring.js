@@ -3,14 +3,19 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-class Header extends Component {
+// local dependencies
+
+class Monitoring extends Component {
     render() {
         return (
             <div className="row">
                 <div className="col-xs-12">
                     <div className="panel panel-default">
                         <div className="panel-heading">
-                            <strong> Header </strong>
+                            <strong> Monitoring </strong>
+                        </div>
+                        <div className="panel-body">
+                            Private content of monitoring. 
                         </div>
                     </div>
                 </div>
@@ -20,6 +25,7 @@ class Header extends Component {
 }
 
 export default connect(state => {
-    console.log('Header mapSteteToProps', state);
+    console.log('Monitoring mapSteteToProps', state);
     return ({})
-} )(Header);
+}, null )(Monitoring);
+

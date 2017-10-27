@@ -6,14 +6,23 @@ import { Link, Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
 
 // local dependencies
+// pages publick
 import Signin from './signin';
 import Signup from './signup';
 import NoMatch from './no-match';
 import Forgot from './forgot_password';
+// pages private
+import Users from './users';
+import Measures from './measures';
+import Monitoring from './monitoring';
+import Sites from './sites';
+import Studies from './studies';
 
+// components
+import Header from '../components/header';
+import SideMenu from '../components/side-menu';
 import PrivateRoute from '../components/private-route';
 
-import App from './private/index';
 
 class Root extends Component {
     
@@ -28,6 +37,8 @@ class Root extends Component {
         return (
             <Router>
                 <div>
+                    <Route path="/app" component={ Header } />
+                    <Route path="/app" component={ SideMenu } />
                     {/* HELPER FOR DEVELOPING */}
                     <p> help data CONTEXT: { JSON.stringify(this.context) } </p>
                     <p> help data STATE: { JSON.stringify(this.state) }  </p>
@@ -38,14 +49,20 @@ class Root extends Component {
                         <li><Link to="/"> Sign In </Link></li>
                         <li><Link to="/signup"> Sign Up </Link></li>
                         <li><Link to="/forgot"> Forgot Password </Link></li>
-                        <li><Link to="/app"> privat App </Link></li>
+                        <li><Link to="/app/users"> privat Users </Link></li>
                     </ul>
                     <Switch>
+                        {/* PUBLICK */}
                         <Route exact={true} path="/" component={ Signin } />
                         <Route exact={true} path="/signup" component={ Signup } />
                         <Route exact={true} path="/forgot" component={ Forgot } />
-                        <PrivateRoute path="/app" component={ App }>
-                        </PrivateRoute>
+                        {/* PRIVATE */}
+                        <PrivateRoute path="/app/sites" component={ Sites } />
+                        <PrivateRoute path="/app/users" component={ Users } />
+                        <PrivateRoute path="/app/studies" component={ Studies } />
+                        <PrivateRoute path="/app/measures" component={ Measures } />
+                        <PrivateRoute path="/app/monitoring" component={ Monitoring } />
+                        {/* OTHERWISE */}
                         <Route component={ NoMatch } />
                     </Switch>
                 </div>

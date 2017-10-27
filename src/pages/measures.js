@@ -3,14 +3,19 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-class Header extends Component {
+// local dependencies
+
+class Measures extends Component {
     render() {
         return (
             <div className="row">
                 <div className="col-xs-12">
                     <div className="panel panel-default">
                         <div className="panel-heading">
-                            <strong> Header </strong>
+                            <strong> Measures </strong>
+                        </div>
+                        <div className="panel-body">
+                            Private content with measure lists. 
                         </div>
                     </div>
                 </div>
@@ -20,6 +25,7 @@ class Header extends Component {
 }
 
 export default connect(state => {
-    console.log('Header mapSteteToProps', state);
+    console.log('Measures mapSteteToProps', state);
     return ({})
-} )(Header);
+}, null )(Measures);
+
