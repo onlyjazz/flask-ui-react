@@ -8,45 +8,6 @@ import React, { Component } from 'react';
 
 // configuration
 
-var classes = {
-    empty: '',
-    info: 'has-info',
-    error: 'has-error',
-    warning: 'has-warning',
-    success: 'has-success',
-};
-
-/**
- * @description helper to determine class name based on meta content of input
- * @param { Object } meta - information about input state 
- * @returns { String } className
- * @function defineStatusClassName
- * @private
- */
-function defineStatusClassName ( meta ) {
-    // console.log('defineStatusClassName => ( meta ) '
-    //     ,'\n active:', meta.active
-    //     ,'\n touched:', meta.touched
-    //     ,'\n visited:', meta.visited
-    //     ,'\n dirty:', meta.dirty
-    //     ,'\n error:', meta.error
-    //     ,'\n warning:', meta.warning
-    //     ,'\n initial:', meta.initial
-    //     ,'\n invalid:', meta.invalid
-    //     ,'\n valid:', meta.valid
-    //     ,'\n meta:', meta
-    // );
-    // 
-    if ( !meta.visited || meta.active ) return classes.empty;
-    //
-    if ( meta.invalid ) return classes.error;
-    //
-    if ( meta.valid ) return classes.success;
-    
-    // undeifined case
-    return classes.empty;
-}
-
 /**
  * @description input component "addone" with helpers to display validation results
  * @example
@@ -64,39 +25,70 @@ function defineStatusClassName ( meta ) {
  */
 class InputAddon extends Component {
     
-    helpBlock ( text ) {
+    helpBlock ( text, id ) {
+        // console.log('InputAddon helpBlock => (text, id) '
+        //     ,'\n this:', this
+        //     ,'\n props:', this.props
+        // );
         return !text ? null : (
             <div className={'input-group '+this.statusClassName }>
-                <label htmlFor={ this.props.id } className="help-block"> { text } </label>
+                <label htmlFor={ id } className="help-block offset-bottom-0"> { text } </label>
             </div>
         );
     }
     
     render () {
         
-        var { input, meta, label, ... attrs } = this.props
+        var { input, meta, label, ...attrs } = this.props
         // define id to make label to work
-        !attrs.id&&(attrs.id = input.name );
-        // define status of field and set status className
-        this.statusClassName = defineStatusClassName(meta);
+        !attrs.id&&(attrs.id = input.name);
+        
+        // is need to show 
+        this.showMessage = false;
+        this.statusClassName = '';
+        if ( meta.visited && meta.touched ) { // || meta.active
+            // addition validation information
+            this.showMessage = true;
+            // add highligted className error
+            if ( meta.valid ) {
+                this.statusClassName = 'has-success';
+            } else if ( meta.invalid ) {
+                if ( meta.error ) {
+                    this.statusClassName = 'has-error';
+                } else if ( meta.warning ) {
+                    this.statusClassName = 'has-warning';
+                } else if ( meta.initial ) {
+                    this.statusClassName = 'has-info';
+                }
+            }
+        }
         
         // console.log('InputAddon render => () '+input.name
+        //     // ,'\n this:', this
         //     ,'\n props:', this.props
         //     ,'\n value:', input.value
         //     ,'\n attrs:', attrs
         //     ,'\n label:', label
         //     ,'\n input:', input
         //     ,'\n meta:', meta
-        //     ,'\n this:', this
+        //     ,'\n active:', meta.active
+        //     ,'\n touched:', meta.touched
+        //     ,'\n visited:', meta.visited
+        //     ,'\n dirty:', meta.dirty
+        //     ,'\n valid:', meta.valid
+        //     ,'\n invalid:', meta.invalid
+        //     ,'\n error:', meta.error
+        //     ,'\n warning:', meta.warning
+        //     ,'\n initial:', meta.initial
         // );
         
         return (
-            <div className="form-group">
+            <div className="form-group offset-bottom-1">
                 <div className={ 'input-group '+ this.statusClassName }>
                     <label htmlFor={ attrs.id } className="input-group-addon"> { label } </label> 
                     <input { ... input } { ... attrs }/>
                 </div>
-                { this.helpBlock( meta.error||meta.warning||meta.initial ) }
+                { this.showMessage&&this.helpBlock( meta.error||meta.warning||meta.initial, attrs.id ) }
             </div>
         )
     }
