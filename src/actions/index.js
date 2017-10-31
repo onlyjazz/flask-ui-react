@@ -20,10 +20,9 @@ export { blockPageLoadError } from './page-data.js';
 
 export { forgotPassword } from './forgot-password.js';
 
-export { signin } from './signin.js';
-export { authError } from './auth-error.js';
+export { signin } from './authentification.js';
 // export { signout } from './authentification.js';
-// export { signup } from './authentification.js';
+// export { signout } from './authentification.js';
 
 
 
