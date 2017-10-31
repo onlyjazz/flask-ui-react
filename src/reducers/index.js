@@ -1,11 +1,17 @@
 
 // outsource dependencies
 import { combineReducers } from 'redux';
-import { reducer as reducerReduxForm } from 'redux-form';
+import { reducer as form } from 'redux-form';
+
+// local  dependencies
+import auth from './auth';
+import pageData from './page-data';
 
 var rootReducer = combineReducers({
     state: (state = {}) => state,
-    form: reducerReduxForm,
+    pageData,
+    auth,
+    form,
 });
 
 export default rootReducer;

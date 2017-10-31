@@ -24,15 +24,6 @@ class ForgotPassword extends Component {
     }
     
     handleFormSubmit ( values, dispatch, form ) {
-        
-        // console.log('Forgot handleFormSubmit => ()'
-        //     ,'\n values:', values
-        //     ,'\n dispatch:', dispatch
-        //     ,'\n form:', form
-        //     // ,'\n this:', this
-        //     ,'\n this.props:', this.props
-        // );
-        
         // clear old error message
         this.props.pageData.errorMessage = null;
         // send request
@@ -54,11 +45,6 @@ class ForgotPassword extends Component {
     render () {
         
         var { handleSubmit, pageData } = this.props;
-        
-        // console.log('Forgot render => ()'
-        //     ,'\n this.props:', this.props
-        //     ,'\n test:', pageData
-        // );
         
         return (
             <div className="container top-indent-10 offset-top-10">
@@ -127,10 +113,6 @@ export default reduxForm({
     * @public
     */
     validate: ( values, meta ) => {
-        // console.log('Signin VALIDATE => (values, meta)'
-        //     ,'\n values:', values
-        //     ,'\n meta:', meta
-        // );
         var errors = {};
         // EMAIL
         if ( !values.email ) {
@@ -138,11 +120,7 @@ export default reduxForm({
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
             errors.email = 'Invalid email address'
         }
-        
         return errors;
     },
-})( connect(state => { // mapStateToProps
-    // console.log('Forgot mapSteteToProps', state);
-    return ({ pageData: state.pageData });
-// actions to props
-}, {forgotPassword, pageChange} )(ForgotPassword) );
+// mapStateToProps
+})( connect(state => ({ pageData: state.pageData }), {forgotPassword, pageChange} )(ForgotPassword) );
