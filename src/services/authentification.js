@@ -12,10 +12,11 @@ import { config } from '../constants';
  * @description axios instance with base configuration of app
  * @public
  */
-var axiosInstance = axios.create({
+var Axios = axios.create({
     baseURL: config.apiPath,
 });
-export { axiosInstance };
+
+export { Axios };
 
 /**
  * @description signin request wich store session data in storage
@@ -26,14 +27,19 @@ export { axiosInstance };
 export function signin ({email, password}) {
     // Submit credentional to API
     return new Promise( ( resolve, reject ) => {
-        axiosInstance
+        Axios
             .post('/signin', { password, email })
             .then(success => {
-                // store tokens
-                storage.set('auth', success.data);
-                // set default auth heder
-                axiosInstance.defaults.headers.common['Authorization'] = success.data.access_token;
-                resolve(success);
+                
+                if ( success.data.access_token ) {
+                    // store tokens
+                    storage.set('auth', success.data);
+                    // set default auth heder
+                    Axios.defaults.headers.common['Authorization'] = success.data.access_token;
+                    resolve(success);
+                } else {
+                    reject({message: 'Invalid Email or Password.'});
+                }
             })
             .catch(reject);
     });
@@ -49,11 +55,11 @@ export function signout () {
     return new Promise( ( resolve, reject ) => {
         // storage.remove('auth');
         // resolve({});
-        axiosInstance
+        Axios
             .get('/signout')
             .then(success => {
                 // clear default auth heder
-                delete axiosInstance.defaults.headers.common['Authorization'];
+                delete Axios.defaults.headers.common['Authorization'];
                 // clear authentification tokens
                 storage.remove('auth');
                 resolve(success);
@@ -73,9 +79,9 @@ export function refreshSession () {
         // get authentification tokens
         var tokens = storage.get('auth');
         // clear default auth heder
-        delete axiosInstance.defaults.headers.common['Authorization'];
+        delete Axios.defaults.headers.common['Authorization'];
         
-        axiosInstance
+        Axios
             .get('/refreshSession', { params: { token: tokens.refresh_token } } )
             .then(success => {
                 // store tokens

@@ -5,33 +5,56 @@ import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Button } from 'react-bootstrap';
+import { toastr } from 'react-redux-toastr';
 
 // local dependencies
-import { forgotPassword, pageChange } from '../actions';
 import LogoBig from '../components/logo-big';
 import InputAddon from '../components/input-addon';
+import { Axios } from '../services';
 
 /**
- * @description page
+ * @description page forgot password
  * @constructor ForgotPassword
  * @public
  */
 class ForgotPassword extends Component {
     
-    componentWillMount () { // pre - render of component
-        // set location of current page
-        this.props.pageChange( this.props.location );
+    constructor ( props ) {
+        super(props);
+        
+        this.state = {
+            expextAnswer: false,
+            errorMessage: null,
+        };
     }
     
     handleFormSubmit ( values, dispatch, form ) {
-        // clear old error message
-        this.props.pageData.errorMessage = null;
-        // send request
-        this.props.forgotPassword( values );
+        
+        this.setState({expextAnswer: true});
+
+        Axios
+            .get('/forgotPassword')
+            .then(success => {
+                // clear form
+                this.props.reset();
+                // update component
+                this.setState({expextAnswer: false});
+                // toastr success message
+                toastr.success('Hello !', 'We glad to see you =)');
+            })
+            .catch(error => {
+                var message = 'Somethings went wrong...';
+                this.setState({
+                    expextAnswer: false,
+                    errorMessage: message,
+                });
+                // toastr error message
+                toastr.error('Error', message);
+            });
     }
     
     showFormError ( text ) {
-        return (
+        return !text ? ('') : (
             <div className="row">
                 <div className="col-xs-10 col-xs-offset-1">
                     <div className="input-group text-center has-error">
@@ -44,7 +67,11 @@ class ForgotPassword extends Component {
     
     render () {
         
-        var { handleSubmit, pageData } = this.props;
+        var { invalid, handleSubmit } = this.props;
+        var { expextAnswer, errorMessage } = this.state;
+        var { showFormError, handleFormSubmit } = this;
+        // 
+        var bindedHandler = handleFormSubmit.bind(this);
         
         return (
             <div className="container top-indent-10 offset-top-10">
@@ -56,7 +83,7 @@ class ForgotPassword extends Component {
                                 <i className="fa fa-life-ring" aria-hidden="true"></i>
                             </div>
                             <div className="panel-body">
-                                <form name="forgotPasswordForm" onSubmit={ handleSubmit( this.handleFormSubmit.bind(this) ) }>
+                                <form name="forgotPasswordForm" onSubmit={ handleSubmit( bindedHandler ) }>
                                     <fieldset>
                                         <LogoBig className="row offset-bottom-4" />
         								<div className="row offset-bottom-2">
@@ -69,7 +96,7 @@ class ForgotPassword extends Component {
                                                     component={ InputAddon }
                                                     className="form-control"
                                                     label={ <span> @ </span> }
-                                                    disabled={ pageData.expextAnswer }
+                                                    disabled={ expextAnswer }
                                                         />
                                             </div>
                                         </div>
@@ -80,15 +107,14 @@ class ForgotPassword extends Component {
                                                     type="submit"
                                                     bsSize="large"
                                                     bsStyle="primary"
-                                                    // onClick={reset}
-                                                    disabled={ this.props.invalid || pageData.expextAnswer }
+                                                    disabled={ invalid || expextAnswer }
                                                         >
                                                     <span> Restore Password </span>
-                                                    { pageData.expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
+                                                    { expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
                                                 </Button>
                                             </div>
         								</div>
-                                        { pageData.errorMessage&&this.showFormError(pageData.errorMessage) }
+                                        { showFormError(errorMessage) }
                                     </fieldset>
                                 </form>
                             </div>
@@ -123,4 +149,4 @@ export default reduxForm({
         return errors;
     },
 // mapStateToProps
-})( connect(state => ({ pageData: state.pageData }), {forgotPassword, pageChange} )(ForgotPassword) );
+})( connect(state => ({}), null)(ForgotPassword) );

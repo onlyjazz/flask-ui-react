@@ -50,15 +50,15 @@ export function pageLoadSuccess ( data ) {
 
 /**
 * @param { Object } error - results of request
-* @param { String } message - prepered message from request if it present
+* @param { String } errorMessage - prepered message from request if it present
 * @returns { Object }
 * @public
 */
-export function pageLoadError ( error, message = 'Something went wrong...' ) {
+export function pageLoadError ( error, errorMessage = 'Something went wrong...' ) {
     return {
         type: DATA_LOAD_ERROR,
         expextAnswer: false,
-        message,
+        errorMessage,
         error,
     }
 }
@@ -92,16 +92,16 @@ export function blockPageLoadSuccess ( data ) {
 
 /**
  * @param { Object } error - results of request
- * @param { String } message - prepered message from request if it present
+ * @param { String } errorMessage - prepered errorMessage from request if it present
  * @returns { Object }
  * @public
  */
-export function blockPageLoadError ( error, message = 'Something went wrong...' ) {
+export function blockPageLoadError ( error, errorMessage = 'Something went wrong...' ) {
     return {
         type: BLOCK_DATA_LOAD_ERROR,
         expextAnswer: false,
         blockLocation: null,
-        message,
+        errorMessage,
         error,
     }
 }

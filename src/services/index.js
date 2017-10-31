@@ -1,10 +1,16 @@
 
 // aliases for export all services
 export { storage } from './storage';
-export { axiosInstance } from './authentification';
+export {
+    signin,
+    signout,
+    refreshSession,
+    Axios,
+    Axios as axiosInstance
+} from './authentification';
 
-export { signin } from './authentification';
-export { signout } from './authentification';
-export { refreshSession } from './authentification';
-
-
+// HELPERS
+var ts = Object.prototype.toString;
+export function isPromise ( data ) {
+    return ts.call(data) === '[object Promise]'||(!!data && typeof data['then'] === 'function' );
+}

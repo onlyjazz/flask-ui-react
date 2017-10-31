@@ -4,21 +4,75 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { Button } from 'react-bootstrap';
+import { toastr } from 'react-redux-toastr';
 
 // local dependencies
+import * as actions from '../actions';
 import LogoBig from '../components/logo-big';
+import InputAddon from '../components/input-addon';
+import { Axios } from '../services';
 
 class Signup extends Component {
     
-    handleFormSubmit () {
+    constructor ( props ) {
+        super(props);
         
-        console.log('Signup handleFormSubmit', this);
+        this.state = {
+            expextAnswer: false,
+            errorMessage: null,
+        };
+    }
+    
+    handleFormSubmit ( values, dispatch, form ) {
+        
+        this.setState({expextAnswer: true});
+
+        Axios.post('/signup', values)
+            .then(success => {
+                // clear form
+                this.props.reset();
+                // update component
+                this.setState({expextAnswer: false});
+                // toastr success message
+                toastr.success('Hello !', 'We glad to see you =)');
+                // update state
+                // dispatch( authStart() );
+                // redirect to app
+                // this.props.history.push('/app');
+            })
+            .catch(error => {
+                var message = 'Somethings went wrong...';
+                this.setState({
+                    expextAnswer: false,
+                    errorMessage: message,
+                });
+                // toastr error message
+                toastr.error('Error', message);
+            });
+    }
+    
+    
+    showFormError ( text ) {
+        return !text ? ('') : (
+            <div className="row">
+                <div className="col-xs-10 col-xs-offset-1">
+                    <div className="input-group text-center has-error">
+                        <strong className="help-block offset-bottom-4"> { text } </strong>
+                    </div>
+                </div>
+            </div>
+        );
     }
     
     
     render() {
         
-        var { handleSubmit } = this.props;
+        var { auth, invalid, handleSubmit } = this.props;
+        var { expextAnswer, errorMessage } = this.state;
+        var { showFormError, handleFormSubmit } = this;
+        // 
+        var bindedHandler = handleFormSubmit.bind(this);
         
         return (
             <div className="container top-indent-10 offset-top-10">
@@ -30,76 +84,81 @@ class Signup extends Component {
                                 <i className="fa fa-user-plus" aria-hidden="true"></i>
         					</div>
         					<div className="panel-body">
-        						<form name="signUpForm" onSubmit={ handleSubmit( this.handleFormSubmit.bind(this) ) }>
-        							<fieldset>
-        								<LogoBig className="row offset-bottom-4" />
-        								<div className="row">
+        						<form name="signUpForm" onSubmit={ handleSubmit( bindedHandler ) }>
+                                    <fieldset>
+                                        <LogoBig className="row offset-bottom-4" />
+                                        <div className="row offset-bottom-2">
         									<div className="col-xs-10 col-xs-offset-1">
-                                                <div className="form-group offset-bottom-2">
-        											<div className="input-group">
-        												<label htmlFor="username" className="input-group-addon">
-                                                            <i className="fa fa-user-circle-o" aria-hidden="true"></i>
-                                                        </label> 
-                                                        <Field
-                                                            id="username"
-                                                            type="text"
-                                                            name="username"
-                                                            component="input"
-                                                            placeholder="User Name"
-                                                            className="form-control"
-                                                                />
-        											</div>
-        										</div>
-                                                
-        										<div className="form-group offset-bottom-2">
-        											<div className="input-group">
-        												<label htmlFor="email" className="input-group-addon"> @ </label> 
-                                                        <Field
-                                                            id="email"
-                                                            type="mail"
-                                                            name="email"
-                                                            component="input"
-                                                            placeholder="Email"
-                                                            className="form-control"
-                                                                />
-        											</div>
-        										</div>
-        										<div className="form-group offset-bottom-2">
-        											<div className="input-group">
-        												<label htmlFor="password" className="input-group-addon">
-        													<i className="glyphicon glyphicon-lock"></i>
-        												</label>
-                                                        <Field
-                                                            id="password"
-                                                            name="password"
-                                                            type="password"
-                                                            component="input"
-                                                            placeholder="Password"
-                                                            className="form-control"
-                                                                />
-        											</div>
-        										</div>
-                                                <div className="form-group offset-bottom-4">
-        											<div className="input-group">
-        												<label htmlFor="confirm" className="input-group-addon">
-        													<i className="fa fa-repeat" aria-hidden="true"></i>
-        												</label>
-                                                        <Field
-                                                            id="confirm"
-                                                            name="confirm"
-                                                            type="password"
-                                                            component="input"
-                                                            placeholder="Confirm Password"
-                                                            className="form-control"
-                                                                />
-        											</div>
-        										</div>
-        										<div className="form-group">
-        											<input type="submit" className="btn btn-lg btn-primary btn-block" value="Sign Up" />
-        										</div>
-        									</div>
+                                                <Field
+                                                    required
+                                                    type="text"
+                                                    name="username"
+                                                    placeholder="User Name"
+                                                    component={ InputAddon }
+                                                    className="form-control"
+                                                    disabled={ expextAnswer }
+                                                    label={ <i className="fa fa-user-circle-o" aria-hidden="true"></i> }
+                                                        />
+                                            </div>
+                                        </div>
+        								<div className="row offset-bottom-2">
+        									<div className="col-xs-10 col-xs-offset-1">
+                                                <Field
+                                                    required
+                                                    type="mail"
+                                                    name="email"
+                                                    placeholder="Email"
+                                                    component={ InputAddon }
+                                                    className="form-control"
+                                                    disabled={ expextAnswer }
+                                                    label={ <span> @ </span> }
+                                                        />
+                                            </div>
+                                        </div>
+                                        <div className="row offset-bottom-2">
+                                            <div className="col-xs-10 col-xs-offset-1">
+                                                <Field
+                                                    required
+                                                    name="password"
+                                                    type="password"
+                                                    placeholder="Password"
+                                                    component={ InputAddon }
+                                                    className="form-control"
+                                                    disabled={ expextAnswer }
+                                                    label={ <i className="glyphicon glyphicon-lock"></i> }
+                                                        />
+                                            </div>
+                                        </div>
+                                        <div className="row offset-bottom-4">
+                                            <div className="col-xs-10 col-xs-offset-1">
+                                                <Field
+                                                    required
+                                                    name="confirm"
+                                                    type="password"
+                                                    placeholder="Confirm Password"
+                                                    component={ InputAddon }
+                                                    className="form-control"
+                                                    disabled={ expextAnswer }
+                                                    label={ <i className="fa fa-repeat" aria-hidden="true"></i> }
+                                                        />
+                                            </div>
+                                        </div>
+                                        <div className="row offset-bottom-4">
+                                            <div className="col-xs-10 col-xs-offset-1">
+                                                <Button
+                                                    block
+                                                    type="submit"
+                                                    bsSize="large"
+                                                    bsStyle="primary"
+                                                    disabled={ invalid || expextAnswer }
+                                                        >
+                                                    <span> Sign In </span>
+                                                    { expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
+                                                </Button>
+                                            </div>
         								</div>
-        							</fieldset>
+                                        { showFormError(errorMessage) }
+                                    </fieldset>
         						</form>
         					</div>
                             <div className="panel-footer text-right">
@@ -115,8 +174,45 @@ class Signup extends Component {
 
 export default reduxForm({
     form: 'signUpForm',
- // mapStateToProps
+    /**
+     * @param { Object } values - nammed properties of input data
+     * @param { Object } meta - information about form status
+     * @returns { Object } - nammed errors
+     * @function validate
+     * @public
+     */
+    validate: ( values, meta ) => {
+
+        var errors = {};
+        // USERNAME
+        if ( !values.username ) {
+            errors.username = 'User Name is required';
+        } else if (!/^[A-Z0-9._%+-]{2,}$/i.test(values.username)) {
+            errors.username = 'Try something else';
+        }
+        // EMAIL
+        if ( !values.email ) {
+            errors.email = 'Email is required';
+        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+            errors.email = 'Invalid email address';
+        }
+        // PASSWORD
+        if ( !values.password ) {
+            errors.password = 'Password is required';
+        } else if ( values.password.length < 8 ) {
+            errors.password = 'Password must contain at least 8 symbol character';
+        }
+        // CONFIRM
+        if ( !values.confirm ) {
+            errors.confirm = 'Please confirm your Password';
+        } else if ( values.password != values.confirm ) {
+            errors.confirm = 'Passwords do not match';
+        }
+        
+        return errors;
+    },
+  // mapStateToProps
 })( connect(state => {
     console.log('Signup mapSteteToProps', state);
-    return ({ authenticated: false })
+    return ({ auth: state.auth })
 }, null)(Signup) );

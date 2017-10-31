@@ -22,12 +22,12 @@ var initil = {
 
 export default function ( state = initil, action ) {
     
-    console.log('reduser PAGE DATA'
-        ,'\n action:', action
-        ,'\n state:', state
-    );
+    // console.log('reduser PAGE DATA'
+    //     ,'\n action:', action
+    //     ,'\n state:', state
+    // );
     
-    var { type, option } = action;
+    var { type, ...option } = action;
     
     switch ( type ) {
         default: return state;

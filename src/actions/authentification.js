@@ -1,33 +1,53 @@
 
 // outsource dependencies
 
-
 // local dependencies
-import { blockPageLoadStart, blockPageLoadError, blockPageLoadSuccess } from '../actions';
-import { signin as signinRequest } from '../services';
-
-// configuration
+import {
+    AUTH_USER,
+    AUTH_ERROR,
+    AUTH_START,
+    UNAUTH_USER,
+} from '../actions/types';
 
 /**
- * @description async action sign in
- * @param { Object } 
  * @public
  */
-export function signin ({email, password}) {
-    return function ( dispatch ) {
-        dispatch( blockPageLoadStart() );
-        // Submit credentional to API
-        signinRequest({email, password})
-            // update state on success
-            .then(success => {
-                // update state auth
-                // dispatch({ type: AUTH_USER });
-                // update state data_page
-                dispatch( blockPageLoadSuccess(success) );
-            })
-            // update state on error
-            .catch(error => {
-                dispatch( blockPageLoadError(error, error.response.status+' '+error.response.statusText) );
-            });
+export function authStart () {
+    return {
+        type: AUTH_START,
+    }
+}
+
+/**
+ * @param { Object } user
+ * @public
+ */
+export function authUser ( user ) {
+    return {
+        type: AUTH_USER,
+        user,
+    }
+}
+
+
+/**
+ * @public
+ */
+export function unauthUser () {
+    return {
+        type: UNAUTH_USER,
+    }
+}
+
+/**
+* @param { Object } error
+* @param { String } errorMessage
+ * @public
+ */
+export function authError ( error, errorMessage ) {
+    return {
+        type: AUTH_ERROR,
+        errorMessage,
+        error,
     }
 }

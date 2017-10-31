@@ -1,10 +1,11 @@
 // eslint-disable import/first
 
 // outsource dependencies
+import React from 'react';
 import thunk from 'redux-thunk';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import React from 'react';
+import ReduxToastr from 'react-redux-toastr'
 import { createStore, applyMiddleware } from 'redux';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
@@ -13,6 +14,7 @@ import './style';
 
 // local dependencies
 import reducers from './reducers';
+import { debugLog, payloads, errors } from './middlewares';
 
 // local dependencies
 // pages publick
@@ -36,7 +38,7 @@ import PrivateRoute from './components/private-route';
 // NOTE: this API requires redux@>=3.1.0
 var store = createStore(
   reducers,
-  applyMiddleware(thunk)
+  applyMiddleware( thunk, debugLog, payloads, errors )
 );
 
 /**
@@ -72,6 +74,16 @@ function Root ( props, state ) {
                     {/* OTHERWISE */}
                     <Route component={ NoMatch } />
                 </Switch>
+                <ReduxToastr
+                    timeOut={4000}
+                    newestOnTop={false}
+                    position="top-right"
+                    transitionIn="fadeIn"
+                    transitionOut="fadeOut"
+                    preventDuplicates
+                    progressBar
+                        >
+                </ReduxToastr>
             </div>
         </Router>
     );
