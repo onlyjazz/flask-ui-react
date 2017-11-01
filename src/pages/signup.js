@@ -53,13 +53,14 @@ class Signup extends Component {
     }
     
     
-    showFormError ( text ) {
-        return !text ? ('') : (
+    showFormError () {
+        return !this.state.errorMessage ? ('') : (
             <div className="row">
                 <div className="col-xs-10 col-xs-offset-1">
-                    <div className="input-group text-center has-error">
-                        <strong className="help-block offset-bottom-4"> { text } </strong>
-                    </div>
+                    <p className="alert alert-danger" onClick={ () => this.setState({errorMessage: ''}) }>
+                        <strong> Error: </strong>
+                        { this.state.errorMessage }
+                    </p>
                 </div>
             </div>
         );
@@ -70,9 +71,7 @@ class Signup extends Component {
         
         var { auth, invalid, handleSubmit } = this.props;
         var { expextAnswer, errorMessage } = this.state;
-        var { showFormError, handleFormSubmit } = this;
-        // 
-        var bindedHandler = handleFormSubmit.bind(this);
+        var bindedHandler = this.handleFormSubmit.bind(this);
         
         return (
             <div className="container top-indent-10 offset-top-10">
@@ -152,12 +151,12 @@ class Signup extends Component {
                                                     bsStyle="primary"
                                                     disabled={ invalid || expextAnswer }
                                                         >
-                                                    <span> Sign In </span>
+                                                    <span> Sign Up </span>
                                                     { expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
                                                 </Button>
                                             </div>
         								</div>
-                                        { showFormError(errorMessage) }
+                                        { this.showFormError() }
                                     </fieldset>
         						</form>
         					</div>

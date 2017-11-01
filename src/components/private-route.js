@@ -20,35 +20,30 @@ class PrivateRoute extends Component {
     //     );
     // }
     
-    // componentWillMount () { // pre - render of component
-    //     console.log('PrivateRoute componentWillMount => ()'
-    //         ,'\n contenxt:', this.contenxt
-    //         ,'\n state:', this.state
-    //         ,'\n props:', this.props
-    //         ,'\n refs:', this.refs
-    //         ,'\n this:', this
-    //     );
-    // }
+    componentWillMount () { // pre - render of component
+        var { auth } = this.props;
+        this.allow = auth.authenticated;
+    }
     
     render () {
-        console.log('PrivateRoute render => ()'
+        
+        // allow flag to pass to the private routes
+        var { auth } = this.props;
+        
+        console.log('PrivateRoute componentWillMount => ()'
             ,'\n contenxt:', this.contenxt
             ,'\n state:', this.state
             ,'\n props:', this.props
             ,'\n refs:', this.refs
+            ,'\n auth:', auth
         );
-        
-        // allow flag to pass to the private routes
-        var allow = this.props.authenticated;
         // render component
-        return allow ? ( <Route { ... this.props } ></Route> )
+        // return auth.authenticated
+        return true
+            ? ( <Route { ... this.props } ></Route> )
             : ( <Redirect to={{ pathname: '/', state: { from: this.props.location } }}/> );
     }
 }
 
 // export default connect( ( state ) => ({authenticated: state.authenticated}) )(PrivateRoute);
-export default connect(state => {
-    console.log('PrivateRoute mapSteteToProps', state);
-    // return ({ authenticated: !!state.authenticated })
-    return ({ authenticated: !!state.authenticated })
-}, null)(PrivateRoute)
+export default connect(state =>  ({ auth: state.auth }), null)(PrivateRoute)

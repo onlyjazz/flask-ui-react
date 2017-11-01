@@ -59,13 +59,14 @@ class Signin extends Component {
             });
     }
     
-    showFormError ( text ) {
-        return !text ? ('') : (
+    showFormError () {
+        return !this.state.errorMessage ? ('') : (
             <div className="row">
                 <div className="col-xs-10 col-xs-offset-1">
-                    <div className="input-group text-center has-error">
-                        <strong className="help-block offset-bottom-4"> { text } </strong>
-                    </div>
+                    <p className="alert alert-danger" onClick={ () => this.setState({errorMessage: ''}) }>
+                        <strong> Error: </strong>
+                        { this.state.errorMessage }
+                    </p>
                 </div>
             </div>
         );
@@ -74,10 +75,8 @@ class Signin extends Component {
     render () {
         
         var { auth, invalid, handleSubmit } = this.props;
-        var { expextAnswer, errorMessage } = this.state;
-        var { showFormError, handleFormSubmit } = this;
-        // 
-        var bindedHandler = handleFormSubmit.bind(this);
+        var { expextAnswer } = this.state;
+        var bindedHandler = this.handleFormSubmit.bind(this);
         // console.log('Signin render => ()'
         //     // ,'\n contenxt:', this.contenxt
         // //     ,'\n state:', this.state
@@ -141,7 +140,7 @@ class Signin extends Component {
                                                 </Button>
                                             </div>
         								</div>
-                                        { showFormError(errorMessage) }
+                                        { this.showFormError() }
                                     </fieldset>
         						</form>
         					</div>
