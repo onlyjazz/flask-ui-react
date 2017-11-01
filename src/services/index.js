@@ -1,16 +1,12 @@
 
-// aliases for export all services
-export { storage } from './storage';
-export {
-    signin,
-    signout,
-    refreshSession,
-    Axios,
-    Axios as axiosInstance
-} from './authentification';
+// outsource aliases
+import 's-is';
+var is = window.is;
 
-// HELPERS
-var ts = Object.prototype.toString;
-export function isPromise ( data ) {
-    return ts.call(data) === '[object Promise]'||(!!data && typeof data['then'] === 'function' );
-}
+// aliases for export all services
+export { is };
+export { storage } from './storage';
+export { default as Axios } from './axios-instance';
+
+export { signin, signout, restoreSession } from './authentification';
+

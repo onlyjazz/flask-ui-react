@@ -18,11 +18,3 @@ export {
     blockPageLoadError,
     blockPageLoadSuccess,
 } from './page-data.js';
-
-export {
-    authStart,
-    authUser,
-    unauthUser,
-    authError,
-} from './authentification.js';
-

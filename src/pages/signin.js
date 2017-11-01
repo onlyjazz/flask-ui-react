@@ -8,7 +8,7 @@ import { Button } from 'react-bootstrap';
 import { toastr } from 'react-redux-toastr';
 
 // local dependencies
-import * as actions from '../actions';
+import { AUTH_USER } from '../actions/types';
 import LogoBig from '../components/logo-big';
 import InputAddon from '../components/input-addon';
 import { signin } from '../services';
@@ -44,9 +44,9 @@ class Signin extends Component {
                 // toastr success message
                 toastr.success('Hello !', 'We glad to see you =)');
                 // update state
-                // dispatch( authStart() );
+                dispatch({ type: AUTH_USER });
                 // redirect to app
-                // this.props.history.push('/app');
+                this.props.history.push('/app');
             })
             .catch(error => {
                 var message = 'Somethings went wrong...';
@@ -189,4 +189,4 @@ export default reduxForm({
         return errors;
     },
   // mapStateToProps
-})( connect(state => ({ auth: state.auth }), actions)(Signin) );
+})( connect(state => ({ auth: state.auth }), null)(Signin) );

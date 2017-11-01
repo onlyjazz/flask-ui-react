@@ -1,22 +1,11 @@
 
 // outsource dependencies
-import axios from 'axios';
 
 // local dependencies
 import { storage } from '../services';
+import { Axios } from '../services';
 
 // configuration
-import { config } from '../constants';
-
-/**
- * @description axios instance with base configuration of app
- * @public
- */
-var Axios = axios.create({
-    baseURL: config.apiPath,
-});
-
-export { Axios };
 
 /**
  * @description signin request wich store session data in storage
@@ -73,7 +62,7 @@ export function signout () {
  * @returns { Promise }
  * @public
  */
-export function refreshSession () {
+export function restoreSession () {
     // Submit credentional to API
     return new Promise( ( resolve, reject ) => {
         // get authentification tokens
@@ -87,7 +76,7 @@ export function refreshSession () {
                 // store tokens
                 storage.set('auth', success.data);
                 // set default auth heder
-                axios.defaults.headers.common['Authorization'] = success.data.access_token;
+                Axios.defaults.headers.common['Authorization'] = success.data.access_token;
                 resolve(success);
             })
             .catch(reject);

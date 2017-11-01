@@ -31,7 +31,7 @@ class ForgotPassword extends Component {
     handleFormSubmit ( values, dispatch, form ) {
         
         this.setState({expextAnswer: true});
-
+        
         Axios
             .get('/forgotPassword')
             .then(success => {
@@ -69,7 +69,7 @@ class ForgotPassword extends Component {
     render () {
         
         var { invalid, handleSubmit } = this.props;
-        var { expextAnswer, errorMessage } = this.state;
+        var { expextAnswer } = this.state;
         var bindedHandler = this.handleFormSubmit.bind(this);
         
         return (

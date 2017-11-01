@@ -2,7 +2,7 @@
 // outsource dependencies
 
 // local dependencies
-import { AUTH_USER, UNAUTH_USER, AUTH_ERROR } from '../actions/types';
+import { AUTH_USER, UNAUTH_USER/*, AUTH_ERROR*/ } from '../actions/types';
 
 // configuration
 export default function ( state = {}, action ) {
@@ -22,8 +22,6 @@ export default function ( state = {}, action ) {
         case AUTH_USER: return { ...state, ...option, authenticated: true };
         // 
         case UNAUTH_USER: return { ...state, ...option, authenticated: false};
-        // 
-        case AUTH_ERROR: return { ...state, ...option, authenticated: false };
         //     break;
     }
     

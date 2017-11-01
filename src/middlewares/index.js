@@ -1,6 +1,6 @@
 
 import { config } from '../constants';
-import { isPromise } from '../services';
+import { is } from '../services';
 
 window._actionType = 'AUTH';
 /**
@@ -31,7 +31,7 @@ export function debugLog ( {dispatch} ) {
 export function payloads ( {dispatch} ) {
     return next => action => {
         var { data, payload, error } = action;
-        if ( !error && !data && isPromise(payload) ) {
+        if ( !error && !data && is.promise(payload) ) {
             payload
                 .then( success => {
                     action.data = success;
