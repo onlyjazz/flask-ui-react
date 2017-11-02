@@ -30,11 +30,12 @@ export function debugLog ( {dispatch} ) {
  */
 export function payloads ( {dispatch} ) {
     return next => action => {
-        var { data, payload, error } = action;
+        var { payload, error } = action;
+        var data = action[action.payloadName || 'data'];
         if ( !error && !data && is.promise(payload) ) {
             payload
                 .then( success => {
-                    action.data = success;
+                    action[action.payloadName || 'data'] = success;
                     dispatch(action);
                 })
                 .catch( error => {

@@ -8,10 +8,9 @@ import { Button } from 'react-bootstrap';
 import { toastr } from 'react-redux-toastr';
 
 // local dependencies
-import * as actions from '../actions';
 import LogoBig from '../components/logo-big';
 import InputAddon from '../components/input-addon';
-import { Axios } from '../services';
+import { Axios, signin } from '../services';
 
 class Signup extends Component {
     
@@ -30,16 +29,36 @@ class Signup extends Component {
 
         Axios.post('/signup', values)
             .then(success => {
+                
+                // signin(values)
+                //     .then(success => {
+                //         // clear form
+                //         this.props.reset();
+                //         // update component
+                //         this.setState({expextAnswer: false});
+                //         // toastr success message
+                //         toastr.success('Hello !', 'We glad to see you =)');
+                //         // update state
+                //         dispatch({ type: AUTH_USER });
+                //         // redirect to app
+                //         this.props.history.push('/app');
+                //     })
+                //     .catch(error => {
+                //         var message = 'Somethings went wrong...';
+                //         this.setState({
+                //             expextAnswer: false,
+                //             errorMessage: message,
+                //         });
+                //         // toastr error message
+                //         toastr.error('Error', message);
+                //     });
                 // clear form
                 this.props.reset();
                 // update component
                 this.setState({expextAnswer: false});
                 // toastr success message
-                toastr.success('Hello !', 'We glad to see you =)');
+                toastr.success('Hello !', 'You may confirm your email.');
                 // update state
-                // dispatch( authStart() );
-                // redirect to app
-                // this.props.history.push('/app');
             })
             .catch(error => {
                 var message = 'Somethings went wrong...';
@@ -69,8 +88,8 @@ class Signup extends Component {
     
     render() {
         
-        var { auth, invalid, handleSubmit } = this.props;
-        var { expextAnswer, errorMessage } = this.state;
+        var { /*auth,*/ invalid, handleSubmit } = this.props;
+        var { expextAnswer } = this.state;
         var bindedHandler = this.handleFormSubmit.bind(this);
         
         return (
@@ -204,14 +223,11 @@ export default reduxForm({
         // CONFIRM
         if ( !values.confirm ) {
             errors.confirm = 'Please confirm your Password';
-        } else if ( values.password != values.confirm ) {
+        } else if ( values.password !== values.confirm ) {
             errors.confirm = 'Passwords do not match';
         }
         
         return errors;
     },
   // mapStateToProps
-})( connect(state => {
-    console.log('Signup mapSteteToProps', state);
-    return ({ auth: state.auth })
-}, null)(Signup) );
+})( connect(state => ({ auth: state.auth }), null)(Signup) );

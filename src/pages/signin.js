@@ -11,7 +11,7 @@ import { toastr } from 'react-redux-toastr';
 import { AUTH_USER } from '../actions/types';
 import LogoBig from '../components/logo-big';
 import InputAddon from '../components/input-addon';
-import { signin } from '../services';
+import { signin, getSelf, is } from '../services';
 
 class Signin extends Component {
     
@@ -38,15 +38,15 @@ class Signin extends Component {
         signin(values)
             .then(success => {
                 // clear form
-                this.props.reset();
+                // this.props.reset();
                 // update component
-                this.setState({expextAnswer: false});
+                // this.setState({expextAnswer: false});
                 // toastr success message
                 toastr.success('Hello !', 'We glad to see you =)');
                 // update state
                 dispatch({ type: AUTH_USER });
                 // redirect to app
-                this.props.history.push('/app');
+                this.props.history.push('/app'); // does not work if action async
             })
             .catch(error => {
                 var message = 'Somethings went wrong...';
@@ -74,15 +74,15 @@ class Signin extends Component {
     
     render () {
         
-        var { auth, invalid, handleSubmit } = this.props;
+        var { /*auth,*/ invalid, handleSubmit } = this.props;
         var { expextAnswer } = this.state;
         var bindedHandler = this.handleFormSubmit.bind(this);
         // console.log('Signin render => ()'
-        //     // ,'\n contenxt:', this.contenxt
-        // //     ,'\n state:', this.state
-        //     // ,'\n props:', this.props
-        // //     ,'\n refs:', this.refs
-        //     // ,'\n this.props.history:', this.props.history
+        //     ,'\n contenxt:', this.contenxt
+        //     ,'\n state:', this.state
+        //     ,'\n props:', this.props
+        //     ,'\n refs:', this.refs
+        //     ,'\n this.props.history:', this.props.history
         // );
         
         return (
