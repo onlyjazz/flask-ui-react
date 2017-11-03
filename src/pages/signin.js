@@ -4,21 +4,92 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { Button } from 'react-bootstrap';
+import { toastr } from 'react-redux-toastr';
 
 // local dependencies
+import { AUTH_USER } from '../actions/types';
 import LogoBig from '../components/logo-big';
+import InputAddon from '../components/input-addon';
+import { Axios, signin } from '../services';
 
 class Signin extends Component {
     
-    handleFormSubmit () {
+    constructor ( props ) {
+        super(props);
         
-        console.log('Signin handleFormSubmit', this);
+        this.state = {
+            expextAnswer: false,
+            errorMessage: null,
+        };
     }
     
-    
-    render() {
+    handleFormSubmit ( {password, email}, dispatch, form ) {
         
-        var { handleSubmit } = this.props;
+        this.setState({expextAnswer: true});
+        
+        signin({password, email})
+            .then(success => {
+                Axios
+                    .get('/private/self')
+                    .then(success => {
+                        // clear form
+                        this.props.reset();
+                        // update component
+                        this.setState({expextAnswer: false});
+                        // toastr success message
+                        toastr.success('Hello !', 'We glad to see you =)');
+                        // update state
+                        dispatch({ type: AUTH_USER, user: success.data });
+                        // redirect to app
+                        this.props.history.push('/app'); // does not work if action async
+                    })
+                    .catch(error => {
+                        var message = 'Somethings went wrong...';
+                        this.setState({
+                            expextAnswer: false,
+                            errorMessage: message,
+                        });
+                        // toastr error message
+                        toastr.error('Error', message);
+                    });
+            })
+            .catch(error => {
+                var message = 'Somethings went wrong...';
+                this.setState({
+                    expextAnswer: false,
+                    errorMessage: message,
+                });
+                // toastr error message
+                toastr.error('Error', message);
+            });
+    }
+    
+    showFormError () {
+        return !this.state.errorMessage ? ('') : (
+            <div className="row">
+                <div className="col-xs-10 col-xs-offset-1">
+                    <p className="alert alert-danger" onClick={ () => this.setState({errorMessage: ''}) }>
+                        <strong> Error: </strong>
+                        { this.state.errorMessage }
+                    </p>
+                </div>
+            </div>
+        );
+    }
+    
+    render () {
+        
+        var { /*auth,*/ invalid, handleSubmit } = this.props;
+        var { expextAnswer } = this.state;
+        var bindedHandler = this.handleFormSubmit.bind(this);
+        // console.log('Signin render => ()'
+        //     ,'\n contenxt:', this.contenxt
+        //     ,'\n state:', this.state
+        //     ,'\n props:', this.props
+        //     ,'\n refs:', this.refs
+        //     ,'\n this.props.history:', this.props.history
+        // );
         
         return (
             <div className="container top-indent-10 offset-top-10">
@@ -30,45 +101,53 @@ class Signin extends Component {
                                 <i className="fa fa-sign-in" aria-hidden="true"></i>
         					</div>
         					<div className="panel-body">
-        						<form name="signInForm" onSubmit={ handleSubmit( this.handleFormSubmit.bind(this) ) }>
-        							<fieldset>
-        								<LogoBig className="row offset-bottom-4" />
-        								<div className="row">
+        						<form name="signInForm" onSubmit={ handleSubmit( bindedHandler ) }>
+                                    <fieldset>
+                                        <LogoBig className="row offset-bottom-4" />
+        								<div className="row offset-bottom-2">
         									<div className="col-xs-10 col-xs-offset-1">
-        										<div className="form-group offset-bottom-2">
-        											<div className="input-group">
-        												<label htmlFor="email" className="input-group-addon"> @ </label> 
-                                                        <Field
-                                                            id="email"
-                                                            type="mail"
-                                                            name="email"
-                                                            component="input"
-                                                            placeholder="Email"
-                                                            className="form-control"
-                                                                />
-        											</div>
-        										</div>
-        										<div className="form-group offset-bottom-4">
-        											<div className="input-group">
-        												<label htmlFor="password" className="input-group-addon">
-        													<i className="glyphicon glyphicon-lock"></i>
-        												</label>
-                                                        <Field
-                                                            id="password"
-                                                            name="password"
-                                                            type="password"
-                                                            component="input"
-                                                            placeholder="Password"
-                                                            className="form-control"
-                                                                />
-        											</div>
-        										</div>
-        										<div className="form-group">
-        											<input type="submit" className="btn btn-lg btn-primary btn-block" value="Sign In" />
-        										</div>
-        									</div>
+                                                <Field
+                                                    required
+                                                    type="mail"
+                                                    name="email"
+                                                    placeholder="Email"
+                                                    component={ InputAddon }
+                                                    className="form-control"
+                                                    disabled={ expextAnswer }
+                                                    label={ <span> @ </span> }
+                                                        />
+                                            </div>
+                                        </div>
+                                        <div className="row offset-bottom-4">
+                                            <div className="col-xs-10 col-xs-offset-1">
+                                                <Field
+                                                    required
+                                                    name="password"
+                                                    type="password"
+                                                    placeholder="Password"
+                                                    component={ InputAddon }
+                                                    className="form-control"
+                                                    disabled={ expextAnswer }
+                                                    label={ <i className="glyphicon glyphicon-lock"></i> }
+                                                        />
+                                            </div>
+                                        </div>
+                                        <div className="row offset-bottom-4">
+                                            <div className="col-xs-10 col-xs-offset-1">
+                                                <Button
+                                                    block
+                                                    type="submit"
+                                                    bsSize="large"
+                                                    bsStyle="primary"
+                                                    disabled={ invalid || expextAnswer }
+                                                        >
+                                                    <span> Sign In </span>
+                                                    { expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
+                                                </Button>
+                                            </div>
         								</div>
-        							</fieldset>
+                                        { this.showFormError() }
+                                    </fieldset>
         						</form>
         					</div>
         					<div className="panel-footer">
@@ -91,8 +170,29 @@ class Signin extends Component {
 
 export default reduxForm({
     form: 'signInForm',
- // mapStateToProps
-})( connect(state => {
-    console.log('Signin mapSteteToProps', state);
-    return ({ authenticated: false })
-}, null)(Signin) );
+    /**
+     * @param { Object } values - nammed properties of input data
+     * @param { Object } meta - information about form status
+     * @returns { Object } - nammed errors
+     * @function validate
+     * @public
+     */
+    validate: ( values, meta ) => {
+
+        var errors = {};
+        // EMAIL
+        if ( !values.email ) {
+            errors.email = 'Email is required'
+        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+            errors.email = 'Invalid email address'
+        }
+        // PASSWORD
+        if ( !values.password ) {
+            errors.password = 'Password is required'
+        } else if ( values.password.length < 8 ) {
+            errors.password = 'Password must contain at least 8 symbol character'
+        }
+        return errors;
+    },
+  // mapStateToProps
+})( connect(state => ({ auth: state.auth }), null)(Signin) );

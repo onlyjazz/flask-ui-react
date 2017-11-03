@@ -4,20 +4,73 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { Button } from 'react-bootstrap';
+import { toastr } from 'react-redux-toastr';
 
 // local dependencies
 import LogoBig from '../components/logo-big';
+import InputAddon from '../components/input-addon';
+import { Axios } from '../services';
 
-class Forgot extends Component {
-    handleFormSubmit () {
+/**
+ * @description page forgot password
+ * @constructor ForgotPassword
+ * @public
+ */
+class ForgotPassword extends Component {
+    
+    constructor ( props ) {
+        super(props);
         
-        console.log('Forgot handleFormSubmit', this);
+        this.state = {
+            expextAnswer: false,
+            errorMessage: null,
+        };
     }
     
-    
-    render() {
+    handleFormSubmit ( values, dispatch, form ) {
         
-        var { handleSubmit } = this.props;
+        this.setState({expextAnswer: true});
+        
+        Axios
+            .get('/forgotPassword')
+            .then(success => {
+                // clear form
+                this.props.reset();
+                // update component
+                this.setState({expextAnswer: false});
+                // toastr success message
+                toastr.success('Hello !', 'We glad to see you =)');
+            })
+            .catch(error => {
+                var message = 'Somethings went wrong...';
+                this.setState({
+                    expextAnswer: false,
+                    errorMessage: message,
+                });
+                // toastr error message
+                toastr.error('Error', message);
+            });
+    }
+    
+    showFormError () {
+        return !this.state.errorMessage ? ('') : (
+            <div className="row">
+                <div className="col-xs-10 col-xs-offset-1">
+                    <p className="alert alert-danger" onClick={ () => this.setState({errorMessage: ''}) }>
+                        <strong> Error: </strong>
+                        { this.state.errorMessage }
+                    </p>
+                </div>
+            </div>
+        );
+    }
+    
+    render () {
+        
+        var { invalid, handleSubmit } = this.props;
+        var { expextAnswer } = this.state;
+        var bindedHandler = this.handleFormSubmit.bind(this);
         
         return (
             <div className="container top-indent-10 offset-top-10">
@@ -29,29 +82,38 @@ class Forgot extends Component {
                                 <i className="fa fa-life-ring" aria-hidden="true"></i>
                             </div>
                             <div className="panel-body">
-                                <form name="forgotPasswordForm" onSubmit={ handleSubmit( this.handleFormSubmit.bind(this) ) }>
+                                <form name="forgotPasswordForm" onSubmit={ handleSubmit( bindedHandler ) }>
                                     <fieldset>
                                         <LogoBig className="row offset-bottom-4" />
-                                        <div className="row">
-                                            <div className="col-xs-10 col-xs-offset-1">
-                                                <div className="form-group offset-bottom-4">
-                                                    <div className="input-group">
-                                                        <label htmlFor="email" className="input-group-addon"> @ </label> 
-                                                        <Field
-                                                            id="email"
-                                                            type="mail"
-                                                            name="email"
-                                                            component="input"
-                                                            placeholder="Email"
-                                                            className="form-control"
-                                                                />
-                                                    </div>
-                                                </div>
-                                                <div className="form-group">
-                                                    <input type="submit" className="btn btn-lg btn-primary btn-block" value="Submit" />
-                                                </div>
+        								<div className="row offset-bottom-2">
+        									<div className="col-xs-10 col-xs-offset-1">
+                                                <Field
+                                                    required
+                                                    type="mail"
+                                                    name="email"
+                                                    placeholder="Email"
+                                                    component={ InputAddon }
+                                                    className="form-control"
+                                                    label={ <span> @ </span> }
+                                                    disabled={ expextAnswer }
+                                                        />
                                             </div>
                                         </div>
+                                        <div className="row offset-bottom-4">
+                                            <div className="col-xs-10 col-xs-offset-1">
+                                                <Button
+                                                    block
+                                                    type="submit"
+                                                    bsSize="large"
+                                                    bsStyle="primary"
+                                                    disabled={ invalid || expextAnswer }
+                                                        >
+                                                    <span> Restore Password </span>
+                                                    { expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
+                                                </Button>
+                                            </div>
+        								</div>
+                                        { this.showFormError() }
                                     </fieldset>
                                 </form>
                             </div>
@@ -68,8 +130,22 @@ class Forgot extends Component {
 
 export default reduxForm({
     form: 'forgotPasswordForm',
- // mapStateToProps
-})( connect(state => {
-    console.log('Forgot mapSteteToProps', state);
-    return ({ authenticated: false })
-}, null)(Forgot) );
+    /**
+    * @param { Object } values - nammed properties of input data
+    * @param { Object } meta - information about form status
+    * @returns { Object } - nammed errors
+    * @function validate
+    * @public
+    */
+    validate: ( values, meta ) => {
+        var errors = {};
+        // EMAIL
+        if ( !values.email ) {
+            errors.email = 'Email is required'
+        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+            errors.email = 'Invalid email address'
+        }
+        return errors;
+    },
+// mapStateToProps
+})( connect(state => ({}), null)(ForgotPassword) );

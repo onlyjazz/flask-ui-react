@@ -12,15 +12,28 @@ You can find the most recent version of this guide [here](https://github.com/fac
 
 #### Clone and run
 
-Checkout this repo, install dependencies, then start the process with the following:
+Checkout this repo, install dependencies, then start the process
 
 ```
 > git clone https://github.com/onlyjazz/flask-ui-react.git
 > cd flask-ui-react
 > npm install
-> npm start
+> npm run start
 ```
 
+To run preprocessor less
+```
+> gulp less:watch
+```
+
+#### Build
+
+Without environment configuration.
+
+```
+> npm install
+> npm run build
+```
 
 #### Setup custom configuration
 
