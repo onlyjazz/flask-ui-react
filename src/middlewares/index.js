@@ -1,28 +1,8 @@
 
-import { config } from '../constants';
 import { is } from '../services';
+// import { config } from '../constants';
 
-window._actionType = 'AUTH';
-/**
- * @description logger for each action
- * @public
- */
-export function debugLog ( {dispatch} ) {
-    return next => action => {
-        if ( config.DEBUG&&(!window._actionType||(new RegExp(window._actionType, 'gi')).test(action.type) ) ) {
-            var { type, data, payload, error, ...rest } = action;
-            console.log(
-                'Log DEBUG middlewares:'
-                ,'\n\t action:', action
-                ,'\n\t rest:', rest
-                ,'\n\t payload:', payload
-                ,'\n\t error:', error
-                ,'\n\t type:', type
-            );
-        }
-        next(action);
-    };
-}
+export { authRun } from './authRun';
 
 /**
  * @description determine promisses on properties "payload" and resolve it
@@ -55,11 +35,8 @@ export function errors ( {dispatch} ) {
     return next => action => {
         var { error, errorMessage } = action;
         if ( error && !errorMessage ) {
-            
-            // action.errorMessage = error.status + eroo
-            action.errorMessage = true;
+            action.errorMessage = error.status +' '+ error.statusText;
             dispatch(action);
         } else next(action);
     };
 }
-

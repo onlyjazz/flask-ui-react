@@ -3,6 +3,15 @@
 import React, { Component } from 'react';
 
 // local dependencies
-export default function ( Component, option ) {
-    
+
+// configuration
+
+class Preloader extends Component {
+    render () {
+        return !this.props.show
+            ? ( <div>{ this.props.children }</div> )
+            : ( <div> Preloader </div> );
+    }
 }
+
+export default Preloader;

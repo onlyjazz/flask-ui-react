@@ -62,7 +62,7 @@ export function signout () {
  * @returns { Promise }
  * @public
  */
-export function restoreSession () {
+export function refreshSession () {
     // Submit credentional to API
     return new Promise( ( resolve, reject ) => {
         // get authentification tokens
@@ -79,6 +79,9 @@ export function restoreSession () {
                 Axios.defaults.headers.common['Authorization'] = success.data.access_token;
                 resolve(success);
             })
-            .catch(reject);
+            .catch(error => {
+                storage.remove('auth');
+                reject(error);
+            });
     });
 }

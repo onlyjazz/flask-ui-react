@@ -10,7 +10,7 @@ import { toastr } from 'react-redux-toastr';
 // local dependencies
 import LogoBig from '../components/logo-big';
 import InputAddon from '../components/input-addon';
-import { Axios, signin } from '../services';
+import { Axios/*, signin*/ } from '../services';
 
 class Signup extends Component {
     

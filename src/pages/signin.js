@@ -11,7 +11,7 @@ import { toastr } from 'react-redux-toastr';
 import { AUTH_USER } from '../actions/types';
 import LogoBig from '../components/logo-big';
 import InputAddon from '../components/input-addon';
-import { signin, getSelf, is } from '../services';
+import { Axios, signin } from '../services';
 
 class Signin extends Component {
     
@@ -24,29 +24,35 @@ class Signin extends Component {
         };
     }
     
-    componentWillMount () { // pre - render of component
-        // if ( this.props.auth.authenticated ) {
-        //     // redirect to app
-        //     this.props.history.push('/app');
-        // }
-    }
-    
-    handleFormSubmit ( values, dispatch, form ) {
+    handleFormSubmit ( {password, email}, dispatch, form ) {
         
         this.setState({expextAnswer: true});
-
-        signin(values)
+        
+        signin({password, email})
             .then(success => {
-                // clear form
-                // this.props.reset();
-                // update component
-                // this.setState({expextAnswer: false});
-                // toastr success message
-                toastr.success('Hello !', 'We glad to see you =)');
-                // update state
-                dispatch({ type: AUTH_USER });
-                // redirect to app
-                this.props.history.push('/app'); // does not work if action async
+                Axios
+                    .get('/private/self')
+                    .then(success => {
+                        // clear form
+                        this.props.reset();
+                        // update component
+                        this.setState({expextAnswer: false});
+                        // toastr success message
+                        toastr.success('Hello !', 'We glad to see you =)');
+                        // update state
+                        dispatch({ type: AUTH_USER, user: success.data });
+                        // redirect to app
+                        this.props.history.push('/app'); // does not work if action async
+                    })
+                    .catch(error => {
+                        var message = 'Somethings went wrong...';
+                        this.setState({
+                            expextAnswer: false,
+                            errorMessage: message,
+                        });
+                        // toastr error message
+                        toastr.error('Error', message);
+                    });
             })
             .catch(error => {
                 var message = 'Somethings went wrong...';
