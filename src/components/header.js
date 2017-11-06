@@ -8,11 +8,10 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { LogoSmall } from '../components';
 import { signout } from '../actions';
 
-
 class Header extends Component {
     render() {
         return (
-            <header id="header">
+            <header id="header" className="container-fluid">
                 <div className="row header-inner">
                     <div className="col-xs-2 col-sm-1 text-center hidden-xs">
                         <LogoSmall className="header-logo top-indent-2" to="/app" />
@@ -29,8 +28,8 @@ class Header extends Component {
                     
                     <div className="col-xs-10 col-sm-11">
                         <ul className="list-inline pull-right top-indent-1">
-                            <li>
-                                <i className="fa fa-bell" aria-hidden="true"></i>
+                            <li className="notify-bell">
+                                <i className="fa fa-bell fa-lg" aria-hidden="true"></i>
                             </li>
                             <li className="user-menu">
                                 <DropdownButton
@@ -54,7 +53,4 @@ class Header extends Component {
     }
 }
 
-export default connect(state => {
-    console.log('Header mapSteteToProps', state);
-    return ({})
-}, { signout })(Header);
+export default connect(state => ({}), { signout })(Header);

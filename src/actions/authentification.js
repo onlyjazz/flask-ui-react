@@ -8,8 +8,6 @@ import { AUTH_USER, UNAUTH_USER, AUTH_ERROR } from './types';
 import { storage } from '../services';
 import { Axios } from '../services';
 
-var requester = Axios;
-
 export function unauthUser () {
     return {
         type: UNAUTH_USER,

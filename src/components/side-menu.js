@@ -7,21 +7,16 @@ import { Link } from 'react-router-dom';
 class SideMenu extends Component {
     render() {
         return (
-            <div className="row">
-                <div className="col-xs-12">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            <strong> SideMenu </strong>
+            <div className="container-fluid">
+                <div className="row">
+                    <div id="navSideMenu">
+                        <div className="nav-side-menu-inner">
+                            nav-side-menu-inner
                         </div>
-                        <div className="panel-body">
-                            <ul>
-                                <li><Link to="/app/sites"> Sites </Link></li>
-                                <li><Link to="/app/users"> Users </Link></li>
-                                <li><Link to="/app/studies"> Studies </Link></li>
-                                <li><Link to="/app/measures"> Measures </Link></li>
-                                <li><Link to="/app/monitoring"> Monitoring </Link></li>
-                                <li><Link to="/"> login </Link></li>
-                            </ul>
+                    </div>
+                    <div id="navContent">
+                        <div className="nav-content-inner">
+                            <div className="container-fluid"> { this.props.children } </div>
                         </div>
                     </div>
                 </div>
