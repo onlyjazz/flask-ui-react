@@ -8,28 +8,34 @@ import { Button } from 'react-bootstrap';
 import { toastr } from 'react-redux-toastr';
 
 // local dependencies
-import { AUTH_USER } from '../actions/types';
+import { authUser } from '../actions';
 import LogoBig from '../components/logo-big';
 import InputAddon from '../components/input-addon';
-import { Axios, signin } from '../services';
+import { Axios, storage } from '../services';
 
 class Signin extends Component {
     
     constructor ( props ) {
         super(props);
-        
+
         this.state = {
             expextAnswer: false,
             errorMessage: null,
         };
     }
     
-    handleFormSubmit ( {password, email}, dispatch, form ) {
+    handleFormSubmit ( {password, email}, dispatch ) {
         
         this.setState({expextAnswer: true});
-        
-        signin({password, email})
+        // sign in
+        Axios
+            .post('/signin', { password, email })
             .then(success => {
+                // store tokens
+                storage.set('auth', success.data);
+                // set default auth heder
+                Axios.defaults.headers.common['Authorization'] = success.data.access_token;
+                // get self
                 Axios
                     .get('/private/self')
                     .then(success => {
@@ -40,7 +46,7 @@ class Signin extends Component {
                         // toastr success message
                         toastr.success('Hello !', 'We glad to see you =)');
                         // update state
-                        dispatch({ type: AUTH_USER, user: success.data });
+                        dispatch( authUser(success.data) );
                         // redirect to app
                         this.props.history.push('/app'); // does not work if action async
                     })
@@ -55,7 +61,7 @@ class Signin extends Component {
                     });
             })
             .catch(error => {
-                var message = 'Somethings went wrong...';
+                var message = 'Wrong email or password.';
                 this.setState({
                     expextAnswer: false,
                     errorMessage: message,
@@ -78,18 +84,24 @@ class Signin extends Component {
         );
     }
     
+    componentDidUpdate () {
+        var { auth, history } = this.props;
+        if ( auth.authenticated ) {
+            history.push('/app');
+        }
+    }
+    
+    componentDidMount () {
+        setTimeout(()=> { // Fucking react-redux does not update the state for any pre-render methods for initial rendering
+            if ( this.props.auth.authenticated ) {
+                this.props.history.push('/app');
+            }
+        }, 10);
+    }
+    
     render () {
         
-        var { /*auth,*/ invalid, handleSubmit } = this.props;
-        var { expextAnswer } = this.state;
-        var bindedHandler = this.handleFormSubmit.bind(this);
-        // console.log('Signin render => ()'
-        //     ,'\n contenxt:', this.contenxt
-        //     ,'\n state:', this.state
-        //     ,'\n props:', this.props
-        //     ,'\n refs:', this.refs
-        //     ,'\n this.props.history:', this.props.history
-        // );
+        var { invalid, handleSubmit } = this.props;
         
         return (
             <div className="container top-indent-10 offset-top-10">
@@ -101,7 +113,7 @@ class Signin extends Component {
                                 <i className="fa fa-sign-in" aria-hidden="true"></i>
         					</div>
         					<div className="panel-body">
-        						<form name="signInForm" onSubmit={ handleSubmit( bindedHandler ) }>
+        						<form name="signInForm" onSubmit={ handleSubmit( this.handleFormSubmit.bind(this) ) }>
                                     <fieldset>
                                         <LogoBig className="row offset-bottom-4" />
         								<div className="row offset-bottom-2">
@@ -113,7 +125,7 @@ class Signin extends Component {
                                                     placeholder="Email"
                                                     component={ InputAddon }
                                                     className="form-control"
-                                                    disabled={ expextAnswer }
+                                                    disabled={ this.state.expextAnswer }
                                                     label={ <span> @ </span> }
                                                         />
                                             </div>
@@ -127,7 +139,7 @@ class Signin extends Component {
                                                     placeholder="Password"
                                                     component={ InputAddon }
                                                     className="form-control"
-                                                    disabled={ expextAnswer }
+                                                    disabled={ this.state.expextAnswer }
                                                     label={ <i className="glyphicon glyphicon-lock"></i> }
                                                         />
                                             </div>
@@ -139,10 +151,10 @@ class Signin extends Component {
                                                     type="submit"
                                                     bsSize="large"
                                                     bsStyle="primary"
-                                                    disabled={ invalid || expextAnswer }
+                                                    disabled={ invalid || this.state.expextAnswer }
                                                         >
                                                     <span> Sign In </span>
-                                                    { expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
+                                                    { this.state.expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
                                                 </Button>
                                             </div>
         								</div>

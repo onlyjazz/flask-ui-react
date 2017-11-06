@@ -4,5 +4,11 @@
 // TEST
 export { test } from './test.js';
 
-// aliases for export all actions
+export {
+    signout,
+    signin,
+    unauthUser,
+    authUser,
+    authError,
+} from './authentification';
 
