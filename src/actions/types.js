@@ -1,6 +1,5 @@
 
 export const TEST = 'test';
-export const TEST_ASYNC = 'test_async';
 
 
 // uthentication
