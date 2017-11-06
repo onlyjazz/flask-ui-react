@@ -66,11 +66,24 @@ class ForgotPassword extends Component {
         );
     }
     
+    componentDidUpdate () {
+        var { auth, history } = this.props;
+        if ( auth.authenticated ) {
+            history.push('/app');
+        }
+    }
+    
+    componentDidMount () {
+        setTimeout(()=> { // Fucking react-redux does not update the state for any pre-render methods for initial rendering
+            if ( this.props.auth.authenticated ) {
+                this.props.history.push('/app');
+            }
+        }, 10);
+    }
+    
     render () {
         
         var { invalid, handleSubmit } = this.props;
-        var { expextAnswer } = this.state;
-        var bindedHandler = this.handleFormSubmit.bind(this);
         
         return (
             <div className="container top-indent-10 offset-top-10">
@@ -82,7 +95,7 @@ class ForgotPassword extends Component {
                                 <i className="fa fa-life-ring" aria-hidden="true"></i>
                             </div>
                             <div className="panel-body">
-                                <form name="forgotPasswordForm" onSubmit={ handleSubmit( bindedHandler ) }>
+                                <form name="forgotPasswordForm" onSubmit={ handleSubmit( this.handleFormSubmit.bind(this) ) }>
                                     <fieldset>
                                         <LogoBig className="row offset-bottom-4" />
         								<div className="row offset-bottom-2">
@@ -95,7 +108,7 @@ class ForgotPassword extends Component {
                                                     component={ InputAddon }
                                                     className="form-control"
                                                     label={ <span> @ </span> }
-                                                    disabled={ expextAnswer }
+                                                    disabled={ this.state.expextAnswer }
                                                         />
                                             </div>
                                         </div>
@@ -106,10 +119,10 @@ class ForgotPassword extends Component {
                                                     type="submit"
                                                     bsSize="large"
                                                     bsStyle="primary"
-                                                    disabled={ invalid || expextAnswer }
+                                                    disabled={ invalid || this.state.expextAnswer }
                                                         >
                                                     <span> Restore Password </span>
-                                                    { expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
+                                                    { this.state.expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
                                                 </Button>
                                             </div>
         								</div>
@@ -148,4 +161,4 @@ export default reduxForm({
         return errors;
     },
 // mapStateToProps
-})( connect(state => ({}), null)(ForgotPassword) );
+})( connect(state => ({ auth: state.auth }), null)(ForgotPassword) );

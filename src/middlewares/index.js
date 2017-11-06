@@ -1,5 +1,6 @@
 
 import { is } from '../services';
+import { toastr } from 'react-redux-toastr';
 // import { config } from '../constants';
 
 export { authRun } from './authRun';
@@ -11,11 +12,10 @@ export { authRun } from './authRun';
 export function payloads ( {dispatch} ) {
     return next => action => {
         var { payload, error } = action;
-        var data = action[action.payloadName || 'data'];
-        if ( !error && !data && is.promise(payload) ) {
+        if ( !error && is.promise(payload) ) {
             payload
                 .then( success => {
-                    action[action.payloadName || 'data'] = success;
+                    action.payload = success;
                     dispatch(action);
                 })
                 .catch( error => {
@@ -34,8 +34,9 @@ export function payloads ( {dispatch} ) {
 export function errors ( {dispatch} ) {
     return next => action => {
         var { error, errorMessage } = action;
-        if ( error && !errorMessage ) {
-            action.errorMessage = error.status +' '+ error.statusText;
+        if ( error ) {
+            !errorMessage && (action.errorMessage = error.status +' '+ error.statusText);
+            toastr.error('Error !', action.errorMessage);
             dispatch(action);
         } else next(action);
     };
