@@ -6,27 +6,32 @@ export default [
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-list-alt',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-users',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-graduation-cap',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-line-chart',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-eye',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         name: 'Sub Menu 2',
@@ -34,27 +39,32 @@ export default [
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-list-alt',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-users',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-graduation-cap',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-line-chart',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-eye',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         name: 'Sub Menu 3',
@@ -62,27 +72,32 @@ export default [
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-list-alt',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-users',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-graduation-cap',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-line-chart',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }, {
         link: true,
         name: 'Dummy',
-        icon: 'fa-eye',
+        badge: 'example',
+        icon: 'fa-info-circle',
         pathname: '/app/users',
     }
 ];

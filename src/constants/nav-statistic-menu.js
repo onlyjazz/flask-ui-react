@@ -4,6 +4,7 @@ export default [
         divider: true,
     }, {
         link: true,
+        badge: 1,
         name: 'Dummy',
         icon: 'fa-list-alt',
         pathname: '/app/users',
@@ -14,6 +15,7 @@ export default [
         pathname: '/app/users',
     }, {
         link: true,
+        badge: 2,
         name: 'Dummy',
         icon: 'fa-graduation-cap',
         pathname: '/app/users',
@@ -29,21 +31,25 @@ export default [
         pathname: '/app/users',
     }, {
         link: true,
+        badge: 20,
         name: 'Dummy',
         icon: 'fa-list-alt',
         pathname: '/app/users',
     }, {
         link: true,
+        badge: 50,
         name: 'Dummy',
         icon: 'fa-users',
         pathname: '/app/users',
     }, {
         link: true,
+        badge: 123,
         name: 'Dummy',
         icon: 'fa-graduation-cap',
         pathname: '/app/users',
     }, {
         link: true,
+        badge: 'text',
         name: 'Dummy',
         icon: 'fa-line-chart',
         pathname: '/app/users',
