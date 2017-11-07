@@ -5,27 +5,27 @@ export default [
         divider: true,
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-list-alt',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-users',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-graduation-cap',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-line-chart',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-eye',
         pathname: '/app/users',
     }, {
@@ -33,27 +33,27 @@ export default [
         divider: true,
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-list-alt',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-users',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-graduation-cap',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-line-chart',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-eye',
         pathname: '/app/users',
     }, {
@@ -61,27 +61,27 @@ export default [
         divider: true,
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-list-alt',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-users',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-graduation-cap',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-line-chart',
         pathname: '/app/users',
     }, {
         link: true,
-        name: 'Doomy',
+        name: 'Dummy',
         icon: 'fa-eye',
         pathname: '/app/users',
     }
