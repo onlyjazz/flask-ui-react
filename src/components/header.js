@@ -5,38 +5,61 @@ import React, { Component } from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 // local dependencies
+import defaultAvatar from '../images/default-avatar.png';
 import { LogoSmall } from '../components';
-import { signout } from '../actions';
+import { signout, navMinify, navMaximize } from '../actions';
+
+function loggedUser ( user ) {
+    return (
+        <ul className="list-unstyled list-inline profile-toggle">
+            <li className="avatar">
+                <img alt={user.name} src={user.avatar||defaultAvatar} />
+            </li>
+            <li className="user">
+                <div className="name"> {user.name} </div>
+                <div className="status"> Admin </div>
+            </li>
+            <li> <i className="fa fa-caret-down" aria-hidden="true"></i> </li>
+        </ul>
+    );
+}
 
 class Header extends Component {
     render() {
+        
+        var { nav, auth, navMinify, navMaximize } = this.props;
+        
+        // console.log('Header reducer => ()'
+        //     ,'\n props:', this.props
+        //     ,'\n state:', this.state
+        //     ,'\n nav:', nav
+        // );
+        
         return (
             <header id="header" className="container-fluid">
                 <div className="row header-inner">
-                    <div className="col-xs-2 col-sm-1 text-center hidden-xs">
-                        <LogoSmall className="header-logo top-indent-2" to="/app" />
-                    </div>
                     
-                    <div className="col-xs-2 col-sm-1 visible-xs navbar-inverse">
-                        <button type="button" className="navbar-toggle">
-                            <span className="sr-only">Toggle navigation</span>
-                            <span className="icon-bar"></span>
-                            <span className="icon-bar"></span>
-                            <span className="icon-bar"></span>
+                    <div className="col-xs-5">
+                        <LogoSmall className="header-logo" to="/app/users" />
+                        <button
+                            type="button"
+                            className={'header-toggle'+(nav.minify?' active':'')}
+                            onClick={()=> nav.minify?navMaximize():navMinify() }
+                                >
+                            <i className="fa fa-bars" aria-hidden="true"></i>
                         </button>
                     </div>
                     
-                    <div className="col-xs-10 col-sm-11">
-                        <ul className="list-inline pull-right top-indent-1">
-                            <li className="notify-bell">
-                                <i className="fa fa-bell fa-lg" aria-hidden="true"></i>
-                            </li>
+                    <div className="col-xs-7">
+                        <ul className="list-inline pull-right">
+                            {/* <li className="">
+                                <i className="fa fa-bell fa-lg top-indent-2" aria-hidden="true"></i>
+                            </li> */}
                             <li className="user-menu">
                                 <DropdownButton
                                     id="userMenu"
                                     noCaret={true}
-                                    bsStyle="primary"
-                                    title={(<i className="fa fa-bars" aria-hidden="true"></i>)}
+                                    title={loggedUser(auth.user)}
                                         >
                                     <MenuItem>Action</MenuItem>
                                     <MenuItem>Another action</MenuItem>
@@ -53,4 +76,4 @@ class Header extends Component {
     }
 }
 
-export default connect(state => ({}), { signout })(Header);
+export default connect(state => ({nav: state.nav, auth: state.auth}), { signout, navMinify, navMaximize })(Header);

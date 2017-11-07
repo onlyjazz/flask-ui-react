@@ -29,15 +29,15 @@ class Signin extends Component {
         this.setState({expextAnswer: true});
         // sign in
         Axios
-            .post('/signin', { password, email })
+            .post('/users/signin', { password, email })
             .then(success => {
                 // store tokens
                 storage.set('auth', success.data);
                 // set default auth heder
-                Axios.defaults.headers.common['Authorization'] = success.data.access_token;
+                Axios.defaults.headers.common['Authorization'] = success.data.jwtToken;
                 // get self
                 Axios
-                    .get('/private/self')
+                    .get('/users/self')
                     .then(success => {
                         // clear form
                         this.props.reset();
@@ -51,6 +51,11 @@ class Signin extends Component {
                         this.props.history.push('/app/studies'); // does not work if action async
                     })
                     .catch(error => {
+                        // clear tokens
+                        storage.remove('auth');
+                        // remove auth heder
+                        delete Axios.defaults.headers.common['Authorization'];
+                        // show error message
                         var message = 'Somethings went wrong...';
                         this.setState({
                             expextAnswer: false,
@@ -106,7 +111,7 @@ class Signin extends Component {
         return (
             <div className="container top-indent-10 offset-top-10">
         		<div className="row">
-        			<div className="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+        			<div style={ {width: '360px', margin: '0 auto'} }>
         				<div className="panel panel-default">
         					<div className="panel-heading">
         						<strong> Sign In </strong>

@@ -70,7 +70,7 @@ class Signup extends Component {
         return (
             <div className="container top-indent-10 offset-top-10">
         		<div className="row">
-        			<div className="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+        			<div style={ {width: '360px', margin: '0 auto'} }>
         				<div className="panel panel-default">
         					<div className="panel-heading">
         						<strong> Sign Up </strong>

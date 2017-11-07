@@ -48,7 +48,7 @@ class SideMenu extends Component {
             key = 0;
         
         for ( ; key < list.length; key ++ ) {
-            var { divider, link, name, pathname, icon, matcher, disabled } = list[key];
+            var { divider, link, name, pathname, icon, matcher, disabled, badge } = list[key];
             if ( divider ) {
                 menu.push( <div key={key} className="divider"> { name } </div> );
             }
@@ -62,7 +62,7 @@ class SideMenu extends Component {
                 menu.push(
                     <Link key={key} className={'list-group-item'+linkClassName} to={disabled?current:pathname} >
                         <i className={icon+' fa'} aria-hidden="true"></i> {name}
-                        <span className="badge"> 12 </span>
+                        {badge&&(<span className="badge"> {String(badge)} </span>)}
                     </Link>
                 );
             }
