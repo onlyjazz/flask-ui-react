@@ -37,7 +37,7 @@ export function authRun ( {dispatch} ) {
                                 dispatch( authUser(success.data) );
                             })
                             .catch( error => {
-                                dispatch( authError(error) );
+                                dispatch( unauthUser() );
                             })
                         })
                         .catch(error => {

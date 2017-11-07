@@ -48,7 +48,7 @@ class Signin extends Component {
                         // update state
                         dispatch( authUser(success.data) );
                         // redirect to app
-                        this.props.history.push('/app'); // does not work if action async
+                        this.props.history.push('/app/studies'); // does not work if action async
                     })
                     .catch(error => {
                         var message = 'Somethings went wrong...';
@@ -87,14 +87,14 @@ class Signin extends Component {
     componentDidUpdate () {
         var { auth, history } = this.props;
         if ( auth.authenticated ) {
-            history.push('/app');
+            history.push('/app/studies');
         }
     }
     
     componentDidMount () {
         setTimeout(()=> { // Fucking react-redux does not update the state for any pre-render methods for initial rendering
             if ( this.props.auth.authenticated ) {
-                this.props.history.push('/app');
+                this.props.history.push('/app/studies');
             }
         }, 10);
     }

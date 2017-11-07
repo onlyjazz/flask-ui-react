@@ -6,3 +6,6 @@ export const config = {
     apiPath: 'http://localhost:8000',
 };
 
+export { default as mainMenu } from './nav-main-menu';
+export { default as subMenu } from './nav-sub-menu';
+export { default as statisticMenu } from './nav-statistic-menu';

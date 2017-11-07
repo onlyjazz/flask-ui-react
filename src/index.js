@@ -38,7 +38,6 @@ function Root ( props, state ) {
                 <Private redirect="/">
                     <Header />
                     <SideMenu>
-                        <Route exact={true} path="/app" component={ Users } />
                         <Route exact={true} path="/app/users" component={ Users } />
                         <Route exact={true} path="/app/sites" component={ Sites } />
                         <Route exact={true} path="/app/studies" component={ Studies } />

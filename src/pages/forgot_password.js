@@ -69,14 +69,14 @@ class ForgotPassword extends Component {
     componentDidUpdate () {
         var { auth, history } = this.props;
         if ( auth.authenticated ) {
-            history.push('/app');
+            history.push('/app/studies');
         }
     }
     
     componentDidMount () {
         setTimeout(()=> { // Fucking react-redux does not update the state for any pre-render methods for initial rendering
             if ( this.props.auth.authenticated ) {
-                this.props.history.push('/app');
+                this.props.history.push('/app/studies');
             }
         }, 10);
     }

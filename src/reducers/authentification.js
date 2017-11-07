@@ -2,7 +2,7 @@
 // outsource dependencies
 
 // local dependencies
-import { AUTH_USER, UNAUTH_USER, AUTH_ERROR, AUTH_RUN } from '../actions/types';
+import { AUTH_USER, UNAUTH_USER, AUTH_ERROR } from '../actions/types';
 
 // configuration
 export default function ( state = {}, action ) {
