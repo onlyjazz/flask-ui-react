@@ -37,13 +37,13 @@ function Root ( props, state ) {
                 {/* PRIVATE */}
                 <Private redirect="/">
                     <Header />
-                    <SideMenu />
-                    <Route exact={true} path="/app" component={ Users } />
-                    <Route exact={true} path="/app/users" component={ Users } />
-                    <Route exact={true} path="/app/sites" component={ Sites } />
-                    <Route exact={true} path="/app/studies" component={ Studies } />
-                    <Route exact={true} path="/app/measures" component={ Measures } />
-                    <Route exact={true} path="/app/monitoring" component={ Monitoring } />
+                    <SideMenu>
+                        <Route exact={true} path="/app/users" component={ Users } />
+                        <Route exact={true} path="/app/sites" component={ Sites } />
+                        <Route exact={true} path="/app/studies" component={ Studies } />
+                        <Route exact={true} path="/app/measures" component={ Measures } />
+                        <Route exact={true} path="/app/monitoring" component={ Monitoring } />
+                    </SideMenu>
                 </Private>
                 {/* OTHERWISE */}
                 <Route component={ NoMatch } />

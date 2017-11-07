@@ -4,5 +4,22 @@
 // TEST
 export { test } from './test.js';
 
-// aliases for export all actions
+// authentication actions
+export {
+    signout,
+    signin,
+    unauthUser,
+    authUser,
+    authError,
+} from './authentification';
+
+// side menu actions
+export {
+    navMinify,
+    navMaximize,
+    navShowMainMenu,
+    navShowSubMenu,
+    navShowStatistic,
+    navChangeMenu,
+} from './nav';
 

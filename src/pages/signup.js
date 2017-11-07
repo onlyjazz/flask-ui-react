@@ -10,7 +10,7 @@ import { toastr } from 'react-redux-toastr';
 // local dependencies
 import LogoBig from '../components/logo-big';
 import InputAddon from '../components/input-addon';
-import { Axios/*, signin*/ } from '../services';
+import { Axios } from '../services';
 
 class Signup extends Component {
     
@@ -29,35 +29,12 @@ class Signup extends Component {
 
         Axios.post('/signup', values)
             .then(success => {
-                
-                // signin(values)
-                //     .then(success => {
-                //         // clear form
-                //         this.props.reset();
-                //         // update component
-                //         this.setState({expextAnswer: false});
-                //         // toastr success message
-                //         toastr.success('Hello !', 'We glad to see you =)');
-                //         // update state
-                //         dispatch({ type: AUTH_USER });
-                //         // redirect to app
-                //         this.props.history.push('/app');
-                //     })
-                //     .catch(error => {
-                //         var message = 'Somethings went wrong...';
-                //         this.setState({
-                //             expextAnswer: false,
-                //             errorMessage: message,
-                //         });
-                //         // toastr error message
-                //         toastr.error('Error', message);
-                //     });
                 // clear form
                 this.props.reset();
                 // update component
                 this.setState({expextAnswer: false});
                 // toastr success message
-                toastr.success('Hello !', 'You may confirm your email.');
+                toastr.success('Hello '+values.username, 'You may confirm your email.');
                 // update state
             })
             .catch(error => {
@@ -88,9 +65,7 @@ class Signup extends Component {
     
     render() {
         
-        var { /*auth,*/ invalid, handleSubmit } = this.props;
-        var { expextAnswer } = this.state;
-        var bindedHandler = this.handleFormSubmit.bind(this);
+        var { invalid, handleSubmit } = this.props;
         
         return (
             <div className="container top-indent-10 offset-top-10">
@@ -102,7 +77,7 @@ class Signup extends Component {
                                 <i className="fa fa-user-plus" aria-hidden="true"></i>
         					</div>
         					<div className="panel-body">
-        						<form name="signUpForm" onSubmit={ handleSubmit( bindedHandler ) }>
+        						<form name="signUpForm" onSubmit={ handleSubmit( this.handleFormSubmit.bind(this) ) }>
                                     <fieldset>
                                         <LogoBig className="row offset-bottom-4" />
                                         <div className="row offset-bottom-2">
@@ -114,7 +89,7 @@ class Signup extends Component {
                                                     placeholder="User Name"
                                                     component={ InputAddon }
                                                     className="form-control"
-                                                    disabled={ expextAnswer }
+                                                    disabled={ this.state.expextAnswer }
                                                     label={ <i className="fa fa-user-circle-o" aria-hidden="true"></i> }
                                                         />
                                             </div>
@@ -128,7 +103,7 @@ class Signup extends Component {
                                                     placeholder="Email"
                                                     component={ InputAddon }
                                                     className="form-control"
-                                                    disabled={ expextAnswer }
+                                                    disabled={ this.state.expextAnswer }
                                                     label={ <span> @ </span> }
                                                         />
                                             </div>
@@ -142,7 +117,7 @@ class Signup extends Component {
                                                     placeholder="Password"
                                                     component={ InputAddon }
                                                     className="form-control"
-                                                    disabled={ expextAnswer }
+                                                    disabled={ this.state.expextAnswer }
                                                     label={ <i className="glyphicon glyphicon-lock"></i> }
                                                         />
                                             </div>
@@ -156,7 +131,7 @@ class Signup extends Component {
                                                     placeholder="Confirm Password"
                                                     component={ InputAddon }
                                                     className="form-control"
-                                                    disabled={ expextAnswer }
+                                                    disabled={ this.state.expextAnswer }
                                                     label={ <i className="fa fa-repeat" aria-hidden="true"></i> }
                                                         />
                                             </div>
@@ -168,10 +143,10 @@ class Signup extends Component {
                                                     type="submit"
                                                     bsSize="large"
                                                     bsStyle="primary"
-                                                    disabled={ invalid || expextAnswer }
+                                                    disabled={ invalid || this.state.expextAnswer }
                                                         >
                                                     <span> Sign Up </span>
-                                                    { expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
+                                                    { this.state.expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
                                                 </Button>
                                             </div>
         								</div>
@@ -230,4 +205,4 @@ export default reduxForm({
         return errors;
     },
   // mapStateToProps
-})( connect(state => ({ auth: state.auth }), null)(Signup) );
+})( connect(state => ({/* auth: state.auth */}), null)(Signup) );

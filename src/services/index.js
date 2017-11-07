@@ -8,5 +8,3 @@ export { is };
 export { storage } from './storage';
 export { default as Axios } from './axios-instance';
 
-export { signin, signout, refreshSession } from './authentification';
-

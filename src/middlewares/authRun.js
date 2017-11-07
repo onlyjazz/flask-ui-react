@@ -1,7 +1,8 @@
 
 // local dependencies
-import { Axios, refreshSession, storage } from '../services';
-import { AUTH_RUN, AUTH_ERROR, AUTH_USER } from '../actions/types';
+import { Axios, storage } from '../services';
+import { unauthUser, authUser, authError } from '../actions';
+import { AUTH_RUN } from '../actions/types';
 
 /**
  * @description try to check authentication and restore it
@@ -9,29 +10,41 @@ import { AUTH_RUN, AUTH_ERROR, AUTH_USER } from '../actions/types';
  */
 export function authRun ( {dispatch} ) {
     return next => action => {
-        if ( action.type === AUTH_RUN && storage.get('auth') ) {
-            // set default auth heder
-            Axios.defaults.headers.common['Authorization'] = storage.get('auth').access_token;
-            // get user
-            Axios.get('/private/self')
+        if ( action.type === AUTH_RUN ) {
+            if ( storage.get('auth') ) {
+                // console.log('authRun => ()'
+                //     ,'\n type:', action.type
+                //     ,'\n option:', action
+                // );        
+                // set default auth heder
+                Axios.defaults.headers.common['Authorization'] = storage.get('auth').access_token;
+                // get user
+                Axios.get('/private/self')
                 .then(success => {
-                    dispatch({type: AUTH_USER, user: success.data })
+                    dispatch( authUser(success.data) );
                 })
                 .catch(error => {
-                    refreshSession()
+                    // get authentification tokens
+                    var tokens = storage.get('auth');
+                    // clear default auth heder
+                    delete Axios.defaults.headers.common['Authorization'];
+                    // try to refresh session
+                    Axios
+                        .get('/refreshSession', { params: { token: tokens.refresh_token } } )
                         .then(success => {
                             Axios.get('/private/self')
-                                .then(success => {
-                                    dispatch({type: AUTH_USER, user: success.data })
-                                })
-                                .catch( error => {
-                                    dispatch({type: AUTH_ERROR, error: error })
-                                })
+                            .then(success => {
+                                dispatch( authUser(success.data) );
+                            })
+                            .catch( error => {
+                                dispatch( unauthUser() );
+                            })
                         })
                         .catch(error => {
                             next(action);
                         });
                 });
+            } else dispatch( unauthUser() );
         } else next(action);
     };
 }
