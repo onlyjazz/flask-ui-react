@@ -9,15 +9,14 @@ class Studies extends Component {
     render() {
         return (
             <div className="row">
-                <div className="col-xs-12">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            <strong> Studies </strong>
-                        </div>
-                        <div className="panel-body">
-                            Private content. 
-                        </div>
+                <div className="panel panel-default no-radius">
+                    <div className="panel-heading">
+                        <i className="fa fa-graduation-cap" aria-hidden="true"></i>
+                        <strong> Studies </strong>
                     </div>
+                </div>
+                <div className="col-xs-12">
+                    Private content with study lists.
                 </div>
             </div>
         );

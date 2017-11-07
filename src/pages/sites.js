@@ -9,15 +9,14 @@ class Sites extends Component {
     render() {
         return (
             <div className="row">
-                <div className="col-xs-12">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            <strong> Sites </strong>
-                        </div>
-                        <div className="panel-body">
-                            Private content with site lists. 
-                        </div>
+                <div className="panel panel-default no-radius">
+                    <div className="panel-heading">
+                        <i className="fa fa-list-alt" aria-hidden="true"></i>
+                        <strong> Sites </strong>
                     </div>
+                </div>
+                <div className="col-xs-12">
+                    Private content with sites lists.
                 </div>
             </div>
         );
