@@ -9,22 +9,27 @@ var links = [{
         name: 'Sites',
         icon: 'fa-list-alt',
         pathname: '/app/sites',
+        isActive: /sites/gi,
     }, {
         name: 'Users',
         icon: 'fa-users',
         pathname: '/app/users',
+        isActive: /users/gi,
     }, {
         name: 'Studies',
         icon: 'fa-graduation-cap',
         pathname: '/app/studies',
+        isActive: /studies/gi,
     }, {
         name: 'Measures',
         icon: 'fa-line-chart',
         pathname: '/app/measures',
+        isActive: /measures/gi,
     }, {
         name: 'Monitoring',
         icon: 'fa-eye',
         pathname: '/app/monitoring',
+        isActive: /monitoring/gi,
     },
 ];
 
@@ -34,8 +39,18 @@ function MenuItem ( props, state ) {
     //     ,'\n props:', props
     //     ,'\n state:', state
     // );
+    var to = props.name;
+    var linkClassName = 'list-group-item';
+    if ( props.isActive.test(props.current) ) {
+        linkClassName+=' active';
+    }
+    if ( props.disabled ) {
+        linkClassName+=' disabled';
+        to = props.current;
+    }
+    
     return (
-        <Link className={(props.active?'active ':'')+'list-group-item'} to={props.pathname} disabled={props.disabled}>
+        <Link className={linkClassName} to={to} >
             <i className={props.icon+' fa'} aria-hidden="true"></i> {props.name}
             <span className="badge"> 12 </span>
         </Link>
@@ -56,13 +71,11 @@ class SideMenu extends Component {
     
     render() {
         
-        var current = new RegExp(this.props.history.location.pathname, 'gi');
-        
-        console.log('SideMenu render => ()'
-            ,'\n props:', this.props
-            ,'\n state:', this.state
-            ,'\n current:', current
-        );
+        // console.log('SideMenu render => ()'
+        //     ,'\n props:', this.props
+        //     ,'\n state:', this.state
+        //     ,'\n current:', current
+        // );
         
         return (
             <div className={(this.state.short ? 'short-menu ':'')+'container-fluid'}>
@@ -70,12 +83,19 @@ class SideMenu extends Component {
                     <div id="navSideMenu">
                         <div className="nav-side-menu-inner">
                             <div className="list-group nav-menu">
-                                <ul className="nav nav-tabs menu-head">
-                                    <li className="tab"> 1 </li>
-                                    <li className="tab"> 2 </li>
-                                </ul>
+                                <div className="btn-group menu-head">
+                                    <button type="button" className="btn tab" disabled>
+                                        <i className="fa fa-th-list" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" className="btn tab active">
+                                        <i className="fa fa-columns" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" className="btn tab">
+                                        <i className="fa fa-bar-chart" aria-hidden="true"></i>
+                                    </button>
+                                </div>
                                 <div className="divider"> main menu </div>
-                                { links.map( (link, index) => (<MenuItem { ...link } key={index} active={ current.test(link.pathname) } disabled={false} />) ) }
+                                {links.map( (link, index) => (<MenuItem key={index} {...link} disabled={index == 2} current={this.props.history.location.pathname} />) )}
                             </div>
                         </div>
                     </div>

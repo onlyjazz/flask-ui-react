@@ -44,11 +44,38 @@
     .nav-menu {
         
         .menu-head {
-            height: 40px;
+            height: 43px;
+            width: 100%;
+            border-bottom: 1px solid #1c2837;
             .tab {
-                width: 110px;
+                color: #fff;
+                width: 33.6%;
                 height: 100%;
-                background-color: red;
+                border: 0;
+                .border-radius(0);
+                background: transparent;
+                border-left: 1px solid #1c2837;
+                border-right: 1px solid #1c2837;
+                .text-shadow( 0px -1px 0px rgba(0, 0, 0, 1) );
+                .vertical-gradient (#3b4a5f, #334053, 0%, 100% );
+                .box-shadow( inset 0px 0px 20px 1px rgba(255, 255, 255, 0.1) );
+                &:hover {
+                    color: #00b4ff;
+                    .box-shadow( inset 0px 0px 15px 2px rgba(255, 255, 255, 0.2) );
+                }
+                &:active, &.active {
+                    color: #fff;
+                    .vertical-gradient (#1d2837, #334053, 0%, 100% );
+                    .box-shadow( inset 0px 0px 5px 1px rgba(0, 0, 0, 0.4) );
+                }
+                &:disabled, &.disabled {
+                    color: #999;
+                    cursor: no-drop;
+                    .vertical-gradient (#3b4a5f, #333, 0%, 100% );
+                    .box-shadow( inset 0px 0px 20px 1px rgba(255, 255, 255, 0.1) );
+                }
+                &:first-child { border-left: 0; }
+                &:last-child { border-right: 0; }
             }
         }
         
@@ -59,10 +86,9 @@
             border: none;
             border-bottom: 1px solid #1c2837;
             color: #fff;
-            .text-shadow( 0px -1px 0px #000000 );
             .transition( all .3s ease );
+            .text-shadow( 0px -1px 0px #000000 );
             .vertical-gradient (#394353, #333b4b, 0%, 100% );
-            // .box-shadow( inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2) );
             &:hover {
                 color: #00b4ff;
                 .vertical-gradient (#434d5e, #333b4b, 0%, 100% );
@@ -71,7 +97,11 @@
                 .vertical-gradient (#2487c6, #005286, 0%, 100% );
             }
             &:disabled, &.disabled {
-                
+                color: #999;
+                cursor: no-drop;
+                pointer-events: none;
+                .vertical-gradient (#333, #394353, 0%, 100% );
+                .box-shadow( inset 0px 0px 20px 1px rgba(255, 255, 255, 0.1) );
             }
         }
         
