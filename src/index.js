@@ -1,43 +1,25 @@
 // eslint-disable import/first
 
 // outsource dependencies
+import React from 'react';
 import thunk from 'redux-thunk';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import React, { Component } from 'react';
+import ReduxToastr from 'react-redux-toastr'
 import { createStore, applyMiddleware } from 'redux';
-import { Link, Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
 // STYLES inject ...
 import './style';
 
 // local dependencies
 import reducers from './reducers';
-
-// local dependencies
-// pages publick
-import Signin from './pages/signin.js';
-import Signup from './pages/signup';
-import NoMatch from './pages/no-match';
-import Forgot from './pages/forgot_password';
-// pages private
-import Users from './pages/users';
-import Measures from './pages/measures';
-import Monitoring from './pages/monitoring';
-import Sites from './pages/sites';
-import Studies from './pages/studies';
-
-// components
-import Header from './components/header';
-import SideMenu from './components/side-menu';
-import PrivateRoute from './components/private-route';
+import { AUTH_RUN } from './actions/types';
+import { payloads, errors, authRun } from './middlewares';
+import { Header, SideMenu, Private } from './components';
+import { Signin, Signup, NoMatch, ForgotPassword, Users, Measures, Monitoring, Sites, Studies } from './pages';
 
 // configuration
-// NOTE: this API requires redux@>=3.1.0
-var store = createStore(
-  reducers,
-  applyMiddleware(thunk)
-);
 
 /**
  * @description Root Component of application
@@ -45,44 +27,56 @@ var store = createStore(
  * @public
  */
 function Root ( props, state ) {
-    
-    // console.log('Root render =>'
-    //     ,'\n props:', props
-    //     ,'\n state:', state
-    // );
-    
     return (
-        <Router>
-            <div>
-                {/* COMMON FOR PRIVATE */}
-                <Route path="/app" component={ Header } />
-                <Route path="/app" component={ SideMenu } />
-                <Switch>
-                    {/* PUBLICK */}
-                    <Route exact={true} path="/" component={ Signin } />
-                    <Route exact={true} path="/signup" component={ Signup } />
-                    <Route exact={true} path="/forgot" component={ Forgot } />
-                    {/* PRIVATE */}
-                    <PrivateRoute path="/app" component={ Users } />
-                    <PrivateRoute path="/app/sites" component={ Sites } />
-                    <PrivateRoute path="/app/users" component={ Users } />
-                    <PrivateRoute path="/app/studies" component={ Studies } />
-                    <PrivateRoute path="/app/measures" component={ Measures } />
-                    <PrivateRoute path="/app/monitoring" component={ Monitoring } />
-                    {/* OTHERWISE */}
-                    <Route component={ NoMatch } />
-                </Switch>
-            </div>
-        </Router>
+        <Router><div>
+            <Switch>
+                {/* PUBLICK */}
+                <Route exact={true} path="/" component={ Signin } />
+                <Route exact={true} path="/signup" component={ Signup } />
+                <Route exact={true} path="/forgot" component={ ForgotPassword } />
+                {/* PRIVATE */}
+                <Private redirect="/">
+                    <Header />
+                    <SideMenu>
+                        <Route exact={true} path="/app/users" component={ Users } />
+                        <Route exact={true} path="/app/sites" component={ Sites } />
+                        <Route exact={true} path="/app/studies" component={ Studies } />
+                        <Route exact={true} path="/app/measures" component={ Measures } />
+                        <Route exact={true} path="/app/monitoring" component={ Monitoring } />
+                    </SideMenu>
+                </Private>
+                {/* OTHERWISE */}
+                <Route component={ NoMatch } />
+            </Switch>
+            <ReduxToastr
+                timeOut={4000}
+                progressBar={true}
+                newestOnTop={false}
+                position="top-right"
+                transitionIn="fadeIn"
+                transitionOut="fadeOut"
+                preventDuplicates={true}
+                    >
+            </ReduxToastr>
+        </div></Router>
     );
 }
+
+// NOTE: this API requires redux@>=3.1.0
+var store = createStore(
+  reducers,
+  applyMiddleware( authRun, thunk, payloads, errors )
+);
+
+// NOTE: actions which will be executed before application was rendered
+store.dispatch({type: AUTH_RUN});
 
 /**
  * @description insert Roo Component in ReactDOM
  * @public
  */
 ReactDOM.render(
-    <Provider store={store} >
+    <Provider store={store}>
         <Root />
     </Provider>
     ,

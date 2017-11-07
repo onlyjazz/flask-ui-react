@@ -1,11 +1,19 @@
 
 // outsource dependencies
 import { combineReducers } from 'redux';
-import { reducer as reducerReduxForm } from 'redux-form';
+import { reducer as form } from 'redux-form';
+import { reducer as toastr } from 'react-redux-toastr'
+
+// local  dependencies
+import auth from './authentification';
+import nav from './nav';
 
 var rootReducer = combineReducers({
     state: (state = {}) => state,
-    form: reducerReduxForm,
+    toastr,
+    auth,
+    form,
+    nav,
 });
 
 export default rootReducer;

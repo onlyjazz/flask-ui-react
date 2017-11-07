@@ -9,15 +9,14 @@ class Monitoring extends Component {
     render() {
         return (
             <div className="row">
-                <div className="col-xs-12">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            <strong> Monitoring </strong>
-                        </div>
-                        <div className="panel-body">
-                            Private content of monitoring. 
-                        </div>
+                <div className="panel panel-default no-radius">
+                    <div className="panel-heading">
+                        <i className="fa fa-eye" aria-hidden="true"></i>
+                        <strong> Monitoring </strong>
                     </div>
+                </div>
+                <div className="col-xs-12">
+                    Private content with monitoring.
                 </div>
             </div>
         );

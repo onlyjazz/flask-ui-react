@@ -5,7 +5,7 @@
 .clearfix:after { clear: both; }
 
 * {
-
+    :focus { outline: none !important; }
     // background
     // -------------------------
     
@@ -20,6 +20,10 @@
     .text-no {
         text-decoration: line-through;
         text-decoration-color: red;
+    }
+    
+    .no-radius {
+        .border-radius(0);
     }
     // ADDITION
     // ----------------------
