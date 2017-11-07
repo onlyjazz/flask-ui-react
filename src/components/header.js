@@ -29,11 +29,11 @@ class Header extends Component {
         
         var { nav, auth, navMinify, navMaximize } = this.props;
         
-        console.log('Header reducer => ()'
-            ,'\n props:', this.props
-            ,'\n state:', this.state
-            ,'\n nav:', nav
-        );
+        // console.log('Header reducer => ()'
+        //     ,'\n props:', this.props
+        //     ,'\n state:', this.state
+        //     ,'\n nav:', nav
+        // );
         
         return (
             <header id="header" className="container-fluid">
@@ -52,9 +52,9 @@ class Header extends Component {
                     
                     <div className="col-xs-7">
                         <ul className="list-inline pull-right">
-                            <li className="top-indent-1">
-                                <i className="fa fa-bell fa-lg" aria-hidden="true"></i>
-                            </li>
+                            {/* <li className="">
+                                <i className="fa fa-bell fa-lg top-indent-2" aria-hidden="true"></i>
+                            </li> */}
                             <li className="user-menu">
                                 <DropdownButton
                                     id="userMenu"
