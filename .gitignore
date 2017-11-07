@@ -77,4 +77,5 @@ environment/local.*
 /build
 .tmp
 src/style/*.css
+!src/style/vendors/*.css
 src/style/*.map
