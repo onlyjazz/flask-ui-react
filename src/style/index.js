@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap-theme.css';
 // font awesome
 import 'font-awesome/css/font-awesome.css'
 // toastr
-import './toastr.css';
+import './vendors/toastr.css';
 
 // app styles (result of preprocessor less)
 import './all.css';
