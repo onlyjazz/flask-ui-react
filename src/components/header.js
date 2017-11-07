@@ -5,19 +5,35 @@ import React, { Component } from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 // local dependencies
+import defaultAvatar from '../images/default-avatar.png';
 import { LogoSmall } from '../components';
 import { signout, navMinify, navMaximize } from '../actions';
+
+function loggedUser ( user ) {
+    return (
+        <ul className="list-unstyled list-inline profile-toggle">
+            <li className="avatar">
+                <img alt={user.name} src={user.avatar||defaultAvatar} />
+            </li>
+            <li className="user">
+                <div className="name"> {user.name} </div>
+                <div className="status"> Admin </div>
+            </li>
+            <li> <i className="fa fa-caret-down" aria-hidden="true"></i> </li>
+        </ul>
+    );
+}
 
 class Header extends Component {
     render() {
         
-        var { nav, navMinify, navMaximize } = this.props;
+        var { nav, auth, navMinify, navMaximize } = this.props;
         
-        // console.log('Header reducer => ()'
-        //     ,'\n props:', this.props
-        //     ,'\n state:', this.state
-        //     ,'\n nav:', nav
-        // );
+        console.log('Header reducer => ()'
+            ,'\n props:', this.props
+            ,'\n state:', this.state
+            ,'\n nav:', nav
+        );
         
         return (
             <header id="header" className="container-fluid">
@@ -35,16 +51,15 @@ class Header extends Component {
                     </div>
                     
                     <div className="col-xs-7">
-                        <ul className="list-inline pull-right top-indent-1">
-                            <li className="notify-bell">
+                        <ul className="list-inline pull-right">
+                            <li className="top-indent-1">
                                 <i className="fa fa-bell fa-lg" aria-hidden="true"></i>
                             </li>
                             <li className="user-menu">
                                 <DropdownButton
                                     id="userMenu"
                                     noCaret={true}
-                                    bsStyle="primary"
-                                    title={(<i className="fa fa-bars" aria-hidden="true"></i>)}
+                                    title={loggedUser(auth.user)}
                                         >
                                     <MenuItem>Action</MenuItem>
                                     <MenuItem>Another action</MenuItem>
@@ -61,4 +76,4 @@ class Header extends Component {
     }
 }
 
-export default connect(state => ({nav: state.nav}), { signout, navMinify, navMaximize })(Header);
+export default connect(state => ({nav: state.nav, auth: state.auth}), { signout, navMinify, navMaximize })(Header);

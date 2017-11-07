@@ -13,6 +13,7 @@ import { config } from '../constants';
  */
 var axiosInstance = axios.create({
     baseURL: config.apiPath,
+    withCredentials: true,
 });
 
 export default axiosInstance;
