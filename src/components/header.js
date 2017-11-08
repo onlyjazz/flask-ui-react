@@ -10,7 +10,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import ArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import ArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
-import { white, deepPurple600 } from 'material-ui/styles/colors'
+import { white, deepPurple600 } from 'material-ui/styles/colors';
 
 // local dependencies
 import { signout, navMinify, navMaximize } from '../actions';
@@ -37,7 +37,7 @@ class Header extends Component {
                 targetOrigin={{horizontal: 'right', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                     >
-                <MenuItem disabled="true" primaryText={'Signed in as '+this.props.auth.user.name} />
+                <MenuItem disabled={true} primaryText={'Signed in as '+this.props.auth.user.name} />
                 <Link className="" to={'/app/users'}>
                     <img className="top-indent-2" alt="Flask data" src={logo} style={{width: '34px', height: '35px'}} />
                 </Link>
@@ -62,7 +62,7 @@ class Header extends Component {
                 <AppBar
                     title={ <Toogle toogle={Number(nav.minify)} onClick={()=> nav.minify?navMaximize():navMinify() }/> }
                     iconElementRight={ this.userMenu() }
-                    style={{backgroundColor: deepPurple600, height: '64px'}}
+                    style={{backgroundColor: deepPurple600, height: '64px', boxShadow: '0 3px 3px 0 rgba(0,0,0,0.14), 0 3px 4px 0 rgba(0,0,0,0.12), 0 1px 8px 0 rgba(0,0,0,0.20)'}}
                     iconElementLeft={ <Logo /> }
                         />
 			</header>

@@ -4,83 +4,82 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
+import { blueGrey900 } from 'material-ui/styles/colors';
+import Menu from 'material-ui/Menu';
+import Paper from 'material-ui/Paper';
+import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
+import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
+
 // local dependencies
-import { navChangeMenu } from '../actions';
-import { mainMenu } from '../constants';
-import { subMenu } from '../constants';
-import { statisticMenu } from '../constants';
+
+// configuration
 
 class SideMenu extends Component {
     
-    menuTabs () {
-        
-        var { nav, navChangeMenu } = this.props;
-        
+    isActive ( pathname ) {
+        return this.props.history.location.pathname === pathname ? 'active' : '';
+    }
+    
+    
+    FONTS !!!!!!!!!!!!!!!!!!!!
+    
+    
+    
+    menuList () {
         return (
-            <div className="btn-group menu-head">
-                <button
-                    type="button"
-                    onClick={()=> nav.tabIndex!==0&&navChangeMenu(0, mainMenu) }
-                    className={'btn tab'+(nav.tabIndex===0 ? ' active' : '')}
-                        >
-                    <i className="fa fa-th-list" aria-hidden="true"></i>
-                </button>
-                <button
-                    type="button"
-                    onClick={()=> nav.tabIndex!==1&&navChangeMenu(1, subMenu) }
-                    className={'btn tab'+(nav.tabIndex===1 ? ' active' : '')}
-                        >
-                    <i className="fa fa-columns" aria-hidden="true"></i>
-                </button>
-                <button
-                    type="button"
-                    onClick={()=> nav.tabIndex!==2&&navChangeMenu(2, statisticMenu) }
-                    className={'btn tab'+(nav.tabIndex===2 ? ' active' : '')}>
-                    <i className="fa fa-bar-chart" aria-hidden="true"></i>
-                </button>
-            </div>
+            <ul className="list-unstyled">
+                <li className="menu-item"> 
+                    <Link className={this.isActive('/app/studies')} to="/app/studies">
+                        <i className="material-icons" style={{paddingRight: '7px'}}>dashboard</i>  Studies
+                    </Link>
+                    <hr/>
+                </li>
+                <li className="menu-item">
+                    <Link className={this.isActive('/app/sites')} to="/app/sites">
+                        <ActionDashboard /> Sites
+                    </Link>
+                    <hr/>
+                </li>
+            </ul>
         );
     }
-    
-    menuList ( list ) {
-        var current = this.props.history.location.pathname,
-            menu = [],
-            key = 0;
         
-        for ( ; key < list.length; key ++ ) {
-            var { divider, link, name, pathname, icon, matcher, disabled, badge } = list[key];
-            if ( divider ) {
-                menu.push( <div key={key} className="divider"> { name } </div> );
-            }
-            
-            if ( link ) {
-                var linkClassName = '';
-                if ( matcher && (new RegExp(matcher, 'gi')).test(current) ) {
-                    linkClassName+=' active';
-                }
-                disabled&&(linkClassName+=' disabled');
-                menu.push(
-                    <Link key={key} className={'list-group-item'+linkClassName} to={disabled?current:pathname} >
-                        <i className={icon+' fa'} aria-hidden="true"></i> {name}
-                        {badge&&(<span className="badge"> {String(badge)} </span>)}
-                    </Link>
-                );
-            }
-        }
-        return menu;
-    }
-    
     render() {
         
         return (
             <div className={(this.props.nav.minify ? 'short-menu ':'')+'container-fluid'}>
                 <div className="row">
                     <div id="navSideMenu">
-                        <div className="nav-side-menu-inner">
-                            <div className="list-group nav-menu">
-                                { this.menuTabs() }
-                                { this.menuList( this.props.nav.menu ) }
-                            </div>
+                        <div className="nav-side-menu-inner" style={{backgroundColor: blueGrey900}}>
+                            { this.menuList() }
+                            {/* <Paper style={{width: '144px', background: 'transparent'}}>
+                                <Menu style={{width: '144px', background: 'transparent'}}>
+                                    <MenuItem style={itemStyle}>
+                                        <ActionInfo />
+                                        <Link style={this.isActive('/app/studies')} to="/app/studies"> Studies </Link>
+                                    </MenuItem>
+                                    <Divider />
+                                    <MenuItem style={itemStyle}>
+                                        <ActionInfo />
+                                        <Link style={this.isActive('/app/sites')} to="/app/sites"> Sites </Link>
+                                    </MenuItem>
+                                    <MenuItem style={itemStyle}>
+                                        <ActionInfo />
+                                        <Link style={this.isActive('/app/users')} to="/app/users"> Users </Link>
+                                    </MenuItem>
+                                    <MenuItem style={itemStyle}>
+                                        <ActionInfo />
+                                        <Link style={this.isActive('/app/measures')} to="/app/measures"> Measures </Link>
+                                    </MenuItem>
+                                    <MenuItem style={itemStyle}>
+                                        <ActionInfo />
+                                        <Link style={this.isActive('/app/monitoring')} to="/app/monitoring"> Monitoring </Link>
+                                    </MenuItem>
+                                    <Divider></Divider>
+                                    <MenuItem primaryText="All mail" leftIcon={<ActionInfo />} rightIcon={<ActionInfo />} />
+                                </Menu>
+                            </Paper> */}
                         </div>
                     </div>
                     <div id="navContent">
@@ -94,8 +93,4 @@ class SideMenu extends Component {
     }
 }
 
-export default withRouter(connect(
-    state => ({nav: state.nav }),
-    {navChangeMenu}
-)(SideMenu));
-
+export default withRouter(connect( state => ({nav: state.nav }), null)(SideMenu));
