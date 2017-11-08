@@ -7,8 +7,8 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import ReduxToastr from 'react-redux-toastr'
 import { createStore, applyMiddleware } from 'redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
-
 // STYLES inject ...
 import './style';
 
@@ -77,7 +77,9 @@ store.dispatch({type: AUTH_RUN});
  */
 ReactDOM.render(
     <Provider store={store}>
-        <Root />
+        <MuiThemeProvider>
+            <Root />
+        </MuiThemeProvider>
     </Provider>
     ,
     document.getElementById('root')
