@@ -14,11 +14,12 @@ import ArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import { white, deepPurple600 } from 'material-ui/styles/colors';
 
 // local dependencies
-import { signout, navMinify, navMaximize } from '../actions';
 import logo from '../images/logo.png';
+import { USERS } from '../constants/routes';
+import { signout, navMinify, navMaximize } from '../actions';
 
 const Logo = ( props ) => (
-    <Link className="logo" to="/app/users" style={{padding: '0 0 0 10px'}} { ...props }>
+    <Link className="logo" to={USERS.LINK()} style={{padding: '0 0 0 10px'}} { ...props }>
         <img className="top-indent-2" alt="Flask data" src={logo} style={{width: '35px', height: '36px'}} />
     </Link>
 );
@@ -40,7 +41,7 @@ class Header extends Component {
                     >
                 <MenuItem disabled={true} style={{fontWeight: 'bolder', color: '#000'}} primaryText={'Signed in as '+this.props.auth.user.name} />
                 <Divider />
-                <MenuItem primaryText="Profile" containerElement={<Link to={'/app/users'} />} />
+                <MenuItem primaryText="Profile" containerElement={<Link to={USERS.LINK()} />} />
                 <MenuItem primaryText="Logout" onClick={this.props.signout} />
             </IconMenu>
         );
