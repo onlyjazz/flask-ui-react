@@ -8,9 +8,10 @@ import { Button } from 'react-bootstrap';
 import { toastr } from 'react-redux-toastr';
 
 // local dependencies
-import LogoBig from '../components/logo-big';
-import InputAddon from '../components/input-addon';
 import { Axios } from '../services';
+import { LogoBig } from '../components';
+import { InputAddon } from '../components';
+import { SIGN_IN } from '../constants/routes';
 
 /**
  * @description page forgot password
@@ -131,7 +132,7 @@ class ForgotPassword extends Component {
                                 </form>
                             </div>
                             <div className="panel-footer text-right">
-                                <Link to="/"> Back to Login </Link>
+                                <Link to={SIGN_IN.LINK()}> Back to Login </Link>
                             </div>
                         </div>
                     </div>

@@ -9,9 +9,10 @@ import { toastr } from 'react-redux-toastr';
 
 // local dependencies
 import { authUser } from '../actions';
-import LogoBig from '../components/logo-big';
-import InputAddon from '../components/input-addon';
+import { LogoBig } from '../components';
+import { InputAddon } from '../components';
 import { Axios, storage } from '../services';
+import { SIGN_UP, FORGOT_PASSWORD } from '../constants/routes';
 
 class Signin extends Component {
     
@@ -170,10 +171,10 @@ class Signin extends Component {
         					<div className="panel-footer">
                                 <div className="row">
                                     <div className="col-xs-6">
-                                        <Link to="/signup"> Create an Account </Link>
+                                        <Link to={SIGN_UP.LINK()}> Create an Account </Link>
                                     </div>
                                     <div className="col-xs-6 text-right">
-                                        <Link to="/forgot"> Forgot password </Link>
+                                        <Link to={FORGOT_PASSWORD.LINK()}> Forgot password </Link>
                                     </div>
                                 </div>
         					</div>

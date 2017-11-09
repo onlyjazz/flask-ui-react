@@ -8,17 +8,17 @@ import { is } from '../services';
         PUBLICK
 ---------------------------------------------------*/
 export const SIGN_IN = {
-    LNIK: linkTo.bind({optional: false}, '/'),
+    LINK: linkTo.bind({optional: false}, '/'),
     ROUTE: '/',
 };
 
 export const SIGN_UP = {
-    LNIK: linkTo.bind({optional: false}, '/signup'),
+    LINK: linkTo.bind({optional: false}, '/signup'),
     ROUTE: '/signup',
 };
 
 export const FORGOT_PASSWORD = {
-    LNIK: linkTo.bind({optional: false}, '/signup'),
+    LINK: linkTo.bind({optional: false}, '/signup'),
     ROUTE: '/forgot',
 };
 
@@ -26,27 +26,27 @@ export const FORGOT_PASSWORD = {
         PRIVATE
 ---------------------------------------------------*/
 export const USERS = {
-    LNIK: linkTo.bind({optional: false}, '/app/users'),
+    LINK: linkTo.bind({optional: false}, '/app/users'),
     ROUTE: '/app/users',
 };
 
 export const STUDIES = {
-    LNIK: linkTo.bind({optional: false}, '/app/studies'),
+    LINK: linkTo.bind({optional: false}, '/app/studies'),
     ROUTE: '/app/studies',
 };
 
 export const SITES = {
-    LNIK: linkTo.bind({optional: false}, '/app/sites'),
+    LINK: linkTo.bind({optional: false}, '/app/sites'),
     ROUTE: '/app/sites',
 };
 
 export const MEASURES = {
-    LNIK: linkTo.bind({optional: false}, '/app/measures'),
+    LINK: linkTo.bind({optional: false}, '/app/measures'),
     ROUTE: '/app/measures',
 };
 
 export const MONITORING = {
-    LNIK: linkTo.bind({optional: false}, '/app/monitoring'),
+    LINK: linkTo.bind({optional: false}, '/app/monitoring'),
     ROUTE: '/app/monitoring',
 };
 
