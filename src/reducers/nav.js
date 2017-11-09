@@ -2,13 +2,10 @@
 // outsource dependencies
 
 // local dependencies
-import { NAV_MINIFY, NAV_MAXIMIZE, NAV_CHANGE_MENU } from '../actions/types';
-import { mainMenu } from '../constants';
-import { is } from '../services';
+import { NAV_MINIFY, NAV_MAXIMIZE } from '../actions/types';
 
 var initialState = {
     minify: false,
-    menu: mainMenu,
     tabIndex: 0,
 };
 // configuration
@@ -28,9 +25,5 @@ export default function ( state = initialState, action ) {
         case NAV_MINIFY: return { ...state, ...option, minify: true };
         //
         case NAV_MAXIMIZE: return { ...state, ...option, minify: false };
-        //
-        case NAV_CHANGE_MENU: if ( is.array(option.menu) ) {
-            return { ...state, ...option };
-        } else return { ...state, ...option, ...initialState };
     }
 }
