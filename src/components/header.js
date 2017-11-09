@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
+import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
@@ -17,8 +18,8 @@ import { signout, navMinify, navMaximize } from '../actions';
 import logo from '../images/logo.png';
 
 const Logo = ( props ) => (
-    <Link className="logo" to="/app/users" { ...props }>
-        <img className="top-indent-2" alt="Flask data" src={logo} style={{width: '34px', height: '35px'}} />
+    <Link className="logo" to="/app/users" style={{padding: '0 0 0 10px'}} { ...props }>
+        <img className="top-indent-2" alt="Flask data" src={logo} style={{width: '35px', height: '36px'}} />
     </Link>
 );
 
@@ -37,11 +38,9 @@ class Header extends Component {
                 targetOrigin={{horizontal: 'right', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                     >
-                <MenuItem disabled={true} primaryText={'Signed in as '+this.props.auth.user.name} />
-                <Link className="" to={'/app/users'}>
-                    <img className="top-indent-2" alt="Flask data" src={logo} style={{width: '34px', height: '35px'}} />
-                </Link>
-                <MenuItem primaryText="profile" />
+                <MenuItem disabled={true} style={{fontWeight: 'bolder', color: '#000'}} primaryText={'Signed in as '+this.props.auth.user.name} />
+                <Divider />
+                <MenuItem primaryText="Profile" containerElement={<Link to={'/app/users'} />} />
                 <MenuItem primaryText="Logout" onClick={this.props.signout} />
             </IconMenu>
         );
@@ -60,9 +59,9 @@ class Header extends Component {
         return (
             <header id="header">
                 <AppBar
-                    title={ <Toogle toogle={Number(nav.minify)} onClick={()=> nav.minify?navMaximize():navMinify() }/> }
                     iconElementRight={ this.userMenu() }
-                    style={{backgroundColor: deepPurple600, height: '64px', boxShadow: '0 3px 3px 0 rgba(0,0,0,0.14), 0 3px 4px 0 rgba(0,0,0,0.12), 0 1px 8px 0 rgba(0,0,0,0.20)'}}
+                    title={ <Toogle toogle={Number(nav.minify)} onClick={()=> nav.minify?navMaximize():navMinify() }/> }
+                    style={{backgroundColor: deepPurple600, height: '58px', boxShadow: '0 3px 3px 0 rgba(0,0,0,0.14), 0 3px 4px 0 rgba(0,0,0,0.12), 0 1px 8px 0 rgba(0,0,0,0.20)'}}
                     iconElementLeft={ <Logo /> }
                         />
 			</header>

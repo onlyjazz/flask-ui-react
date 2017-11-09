@@ -11,4 +11,3 @@ export const UNAUTH_USER = 'unauth_user';
 // navigation
 export const NAV_MINIFY = 'nav_minify';
 export const NAV_MAXIMIZE = 'nav_maximize';
-export const NAV_CHANGE_MENU = 'nav_tab_change';
