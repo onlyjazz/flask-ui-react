@@ -6,6 +6,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { blueGrey900 } from 'material-ui/styles/colors';
 
 // local dependencies
+import { USERS, STUDIES, SITES, MEASURES, MONITORING } from '../constants/routes';
 
 // configuration
 
@@ -19,31 +20,31 @@ class SideMenu extends Component {
         return (
             <ul className="list-unstyled list-menu">
                 <li className="menu-item"> 
-                    <Link className={this.isActive('/app/studies')} to="/app/studies">
+                    <Link className={this.isActive( USERS.LINK() )} to={USERS.LINK()}>
                         <i className="material-icons" style={{paddingRight: '7px',fontSize: '22px', paddingBottom: '2px'}}>dashboard</i>  Studies
                     </Link>
                     <hr/>
                 </li>
                 <li className="menu-item"> 
-                    <Link className={this.isActive('/app/sites')} to="/app/sites">
+                    <Link className={this.isActive( SITES.LINK() )} to={SITES.LINK()}>
                         <i className="material-icons" style={{paddingRight: '7px',fontSize: '22px', paddingBottom: '2px'}}>assignment</i>  Sites
                     </Link>
                     <hr/>
                 </li>
                 <li className="menu-item"> 
-                    <Link className={this.isActive('/app/users')} to="/app/users">
+                    <Link className={this.isActive( STUDIES.LINK() )} to={STUDIES.LINK()}>
                         <i className="material-icons" style={{paddingRight: '7px',fontSize: '22px', paddingBottom: '2px'}}>people</i>  Users
                     </Link>
                     <hr/>
                 </li>
                 <li className="menu-item"> 
-                    <Link className={this.isActive('/app/measures')} to="/app/measures">
+                    <Link className={this.isActive( MEASURES.LINK() )} to={MEASURES.LINK()}>
                         <i className="material-icons" style={{paddingRight: '7px',fontSize: '22px', paddingBottom: '2px'}}>trending_up</i>  Measures
                     </Link>
                     <hr/>
                 </li>
                 <li className="menu-item"> 
-                    <Link className={this.isActive('/app/monitoring')} to="/app/monitoring">
+                    <Link className={this.isActive( MONITORING.LINK() )} to={MONITORING.LINK()}>
                         <i className="material-icons" style={{paddingRight: '7px',fontSize: '22px', paddingBottom: '2px'}}>swap_calls</i>  Monitoring
                     </Link>
                 </li>

@@ -18,7 +18,7 @@ export const SIGN_UP = {
 };
 
 export const FORGOT_PASSWORD = {
-    LINK: linkTo.bind({optional: false}, '/signup'),
+    LINK: linkTo.bind({optional: false}, '/forgot'),
     ROUTE: '/forgot',
 };
 

@@ -12,7 +12,7 @@ import { authUser } from '../actions';
 import { LogoBig } from '../components';
 import { InputAddon } from '../components';
 import { Axios, storage } from '../services';
-import { SIGN_UP, FORGOT_PASSWORD } from '../constants/routes';
+import { SIGN_UP, FORGOT_PASSWORD, STUDIES } from '../constants/routes';
 
 class Signin extends Component {
     
@@ -49,7 +49,7 @@ class Signin extends Component {
                         // update state
                         dispatch( authUser(success.data) );
                         // redirect to app
-                        this.props.history.push('/app/studies'); // does not work if action async
+                        this.props.history.push(STUDIES.LINK()); // does not work if action async
                     })
                     .catch(error => {
                         // clear tokens
@@ -93,14 +93,14 @@ class Signin extends Component {
     componentDidUpdate () {
         var { auth, history } = this.props;
         if ( auth.authenticated ) {
-            history.push('/app/studies');
+            history.push(STUDIES.LINK());
         }
     }
     
     componentDidMount () {
         setTimeout(()=> { // Fucking react-redux does not update the state for any pre-render methods for initial rendering
             if ( this.props.auth.authenticated ) {
-                this.props.history.push('/app/studies');
+                this.props.history.push(STUDIES.LINK());
             }
         }, 10);
     }
