@@ -11,7 +11,7 @@ import { toastr } from 'react-redux-toastr';
 import { Axios } from '../services';
 import { LogoBig } from '../components';
 import { InputAddon } from '../components';
-import { SIGN_IN, STUDIES } from '../constants/routes';
+import { SIGN_IN, MEASURES } from '../constants/routes';
 
 /**
  * @description page forgot password
@@ -70,14 +70,14 @@ class ForgotPassword extends Component {
     componentDidUpdate () {
         var { auth, history } = this.props;
         if ( auth.authenticated ) {
-            history.push(STUDIES.LINK());
+            history.push(MEASURES.LINK());
         }
     }
     
     componentDidMount () {
         setTimeout(()=> { // Fucking react-redux does not update the state for any pre-render methods for initial rendering
             if ( this.props.auth.authenticated ) {
-                this.props.history.push(STUDIES.LINK());
+                this.props.history.push(MEASURES.LINK());
             }
         }, 10);
     }
