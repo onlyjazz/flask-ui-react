@@ -62,7 +62,7 @@ class Header extends Component {
                 <AppBar
                     iconElementRight={ this.userMenu() }
                     title={ <Toogle toogle={Number(nav.minify)} onClick={()=> nav.minify?navMaximize():navMinify() }/> }
-                    style={{backgroundColor: deepPurple600, height: '58px', boxShadow: '0 3px 3px 0 rgba(0,0,0,0.14), 0 3px 4px 0 rgba(0,0,0,0.12), 0 1px 8px 0 rgba(0,0,0,0.20)'}}
+                    style={{backgroundColor: deepPurple600, height: '64px', boxShadow: '0 3px 3px 0 rgba(0,0,0,0.14), 0 3px 4px 0 rgba(0,0,0,0.12), 0 1px 8px 0 rgba(0,0,0,0.20)'}}
                     iconElementLeft={ <Logo /> }
                         />
 			</header>
