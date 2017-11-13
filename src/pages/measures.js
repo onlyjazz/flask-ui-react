@@ -6,8 +6,11 @@ import { Link } from 'react-router-dom';
 
 import Paper from 'material-ui/Paper';
 import Toggle from 'material-ui/Toggle';
+import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import SelectField from 'material-ui/SelectField';
+import RaisedButton from 'material-ui/RaisedButton';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 // local dependencies
@@ -52,6 +55,43 @@ const tableData = [
   },
 ];
 
+var sortIcon = {
+    'sort': 'glyphicon glyphicon-sort',
+    'sort_asc': 'glyphicon glyphicon-sort-by-attributes',   
+    'sort_desc': 'glyphicon glyphicon-sort-by-attributes-alt',
+    
+    'alphabet': 'glyphicon glyphicon-sort',
+    'alphabet_asc': 'glyphicon glyphicon-sort-by-alphabet',
+    'alphabet_desc': 'glyphicon glyphicon-sort-by-alphabet-alt',
+    
+    'alphabet': 'glyphicon glyphicon-sort',
+    'alphabet_asc': 'glyphicon glyphicon-sort-by-alphabet',
+    'alphabet_desc': 'glyphicon glyphicon-sort-by-alphabet-alt',
+    
+    'order': 'glyphicon glyphicon-sort',
+    'order_asc': 'glyphicon glyphicon-sort-by-order',
+    'order_desc': 'glyphicon glyphicon-sort-by-order-alt',
+};
+
+
+function Sort ( props ) {
+    var type = sortIcon[props.type] ? props.type : 'sort';
+    var className;
+    switch ( props.status ) {
+        case true: className = sortIcon[type+'_asc'];
+        break;case false: className = sortIcon[type+'_desc'];
+        break;default: className = sortIcon[type];
+    }
+    
+    return (
+        <strong className="">
+            { props.children }
+            <span className={className} aria-hidden="true"></span>
+        </strong>
+    );
+}
+
+
 class Measures extends Component {
     constructor (props) {
         super(props)
@@ -67,6 +107,7 @@ class Measures extends Component {
             deselectOnClickaway: true,
             showCheckboxes: true,
             height: 'auto',
+            sort: 'non'
         };
         
         this.toggle = ( event, toggled ) => {
@@ -96,10 +137,43 @@ class Measures extends Component {
         );
     }
   
+    Filter () {
+        return (
+            <Paper zDepth={2} className="clearfix">
+                <h2 className="col-xs-12 top-indent-2 offset-bottom-4" style={{fontSize: '24px', fontWeight: 'normal'}}>
+                    Filters
+                </h2>
+                <div className="col-xs-12 offset-bottom-4">
+                    <SelectField
+                        fullWidth={true}
+                        floatingLabelText="Frequency"
+                        value={this.state.value}
+                        onChange={this.handleChange}
+                            >
+                        <MenuItem value={1} primaryText="Never" />
+                        <MenuItem value={2} primaryText="Every Night" />
+                        <MenuItem value={3} primaryText="Weeknights" />
+                        <MenuItem value={4} primaryText="Weekends" />
+                        <MenuItem value={5} primaryText="Weekly" />
+                    </SelectField>
+                </div>
+                <div className="col-xs-12 offset-bottom-4">
+                    <FlatButton
+                        label="APPLY"
+                        primary={true}
+                        disabled={false}
+                        fullWidth={true}
+                        containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: mesure.id})*/} />}
+                            />
+                </div>
+            </Paper>
+        )
+    }
+  
     Table () {
         
         return (
-            <Paper style={{overflow: 'visible', tableStyle: {overflow: 'visible'}}}>                
+            <Paper zDepth={2} style={{overflow: 'visible', tableStyle: {overflow: 'visible'}}}>                
                 <Table
                     style={{overflow: 'visible'}} /* Fucking material essols */
                     height={this.state.height}
@@ -113,8 +187,11 @@ class Measures extends Component {
                         adjustForCheckbox={this.state.showCheckboxes}
                         enableSelectAll={this.state.enableSelectAll}
                             >
-                        <TableRow>
-                            <TableHeaderColumn tooltip="Study propertie" tooltipStyle={tooltipOverideStyle}> Study </TableHeaderColumn>
+                        <TableRow onCellClick={(event) => {
+                            // console.log(event.target)
+                            this.setState({sort: !this.state.sort});
+                        }}>
+                            <TableHeaderColumn> <Sort status={this.state.sort}> Study </Sort> </TableHeaderColumn>
                             <TableHeaderColumn tooltip="Measure propertie" tooltipStyle={tooltipOverideStyle}> Measure </TableHeaderColumn>
                             <TableHeaderColumn tooltip="Event propertie" tooltipStyle={tooltipOverideStyle}> Event </TableHeaderColumn>
                             <TableHeaderColumn tooltip="CRF abbr" tooltipStyle={tooltipOverideStyle}> CRF </TableHeaderColumn>
@@ -152,24 +229,31 @@ class Measures extends Component {
     }
   
     render() {
+        
         return (
-            <div className="row">
-                <div className="panel panel-default no-radius">
-                    <div className="panel-heading">
-                        <i className="fa fa-line-chart" aria-hidden="true"></i>
-                        <strong> Measures </strong>
-                        <FlatButton
-                            primary={true}
-                            disabled={false}
-                            style={{marginTop: '-8px', float: 'right'}}
-                            label={<span><i className="fa fa-plus" aria-hidden="true"></i> New Measure </span>}
+            <div className="custom-content-container">
+                <div className="row top-indent-8 offset-bottom-4">
+                    <h1 className="col-xs-12 col-sm-8 offset-0 offset-bottom-2" style={{fontSize: '45px', fontWeight: 300}}>
+                        Monitoring Measures
+                    </h1>
+                    <div className="col-xs-12 col-sm-4 top-indent-3 offset-bottom-4">
+                        <RaisedButton
+                            label="ADD MEASURE"
+                            style={{float: 'right'}}
+                            labelColor="#ffffff"
+                            backgroundColor="#4CAF50"
                             containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: mesure.id})*/} />}
                                 />
                     </div>
                 </div>
-                <div className="col-xs-12">
-                    {/* <div className="row"> { this.Options() } </div> */}
-                    <div className="clearfix"> { this.Table() } </div>
+                <div className="row">
+                    <div className="col-xs-12 col-md-3 offset-bottom-4">
+                        <div className="clearfix"> { this.Filter() } </div>
+                    </div>
+                    <div className="col-xs-12 col-md-9 offset-bottom-4">
+                        {/* <div className="row"> { this.Options() } </div> */}
+                        <div className="clearfix"> { this.Table() } </div>
+                    </div>
                 </div>
             </div>
         );
@@ -180,4 +264,24 @@ export default connect(state => {
     console.log('Measures mapSteteToProps', state);
     return ({})
 }, null )(Measures);
+
+// <div className="row">
+//     <div className="panel panel-default no-radius">
+//         <div className="panel-heading">
+//             <i className="fa fa-line-chart" aria-hidden="true"></i>
+//             <strong> Measures </strong>
+//             <FlatButton
+//                 primary={true}
+//                 disabled={false}
+//                 style={{marginTop: '-8px', float: 'right'}}
+//                 label={<span><i className="fa fa-plus" aria-hidden="true"></i> New Measure </span>}
+//                 containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: mesure.id})*/} />}
+//                     />
+//         </div>
+//     </div>
+//     <div className="col-xs-12">
+//         {/* <div className="row"> { this.Options() } </div> */}
+//         <div className="clearfix"> { this.Table() } </div>
+//     </div>
+// </div>
 
