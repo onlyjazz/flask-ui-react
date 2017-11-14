@@ -16,9 +16,11 @@ export function payloads ( {dispatch} ) {
             payload
                 .then( success => {
                     action.payload = success;
+                    action.error = null;
                     dispatch(action);
                 })
                 .catch( error => {
+                    action.payload = null;
                     action.error = error;
                     dispatch(action);
                 });
