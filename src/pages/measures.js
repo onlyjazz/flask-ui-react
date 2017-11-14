@@ -3,6 +3,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import _ from 'lodash';
 
 import Paper from 'material-ui/Paper';
 import Toggle from 'material-ui/Toggle';
@@ -14,46 +15,19 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 // local dependencies
+import { GraphQl } from '../services';
+// import { pageUpdate, pageUpdateError, pageUpdateSuccess } from '../actions';
 
 // configuration
 var cellOverideStyle = {
     whiteSpace: 'normal',
-    textOverflow: 'unset'
+    textOverflow: 'unset',
+    padding: '24px 12px',
 };
 var tooltipOverideStyle = {
     top: '-30%',
     left: '0px'
 };
-const tableData = [
-  {
-    name: 'John Smith John Smith John Smith John Smith John Smith',
-    status: 'Employed',
-  },
-  {
-    name: 'Randal White',
-    status: 'Unemployed',
-  },
-  {
-    name: 'Stephanie Sanders',
-    status: 'Employed',
-  },
-  {
-    name: 'Steve Brown',
-    status: 'Employed',
-  },
-  {
-    name: 'Joyce Whitten',
-    status: 'Employed',
-  },
-  {
-    name: 'Samuel Roberts',
-    status: 'Employed',
-  },
-  {
-    name: 'Adam Moore',
-    status: 'Employed',
-  },
-];
 
 var sortIcon = {
     'sort': 'glyphicon glyphicon-sort',
@@ -64,15 +38,17 @@ var sortIcon = {
     'alphabet_asc': 'glyphicon glyphicon-sort-by-alphabet',
     'alphabet_desc': 'glyphicon glyphicon-sort-by-alphabet-alt',
     
-    'alphabet': 'glyphicon glyphicon-sort',
-    'alphabet_asc': 'glyphicon glyphicon-sort-by-alphabet',
-    'alphabet_desc': 'glyphicon glyphicon-sort-by-alphabet-alt',
-    
     'order': 'glyphicon glyphicon-sort',
     'order_asc': 'glyphicon glyphicon-sort-by-order',
     'order_desc': 'glyphicon glyphicon-sort-by-order-alt',
 };
 
+function Preloader ( props ) {
+    return props.show ?(<strong>
+        <i className="fa fa-spinner fa-spin fa-fw"></i>
+        <span className="sr-only">Loading...</span>
+    </strong>) : ('');
+}
 
 function Sort ( props ) {
     var type = sortIcon[props.type] ? props.type : 'sort';
@@ -97,8 +73,14 @@ class Measures extends Component {
         super(props)
         
         this.state = {
-            fixedHeader: true,
-            fixedFooter: true,
+            expectAnswer: true,
+            errorMessage: null,
+            tableData: [],
+            studies: [],
+            currentStudy: {id: 0},
+            
+            fixedHeader: false,
+            fixedFooter: false,
             stripedRows: false,
             showRowHover: true,
             selectable: true,
@@ -138,33 +120,23 @@ class Measures extends Component {
     }
   
     Filter () {
+        var { studies, currentStudy } = this.state;
         return (
             <Paper zDepth={2} className="clearfix">
-                <h2 className="col-xs-12 top-indent-2 offset-bottom-4" style={{fontSize: '24px', fontWeight: 'normal'}}>
-                    Filters
-                </h2>
+                <h2 className="col-xs-12 top-indent-2 offset-bottom-4" style={{fontSize: '24px', fontWeight: 'normal'}}> Filters </h2>
                 <div className="col-xs-12 offset-bottom-4">
                     <SelectField
                         fullWidth={true}
-                        floatingLabelText="Frequency"
-                        value={this.state.value}
-                        onChange={this.handleChange}
+                        value={currentStudy.id}
+                        floatingLabelText="Studies"
+                        onChange={(event, index, value)=> this.setState({currentStudy: _.find(studies, {id: value})||{id: 0}}) }
                             >
-                        <MenuItem value={1} primaryText="Never" />
-                        <MenuItem value={2} primaryText="Every Night" />
-                        <MenuItem value={3} primaryText="Weeknights" />
-                        <MenuItem value={4} primaryText="Weekends" />
-                        <MenuItem value={5} primaryText="Weekly" />
+                        <MenuItem value={0} primaryText="All" />
+                        {studies.map( (study, key) => ( <MenuItem key={key} value={study.id} primaryText={study.officialTitle} /> ))}
                     </SelectField>
                 </div>
-                <div className="col-xs-12 offset-bottom-4">
-                    <FlatButton
-                        label="APPLY"
-                        primary={true}
-                        disabled={false}
-                        fullWidth={true}
-                        containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: mesure.id})*/} />}
-                            />
+                <div className="col-xs-12 offset-bottom-4" onClick={( event ) => this.updateTableData(this.props.auth.user.customer_id, currentStudy.id ) }>
+                    <FlatButton label="APPLY" primary={true} fullWidth={true}/>
                 </div>
             </Paper>
         )
@@ -175,7 +147,7 @@ class Measures extends Component {
         return (
             <Paper zDepth={2} style={{overflow: 'visible', tableStyle: {overflow: 'visible'}}}>                
                 <Table
-                    style={{overflow: 'visible'}} /* Fucking material essols */
+                    style={{overflow: 'visible', tableLayout: 'auto'}} /* Fucking material essols */
                     height={this.state.height}
                     fixedHeader={this.state.fixedHeader}
                     fixedFooter={this.state.fixedFooter}
@@ -187,16 +159,21 @@ class Measures extends Component {
                         adjustForCheckbox={this.state.showCheckboxes}
                         enableSelectAll={this.state.enableSelectAll}
                             >
+                        <TableRow>
+                          <TableHeaderColumn colSpan="6">
+                              <h2 style={{color: '#333', marginLeft: '-45px', fontSize: '24px', fontWeight: 'normal'}}> All mesasures </h2>
+                          </TableHeaderColumn>
+                        </TableRow>
                         <TableRow onCellClick={(event) => {
-                            // console.log(event.target)
+                            console.log(event.target)
                             this.setState({sort: !this.state.sort});
                         }}>
-                            <TableHeaderColumn> <Sort status={this.state.sort}> Study </Sort> </TableHeaderColumn>
-                            <TableHeaderColumn tooltip="Measure propertie" tooltipStyle={tooltipOverideStyle}> Measure </TableHeaderColumn>
-                            <TableHeaderColumn tooltip="Event propertie" tooltipStyle={tooltipOverideStyle}> Event </TableHeaderColumn>
-                            <TableHeaderColumn tooltip="CRF abbr" tooltipStyle={tooltipOverideStyle}> CRF </TableHeaderColumn>
-                            <TableHeaderColumn tooltip="Item description" tooltipStyle={tooltipOverideStyle}> Item </TableHeaderColumn>
-                            <TableHeaderColumn style={{width: '140px', textAlign: 'center'}}> --- </TableHeaderColumn>
+                            <TableHeaderColumn> Study {/* <Sort status={this.state.sort}> Study </Sort> */}</TableHeaderColumn>
+                            <TableHeaderColumn> Measure </TableHeaderColumn>
+                            <TableHeaderColumn> Event </TableHeaderColumn>
+                            <TableHeaderColumn> CRF </TableHeaderColumn>
+                            <TableHeaderColumn> Item </TableHeaderColumn>
+                            <TableHeaderColumn style={{width: '100px'}}></TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody
@@ -205,14 +182,14 @@ class Measures extends Component {
                         displayRowCheckbox={this.state.showCheckboxes}
                         deselectOnClickaway={this.state.deselectOnClickaway}
                             >
-                        {tableData.map( (row, index) => (
+                        {this.state.tableData.map( (row, index) => (
                             <TableRow key={index}>
-                                <TableRowColumn style={cellOverideStyle}> {index} </TableRowColumn>
+                                <TableRowColumn style={cellOverideStyle}> {row.officialTitle} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.name} </TableRowColumn>
-                                <TableRowColumn style={cellOverideStyle}> {row.status} </TableRowColumn>
-                                <TableRowColumn style={cellOverideStyle}> {row.status} </TableRowColumn>
-                                <TableRowColumn style={cellOverideStyle}> {row.status} </TableRowColumn>
-                                <TableRowColumn style={{...cellOverideStyle, width: '140px'}}>
+                                <TableRowColumn style={cellOverideStyle}> {row.event} </TableRowColumn>
+                                <TableRowColumn style={cellOverideStyle}> {row.crf} </TableRowColumn>
+                                <TableRowColumn style={cellOverideStyle}> {row.item} </TableRowColumn>
+                                <TableRowColumn style={{...cellOverideStyle, width: '100px'}}>
                                     <FlatButton
                                         primary={true}
                                         disabled={false}
@@ -228,13 +205,76 @@ class Measures extends Component {
         );
     }
   
+    Error () {
+        return !this.state.errorMessage ? ('') : (
+            <div className="row">
+                <div className="col-xs-12">{/* col-xs-10 col-xs-offset-1 */}
+                    <p className="alert alert-danger" onClick={ () => this.setState({errorMessage: ''}) }>
+                        <strong> Error: </strong>
+                        { this.state.errorMessage }
+                    </p>
+                </div>
+            </div>
+        );
+    }
+    
+    updateTableData ( customerId, studyId ) {
+        this.setState({
+            expectAnswer: true,
+            errorMessage: null,
+        });
+        GraphQl.getMeasuresPage(customerId, studyId)
+            .then(success => {
+                this.setState({
+                    expectAnswer: false,
+                    tableData: success,
+                });
+            })
+            .catch(error => {
+                this.setState({
+                    tableData: [],
+                    expectAnswer: false,
+                    errorMessage: JSON.stringify(error.data),
+                });
+            });
+    }
+    
+    componentWillMount () {
+        var {auth} = this.props;
+        setTimeout(()=> {
+            GraphQl
+                .getStudies( auth.user.customer_id )
+                .then(success => {
+                    this.setState({studies: success});
+                    this.updateTableData(auth.user.customer_id, 0);
+                })
+                .catch(error => {
+                    this.setState({
+                        expectAnswer: false,
+                        errorMessage: JSON.stringify(error.data),
+                    });
+                });
+        }, 10);
+    }
+    
     render() {
+        
+        var page = this.state.page;
+        
+        console.log('MEASURES reducer => ()'
+            ,'\n state:', this.state
+            ,'\n props:', this.props
+            ,'\n page:', page
+        );
         
         return (
             <div className="custom-content-container">
                 <div className="row top-indent-8 offset-bottom-4">
-                    <h1 className="col-xs-12 col-sm-8 offset-0 offset-bottom-2" style={{fontSize: '45px', fontWeight: 300}}>
-                        Monitoring Measures
+                    <h1 className="col-xs-12 col-sm-8 offset-0 offset-bottom-2" style={{fontSize: '45px', fontWeight: 300}} onClick={()=> {
+                        console.log('this', this);
+                        this.updateTableData();
+                    }}>
+                        Monitoring Measures <Preloader show={this.state.expectAnswer} />
                     </h1>
                     <div className="col-xs-12 col-sm-4 top-indent-3 offset-bottom-4">
                         <RaisedButton
@@ -246,6 +286,9 @@ class Measures extends Component {
                                 />
                     </div>
                 </div>
+                
+                { this.Error() }
+                
                 <div className="row">
                     <div className="col-xs-12 col-md-3 offset-bottom-4">
                         <div className="clearfix"> { this.Filter() } </div>
@@ -262,7 +305,7 @@ class Measures extends Component {
 
 export default connect(state => {
     console.log('Measures mapSteteToProps', state);
-    return ({})
+    return ({page: state.page, auth: state.auth})
 }, null )(Measures);
 
 // <div className="row">
