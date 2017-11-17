@@ -85,10 +85,7 @@ class Measures extends Component {
             
             stripedRows: false,
             showRowHover: true,
-            selectable: true,
-            multiSelectable: true,
             enableSelectAll: true,
-            deselectOnClickaway: false,
             showCheckboxes: true,
             sort: 'non'
         };
@@ -135,61 +132,49 @@ class Measures extends Component {
                 <Table
                     style={{overflow: 'visible', tableLayout: 'auto'}} /* Fucking material essols */
                     height="auto"
-                    selectable={this.state.selectable}
-                    fixedHeader={this.state.fixedHeader}
-                    multiSelectable={this.state.multiSelectable}
-                    deselectOnClickaway={this.state.deselectOnClickaway}
+                    selectable={true}
+                    fixedHeader={false}
+                    multiSelectable={true}
+                    deselectOnClickaway={false}
                         >
                     <TableHeader
                         displaySelectAll={this.state.showCheckboxes}
                         adjustForCheckbox={this.state.showCheckboxes}
-                        enableSelectAll={this.state.enableSelectAll}
-                        deselectOnClickaway={this.state.deselectOnClickaway}
                             >
                         <TableRow style={{borderBottom : 'none'}} selectable={false}>
-                            <TableHeaderColumn colSpan="4" style={{padding: '24px 12px'}}>
-                                <h2 style={{color: '#333', fontSize: '24px', fontWeight: 'normal'}}> All mesasures </h2>
+                            <TableHeaderColumn colSpan="5" style={{padding: '24px 12px'}}>
+                                <h2 style={{color: '#333', fontSize: '24px', marginLeft: '-70px', fontWeight: 'normal'}}> All mesasures </h2>
                             </TableHeaderColumn>
                             <TableHeaderColumn colSpan="2" style={{textAlign: 'right'}}>
                                 <IconMenu
+                                    iconButtonElement={ btn }
                                     open={this.state.openActionMenu}
                                     onRequestChange={value => this.setState({openActionMenu: value})}
-                                    iconButtonElement={ btn }>
+                                        >
                                     <MenuItem value="1" primaryText="Edit one" containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: mesure.id})*/} />} />
                                     <MenuItem value="2" primaryText="Delete" onClick={()=> console.log('Delete') } />
                                 </IconMenu>
                             </TableHeaderColumn>
                         </TableRow>
-                        {/* <TableRow selectable={false} onCellClick={(event) => {
+                        <TableRow
+                            selectable={false}
+                            enableSelectAll={true}
+                            onCellClick={(event) => {
                             console.log(event.target)
                             this.setState({sort: !this.state.sort});
                         }}>
-                            <TableHeaderColumn colSpan="2"> Study </TableHeaderColumn>
+                            <TableHeaderColumn colSpan="3"> Study </TableHeaderColumn>
                             <TableHeaderColumn> Measure </TableHeaderColumn>
                             <TableHeaderColumn> Event </TableHeaderColumn>
                             <TableHeaderColumn> CRF </TableHeaderColumn>
                             <TableHeaderColumn> Item </TableHeaderColumn>
-                        </TableRow> */}
+                        </TableRow>
                     </TableHeader>
                     <TableBody
-                        showRowHover={this.state.showRowHover}
-                        displayRowCheckbox={this.state.showCheckboxes}
-                        deselectOnClickaway={this.state.deselectOnClickaway}
+                        showRowHover={true}
+                        displayRowCheckbox={true}
+                        deselectOnClickaway={false}
                             >
-                        <TableRow
-                            selectable={false}
-                            showRowHover={false}
-                            displayRowCheckbox={false}
-                            onCellClick={(event) => {
-                                console.log(event.target)
-                                this.setState({sort: !this.state.sort});
-                            }}>
-                            <TableRowColumn style={cellOverideStyle}> Study </TableRowColumn>
-                            <TableRowColumn style={cellOverideStyle}> Measure </TableRowColumn>
-                            <TableRowColumn style={cellOverideStyle}> Event </TableRowColumn>
-                            <TableRowColumn style={cellOverideStyle}> CRF </TableRowColumn>
-                            <TableRowColumn style={cellOverideStyle}> Item </TableRowColumn>
-                        </TableRow>
                         {this.state.tableData.map( (row, index) => (
                             // <tr key={index}>
                             //     <td colSpan="2"> {row.officialTitle} </td>
@@ -199,7 +184,7 @@ class Measures extends Component {
                             //     <td colSpan="1"> {row.item} </td>
                             // </tr>
                             <TableRow key={index}>
-                                <TableRowColumn style={cellOverideStyle}> {row.officialTitle} </TableRowColumn>
+                                <TableRowColumn colSpan="3" style={cellOverideStyle}> {row.officialTitle} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.name} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.event} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.crf} </TableRowColumn>
