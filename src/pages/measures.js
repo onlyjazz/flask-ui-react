@@ -6,11 +6,8 @@ import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
 import Paper from 'material-ui/Paper';
-import Toggle from 'material-ui/Toggle';
 import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import SelectField from 'material-ui/SelectField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -18,6 +15,7 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 
 // local dependencies
 import { GraphQl } from '../services';
+import { MESURE_EDIT } from '../constants/routes';
 // import { pageUpdate, pageUpdateError, pageUpdateSuccess } from '../actions';
 
 // configuration
@@ -25,10 +23,6 @@ var cellOverideStyle = {
     whiteSpace: 'normal',
     textOverflow: 'unset',
     padding: '24px 12px',
-};
-var tooltipOverideStyle = {
-    top: '-30%',
-    left: '0px'
 };
 
 var sortIcon = {
@@ -81,11 +75,8 @@ class Measures extends Component {
             tableData: [],
             studies: [],
             currentStudy: {id: 0},
-            
             selected: [],
             allRowsSelected: false,
-            
-            
             
             sort: 'non'
         };
@@ -127,6 +118,9 @@ class Measures extends Component {
               icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#03A9F4" viewBox="0 0 24 24"><path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/></svg>}
                   />
         );
+        
+        var mesureId = this.state.selected[0] ? this.state.selected[0].id : null;
+        
         return (
             <Paper zDepth={2} style={{overflow: 'visible', tableStyle: {overflow: 'visible'}}}>                
                 <Table
@@ -149,9 +143,10 @@ class Measures extends Component {
                                 }}>
                                     <MenuItem
                                         value="1"
-                                        disabled={!this.state.selected[0]}
-                                        primaryText={"Edit one "+(this.state.selected[0] ? this.state.selected[0].id : '"No selection"')}
-                                        containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: this.state.selected[0].id})*/} />} />
+                                        disabled={!mesureId}
+                                        primaryText={"Edit one "+(mesureId || '"No selection"')}
+                                        containerElement={<Link to={MESURE_EDIT.LINK({id: mesureId})} />}
+                                            />
                                     <MenuItem value="2" primaryText="Delete" onClick={()=> console.log('Delete', this.state.selected) } />
                                 </IconMenu>
                             </TableHeaderColumn>
@@ -266,10 +261,10 @@ class Measures extends Component {
                     <div className="col-xs-12 col-sm-4 top-indent-3 offset-bottom-4">
                         <RaisedButton
                             label="ADD MEASURE"
-                            style={{float: 'right'}}
                             labelColor="#ffffff"
+                            style={{float: 'right'}}
                             backgroundColor="#4CAF50"
-                            containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: mesure.id})*/} />}
+                            containerElement={<Link to={MESURE_EDIT.LINK({id: 'NEW'})} />}
                                 />
                     </div>
                 </div>
