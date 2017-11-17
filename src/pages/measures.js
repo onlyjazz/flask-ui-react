@@ -77,16 +77,16 @@ class Measures extends Component {
         this.state = {
             expectAnswer: true,
             errorMessage: null,
+            openActionMenu: false,
             tableData: [],
             studies: [],
             currentStudy: {id: 0},
             
-            openActionMenu: false,
+            selected: [],
+            allRowsSelected: false,
             
-            stripedRows: false,
-            showRowHover: true,
-            enableSelectAll: true,
-            showCheckboxes: true,
+            
+            
             sort: 'non'
         };
         
@@ -136,30 +136,27 @@ class Measures extends Component {
                     fixedHeader={false}
                     multiSelectable={true}
                     deselectOnClickaway={false}
+                    onRowSelection={val => this.onRowSelection(val) }
                         >
-                    <TableHeader
-                        displaySelectAll={this.state.showCheckboxes}
-                        adjustForCheckbox={this.state.showCheckboxes}
-                            >
+                    <TableHeader displaySelectAll={true} adjustForCheckbox={true}>
                         <TableRow style={{borderBottom : 'none'}} selectable={false}>
                             <TableHeaderColumn colSpan="5" style={{padding: '24px 12px'}}>
                                 <h2 style={{color: '#333', fontSize: '24px', marginLeft: '-70px', fontWeight: 'normal'}}> All mesasures </h2>
                             </TableHeaderColumn>
                             <TableHeaderColumn colSpan="2" style={{textAlign: 'right'}}>
-                                <IconMenu
-                                    iconButtonElement={ btn }
-                                    open={this.state.openActionMenu}
-                                    onRequestChange={value => this.setState({openActionMenu: value})}
-                                        >
-                                    <MenuItem value="1" primaryText="Edit one" containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: mesure.id})*/} />} />
-                                    <MenuItem value="2" primaryText="Delete" onClick={()=> console.log('Delete') } />
+                                <IconMenu iconButtonElement={ btn } open={this.state.openActionMenu} onRequestChange={value => {
+                                    this.setState({openActionMenu: value});
+                                }}>
+                                    <MenuItem
+                                        value="1"
+                                        disabled={!this.state.selected[0]}
+                                        primaryText={"Edit one "+(this.state.selected[0] ? this.state.selected[0].id : '"No selection"')}
+                                        containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: this.state.selected[0].id})*/} />} />
+                                    <MenuItem value="2" primaryText="Delete" onClick={()=> console.log('Delete', this.state.selected) } />
                                 </IconMenu>
                             </TableHeaderColumn>
                         </TableRow>
-                        <TableRow
-                            selectable={false}
-                            enableSelectAll={true}
-                            onCellClick={(event) => {
+                        <TableRow selectable={false} onCellClick={(event) => {
                             console.log(event.target)
                             this.setState({sort: !this.state.sort});
                         }}>
@@ -170,20 +167,9 @@ class Measures extends Component {
                             <TableHeaderColumn> Item </TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
-                    <TableBody
-                        showRowHover={true}
-                        displayRowCheckbox={true}
-                        deselectOnClickaway={false}
-                            >
+                    <TableBody showRowHover={true} displayRowCheckbox={true} deselectOnClickaway={false}>
                         {this.state.tableData.map( (row, index) => (
-                            // <tr key={index}>
-                            //     <td colSpan="2"> {row.officialTitle} </td>
-                            //     <td colSpan="1"> {row.name} </td>
-                            //     <td colSpan="1"> {row.event} </td>
-                            //     <td colSpan="1"> {row.crf} </td>
-                            //     <td colSpan="1"> {row.item} </td>
-                            // </tr>
-                            <TableRow key={index}>
+                            <TableRow key={index} selected={ this.state.selected.indexOf(row) > -1 }>
                                 <TableRowColumn colSpan="3" style={cellOverideStyle}> {row.officialTitle} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.name} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.event} </TableRowColumn>
@@ -208,6 +194,18 @@ class Measures extends Component {
                 </div>
             </div>
         );
+    }
+    
+    onRowSelection ( selection ) {
+        switch ( selection ) {
+            case 'all': this.setState({selected: this.state.tableData.slice(0)});
+            break;case 'none': this.setState({selected: []});
+            break;default:
+                for ( var key = 0, res = []; key < selection.length; key ++ ) {
+                    res.push(this.state.tableData[selection[key]]);
+                }
+                this.setState({selected: res});
+        }
     }
     
     updateTableData ( customerId, studyId ) {
