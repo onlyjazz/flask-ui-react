@@ -7,6 +7,8 @@ import _ from 'lodash';
 
 import Paper from 'material-ui/Paper';
 import Toggle from 'material-ui/Toggle';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
@@ -79,44 +81,21 @@ class Measures extends Component {
             studies: [],
             currentStudy: {id: 0},
             
-            fixedHeader: false,
-            fixedFooter: false,
+            openActionMenu: false,
+            
             stripedRows: false,
             showRowHover: true,
             selectable: true,
             multiSelectable: true,
             enableSelectAll: true,
-            deselectOnClickaway: true,
+            deselectOnClickaway: false,
             showCheckboxes: true,
-            height: 'auto',
             sort: 'non'
         };
         
         this.toggle = ( event, toggled ) => {
             this.setState({ [event.target.name]: toggled });
         }
-    }
-      
-    Options () {
-        var { toggle } = this;
-        
-        return (
-            <div style={{ width: 500, overflow: 'hidden', margin: '20px auto' }}>
-                <h3> Table Properties </h3>
-                <TextField floatingLabelText="Table Body Height" defaultValue={this.state.height} onChange={(event)=> this.setState({height: event.target.value}) } />
-                <Toggle name="fixedHeader" label="Fixed Header" onToggle={toggle} defaultToggled={this.state.fixedHeader} />
-                <Toggle name="fixedFooter" label="Fixed Footer" onToggle={this.toggle} defaultToggled={this.state.fixedFooter} />
-                <Toggle name="selectable" label="Selectable" onToggle={this.toggle} defaultToggled={this.state.selectable} />
-                <Toggle name="multiSelectable" label="Multi-Selectable" onToggle={this.toggle} defaultToggled={this.state.multiSelectable} />
-                <Toggle name="enableSelectAll" label="Enable Select All" onToggle={this.toggle} defaultToggled={this.state.enableSelectAll} />
-                <h3 style={{margin: '20px auto 10px'}}> TableBody Properties </h3>
-                <Toggle name="deselectOnClickaway" label="Deselect On Clickaway" onToggle={(event, toggled)=>this.setState({ [event.target.name]: toggled })} defaultToggled={this.state.deselectOnClickaway} />
-                <Toggle name="stripedRows" label="Stripe Rows" onToggle={this.toggle} defaultToggled={this.state.stripedRows} />
-                <Toggle name="showRowHover" label="Show Row Hover" onToggle={this.toggle} defaultToggled={this.state.showRowHover} />
-                <h3 style={{margin: '20px auto 10px'}}> Multiple Properties </h3>
-                <Toggle name="showCheckboxes" label="Show Checkboxes" onToggle={this.toggle} defaultToggled={this.state.showCheckboxes} />
-            </div>    
-        );
     }
   
     Filter () {
@@ -131,7 +110,7 @@ class Measures extends Component {
                         floatingLabelText="Studies"
                         onChange={(event, index, value)=> this.setState({currentStudy: _.find(studies, {id: value})||{id: 0}}) }
                             >
-                        <MenuItem value={0} primaryText="All" />
+                        <MenuItem value={0} style={{ whiteSpace: 'normal', textOverflow: 'unset'}} primaryText="All" />
                         {studies.map( (study, key) => ( <MenuItem key={key} value={study.id} primaryText={study.officialTitle} /> ))}
                     </SelectField>
                 </div>
@@ -143,60 +122,88 @@ class Measures extends Component {
     }
   
     Table () {
-        
+        var btn = (
+          <RaisedButton
+              labelColor="#03A9F4"
+              label="Actions"
+              labelPosition="before"
+              icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#03A9F4" viewBox="0 0 24 24"><path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/></svg>}
+                  />
+        );
         return (
             <Paper zDepth={2} style={{overflow: 'visible', tableStyle: {overflow: 'visible'}}}>                
                 <Table
                     style={{overflow: 'visible', tableLayout: 'auto'}} /* Fucking material essols */
-                    height={this.state.height}
-                    fixedHeader={this.state.fixedHeader}
-                    fixedFooter={this.state.fixedFooter}
+                    height="auto"
                     selectable={this.state.selectable}
+                    fixedHeader={this.state.fixedHeader}
                     multiSelectable={this.state.multiSelectable}
+                    deselectOnClickaway={this.state.deselectOnClickaway}
                         >
                     <TableHeader
                         displaySelectAll={this.state.showCheckboxes}
                         adjustForCheckbox={this.state.showCheckboxes}
                         enableSelectAll={this.state.enableSelectAll}
+                        deselectOnClickaway={this.state.deselectOnClickaway}
                             >
-                        <TableRow>
-                          <TableHeaderColumn colSpan="6">
-                              <h2 style={{color: '#333', marginLeft: '-45px', fontSize: '24px', fontWeight: 'normal'}}> All mesasures </h2>
-                          </TableHeaderColumn>
+                        <TableRow style={{borderBottom : 'none'}} selectable={false}>
+                            <TableHeaderColumn colSpan="4" style={{padding: '24px 12px'}}>
+                                <h2 style={{color: '#333', fontSize: '24px', fontWeight: 'normal'}}> All mesasures </h2>
+                            </TableHeaderColumn>
+                            <TableHeaderColumn colSpan="2" style={{textAlign: 'right'}}>
+                                <IconMenu
+                                    open={this.state.openActionMenu}
+                                    onRequestChange={value => this.setState({openActionMenu: value})}
+                                    iconButtonElement={ btn }>
+                                    <MenuItem value="1" primaryText="Edit one" containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: mesure.id})*/} />} />
+                                    <MenuItem value="2" primaryText="Delete" onClick={()=> console.log('Delete') } />
+                                </IconMenu>
+                            </TableHeaderColumn>
                         </TableRow>
-                        <TableRow onCellClick={(event) => {
+                        {/* <TableRow selectable={false} onCellClick={(event) => {
                             console.log(event.target)
                             this.setState({sort: !this.state.sort});
                         }}>
-                            <TableHeaderColumn> Study {/* <Sort status={this.state.sort}> Study </Sort> */}</TableHeaderColumn>
+                            <TableHeaderColumn colSpan="2"> Study </TableHeaderColumn>
                             <TableHeaderColumn> Measure </TableHeaderColumn>
                             <TableHeaderColumn> Event </TableHeaderColumn>
                             <TableHeaderColumn> CRF </TableHeaderColumn>
                             <TableHeaderColumn> Item </TableHeaderColumn>
-                            <TableHeaderColumn style={{width: '100px'}}></TableHeaderColumn>
-                        </TableRow>
+                        </TableRow> */}
                     </TableHeader>
                     <TableBody
                         showRowHover={this.state.showRowHover}
-                        stripedRows={this.state.stripedRows}
                         displayRowCheckbox={this.state.showCheckboxes}
                         deselectOnClickaway={this.state.deselectOnClickaway}
                             >
+                        <TableRow
+                            selectable={false}
+                            showRowHover={false}
+                            displayRowCheckbox={false}
+                            onCellClick={(event) => {
+                                console.log(event.target)
+                                this.setState({sort: !this.state.sort});
+                            }}>
+                            <TableRowColumn style={cellOverideStyle}> Study </TableRowColumn>
+                            <TableRowColumn style={cellOverideStyle}> Measure </TableRowColumn>
+                            <TableRowColumn style={cellOverideStyle}> Event </TableRowColumn>
+                            <TableRowColumn style={cellOverideStyle}> CRF </TableRowColumn>
+                            <TableRowColumn style={cellOverideStyle}> Item </TableRowColumn>
+                        </TableRow>
                         {this.state.tableData.map( (row, index) => (
+                            // <tr key={index}>
+                            //     <td colSpan="2"> {row.officialTitle} </td>
+                            //     <td colSpan="1"> {row.name} </td>
+                            //     <td colSpan="1"> {row.event} </td>
+                            //     <td colSpan="1"> {row.crf} </td>
+                            //     <td colSpan="1"> {row.item} </td>
+                            // </tr>
                             <TableRow key={index}>
                                 <TableRowColumn style={cellOverideStyle}> {row.officialTitle} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.name} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.event} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.crf} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.item} </TableRowColumn>
-                                <TableRowColumn style={{...cellOverideStyle, width: '100px'}}>
-                                    <FlatButton
-                                        primary={true}
-                                        disabled={false}
-                                        label={<span><i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </span>}
-                                        containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: mesure.id})*/} />}
-                                            />
-                                </TableRowColumn>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -270,10 +277,7 @@ class Measures extends Component {
         return (
             <div className="custom-content-container">
                 <div className="row top-indent-8 offset-bottom-4">
-                    <h1 className="col-xs-12 col-sm-8 offset-0 offset-bottom-2" style={{fontSize: '45px', fontWeight: 300}} onClick={()=> {
-                        console.log('this', this);
-                        this.updateTableData();
-                    }}>
+                    <h1 className="col-xs-12 col-sm-8 offset-0 offset-bottom-2" style={{fontSize: '45px', fontWeight: 300}}>
                         Monitoring Measures <Preloader show={this.state.expectAnswer} />
                     </h1>
                     <div className="col-xs-12 col-sm-4 top-indent-3 offset-bottom-4">
@@ -286,15 +290,12 @@ class Measures extends Component {
                                 />
                     </div>
                 </div>
-                
                 { this.Error() }
-                
                 <div className="row">
-                    <div className="col-xs-12 col-md-3 offset-bottom-4">
+                    <div className="col-xs-12 col-lg-3 offset-bottom-4">
                         <div className="clearfix"> { this.Filter() } </div>
                     </div>
-                    <div className="col-xs-12 col-md-9 offset-bottom-4">
-                        {/* <div className="row"> { this.Options() } </div> */}
+                    <div className="col-xs-12 col-lg-9 offset-bottom-4">
                         <div className="clearfix"> { this.Table() } </div>
                     </div>
                 </div>
@@ -307,24 +308,3 @@ export default connect(state => {
     console.log('Measures mapSteteToProps', state);
     return ({page: state.page, auth: state.auth})
 }, null )(Measures);
-
-// <div className="row">
-//     <div className="panel panel-default no-radius">
-//         <div className="panel-heading">
-//             <i className="fa fa-line-chart" aria-hidden="true"></i>
-//             <strong> Measures </strong>
-//             <FlatButton
-//                 primary={true}
-//                 disabled={false}
-//                 style={{marginTop: '-8px', float: 'right'}}
-//                 label={<span><i className="fa fa-plus" aria-hidden="true"></i> New Measure </span>}
-//                 containerElement={<Link to={'app/measures'/*MESURE_EDIT.LINK({id: mesure.id})*/} />}
-//                     />
-//         </div>
-//     </div>
-//     <div className="col-xs-12">
-//         {/* <div className="row"> { this.Options() } </div> */}
-//         <div className="clearfix"> { this.Table() } </div>
-//     </div>
-// </div>
-
