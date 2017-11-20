@@ -1,9 +1,6 @@
 // local dependencies
 // import * as types from './types';
 
-// TEST
-export { test } from './test.js';
-
 // authentication actions
 export {
     signout,
@@ -14,12 +11,8 @@ export {
 } from './authentification';
 
 // side menu actions
-export {
-    navMinify,
-    navMaximize,
-    navShowMainMenu,
-    navShowSubMenu,
-    navShowStatistic,
-    navChangeMenu,
-} from './nav';
+export { navMinify, navMaximize } from './nav';
+
+// common page actions
+export { pageUpdate, pageUpdateError, pageUpdateSuccess } from './page';
 

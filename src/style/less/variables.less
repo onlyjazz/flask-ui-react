@@ -8,7 +8,7 @@
 
 
 // FONTS
-@font-family-sans-serif:  Helvetica, Arial, sans-serif;
+@font-family-sans-serif:  'Roboto Condensed', Roboto, Helvetica, Arial, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 
@@ -30,19 +30,6 @@
 
 @font-size-regular:  14px;
 @font-size-light:    12px;
-
-@font-family-base:     "JF-Flat", "Open Sans", @font-family-sans-serif;
-@font-size-base:    @font-size-regular;
-@font-weight-base:  @font-weight-book;
-@line-height-base:  1.428571429; // 20/14
-
-//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
-@line-height-computed:    floor((@font-size-base * @line-height-base)); // ~20px
-
-@font-family-head:  "JF-Flat", "Open Sans", @font-family-sans-serif;
-@font-size-head:    @font-size-h1;
-@line-height-head:  1.1667;
-
 
 // COLORS
 @black:             #000000;
@@ -79,7 +66,8 @@
 @dark-purple:       #7A3DCE;
 @brown:             #292929;
 
-// TEXT
+// TEXT 
+@base-bg:           #FAFAFA;
 @base-text:         @grey-shade-8;
 @inverse-text:      darken(@grey-shade-1, 15.8%);//@grey-shade-1
 @muted-text:        @grey;
@@ -93,7 +81,3 @@
 // OFFSETS // padding: @vertical-offset @horizontal-offset;
 @vertical-offset: 7px;
 @horizontal-offset: 12px;
-
-// Modal
-@zindex-modal-background:  1040;
-@zindex-modal:             1050;

@@ -7,19 +7,18 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import ReduxToastr from 'react-redux-toastr'
 import { createStore, applyMiddleware } from 'redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
-
 // STYLES inject ...
 import './style';
 
 // local dependencies
 import reducers from './reducers';
+import * as PATH from './constants/routes';
 import { AUTH_RUN } from './actions/types';
 import { payloads, errors, authRun } from './middlewares';
 import { Header, SideMenu, Private } from './components';
 import { Signin, Signup, NoMatch, ForgotPassword, Users, Measures, Monitoring, Sites, Studies } from './pages';
-
-// configuration
 
 /**
  * @description Root Component of application
@@ -31,18 +30,18 @@ function Root ( props, state ) {
         <Router><div>
             <Switch>
                 {/* PUBLICK */}
-                <Route exact={true} path="/" component={ Signin } />
-                <Route exact={true} path="/signup" component={ Signup } />
-                <Route exact={true} path="/forgot" component={ ForgotPassword } />
+                <Route exact={true} path={PATH.SIGN_IN.ROUTE} component={ Signin } />
+                <Route exact={true} path={PATH.SIGN_UP.ROUTE} component={ Signup } />
+                <Route exact={true} path={PATH.FORGOT_PASSWORD.ROUTE} component={ ForgotPassword } />
                 {/* PRIVATE */}
-                <Private redirect="/">
+                <Private redirect={PATH.SIGN_IN.ROUTE}>
                     <Header />
                     <SideMenu>
-                        <Route exact={true} path="/app/users" component={ Users } />
-                        <Route exact={true} path="/app/sites" component={ Sites } />
-                        <Route exact={true} path="/app/studies" component={ Studies } />
-                        <Route exact={true} path="/app/measures" component={ Measures } />
-                        <Route exact={true} path="/app/monitoring" component={ Monitoring } />
+                        <Route exact={true} path={PATH.USERS.ROUTE} component={ Users } />
+                        <Route exact={true} path={PATH.SITES.ROUTE} component={ Sites } />
+                        <Route exact={true} path={PATH.STUDIES.ROUTE} component={ Studies } />
+                        <Route exact={true} path={PATH.MEASURES.ROUTE} component={ Measures } />
+                        <Route exact={true} path={PATH.MONITORING.ROUTE} component={ Monitoring } />
                     </SideMenu>
                 </Private>
                 {/* OTHERWISE */}
@@ -77,7 +76,9 @@ store.dispatch({type: AUTH_RUN});
  */
 ReactDOM.render(
     <Provider store={store}>
-        <Root />
+        <MuiThemeProvider>
+            <Root />
+        </MuiThemeProvider>
     </Provider>
     ,
     document.getElementById('root')

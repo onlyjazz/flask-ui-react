@@ -7,4 +7,5 @@ var is = window.is;
 export { is };
 export { storage } from './storage';
 export { default as Axios } from './axios-instance';
+export { default as GraphQl } from './graph-ql';
 
