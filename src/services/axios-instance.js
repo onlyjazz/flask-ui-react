@@ -14,6 +14,9 @@ import { config } from '../constants';
 var axiosInstance = axios.create({
     baseURL: config.apiPath,
     withCredentials: true,
+    headers: {
+       'Content-Type': 'application/json',
+   },
 });
 
 export default axiosInstance;
