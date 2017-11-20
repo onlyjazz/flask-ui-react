@@ -24,7 +24,4 @@ class NoMatch extends Component {
     }
 }
 
-export default connect(state => {
-    console.log('NoMatch mapSteteToProps', state);
-    return ({})
-} )(NoMatch);
+export default connect(state => ({}) )(NoMatch);
