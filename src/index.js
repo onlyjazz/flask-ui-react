@@ -18,7 +18,18 @@ import * as PATH from './constants/routes';
 import { AUTH_RUN } from './actions/types';
 import { payloads, errors, authRun } from './middlewares';
 import { Header, SideMenu, Private } from './components';
-import { Signin, Signup, NoMatch, ForgotPassword, Users, Measures, Monitoring, Sites, Studies } from './pages';
+import {
+    Signin,
+    Signup,
+    NoMatch,
+    ForgotPassword,
+    Users,
+    Measures,
+    MeasureEdit,
+    Monitoring,
+    Sites,
+    Studies,
+} from './pages';
 
 /**
  * @description Root Component of application
@@ -37,11 +48,16 @@ function Root ( props, state ) {
                 <Private redirect={PATH.SIGN_IN.ROUTE}>
                     <Header />
                     <SideMenu>
-                        <Route exact={true} path={PATH.USERS.ROUTE} component={ Users } />
-                        <Route exact={true} path={PATH.SITES.ROUTE} component={ Sites } />
-                        <Route exact={true} path={PATH.STUDIES.ROUTE} component={ Studies } />
-                        <Route exact={true} path={PATH.MEASURES.ROUTE} component={ Measures } />
-                        <Route exact={true} path={PATH.MONITORING.ROUTE} component={ Monitoring } />
+                        <Switch>
+                            <Route exact={true} path={PATH.USERS.ROUTE} component={ Users } />
+                            <Route exact={true} path={PATH.SITES.ROUTE} component={ Sites } />
+                            <Route exact={true} path={PATH.STUDIES.ROUTE} component={ Studies } />
+                            <Route exact={true} path={PATH.MEASURES.ROUTE} component={ Measures } />
+                            <Route exact={true} path={PATH.MONITORING.ROUTE} component={ Monitoring } />
+                            <Route exact={true} path={PATH.MESURE_EDIT.ROUTE} component={ MeasureEdit } />
+                            {/* OTHERWISE */}
+                            <Route component={ NoMatch } />
+                        </Switch>
                     </SideMenu>
                 </Private>
                 {/* OTHERWISE */}
