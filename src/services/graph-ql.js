@@ -127,7 +127,7 @@ export function getMeasure ( id ) {
     tokenization();
     // NOTE: native promise can catch the exceptions
     return new Promise(function ( resolve, reject ) {
-        var query = `{ allMeasures( condition: { id: 2820 }, first: 1) { nodes {
+        var query = `{ allMeasures( condition: { id: ${id} }, first: 1) { nodes {
             id name customerId studyId variable
             aggregatef distinctv dataFilter
             statusId created modified funName

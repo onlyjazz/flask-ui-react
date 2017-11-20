@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
 // local dependencies
-import { GraphQl } from '../services';
+import { GraphQl, is } from '../services';
 
 
 class MeasureEdit extends Component {
@@ -13,7 +13,9 @@ class MeasureEdit extends Component {
         super( props );
         
         this.state = {
-            measure: null,
+            measure: {
+                
+            },
             errorMessage: '',
             expectAnswer: false,
         };
@@ -56,7 +58,10 @@ class MeasureEdit extends Component {
             ,'\n props:', this.props
             ,'\n match:', this.props.match
         );
-        this.getMeasure( this.props.match.params.id );
+        var measureId = this.props.match.params.id
+        if ( is.number( measureId ) ) {
+            this.getMeasure( measureId );
+        }
     }
     
     render() {
