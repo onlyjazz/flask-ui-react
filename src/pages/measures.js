@@ -1,9 +1,9 @@
 
 // outsource dependencies
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import _ from 'lodash';
 
 import Paper from 'material-ui/Paper';
 import IconMenu from 'material-ui/IconMenu';
@@ -25,20 +25,6 @@ var cellOverideStyle = {
     padding: '24px 12px',
 };
 
-var sortIcon = {
-    'sort': 'glyphicon glyphicon-sort',
-    'sort_asc': 'glyphicon glyphicon-sort-by-attributes',   
-    'sort_desc': 'glyphicon glyphicon-sort-by-attributes-alt',
-    
-    'alphabet': 'glyphicon glyphicon-sort',
-    'alphabet_asc': 'glyphicon glyphicon-sort-by-alphabet',
-    'alphabet_desc': 'glyphicon glyphicon-sort-by-alphabet-alt',
-    
-    'order': 'glyphicon glyphicon-sort',
-    'order_asc': 'glyphicon glyphicon-sort-by-order',
-    'order_desc': 'glyphicon glyphicon-sort-by-order-alt',
-};
-
 function Preloader ( props ) {
     return props.show ?(<strong>
         <i className="fa fa-spinner fa-spin fa-fw"></i>
@@ -46,22 +32,36 @@ function Preloader ( props ) {
     </strong>) : ('');
 }
 
-function Sort ( props ) {
-    var type = sortIcon[props.type] ? props.type : 'sort';
-    var className;
-    switch ( props.status ) {
-        case true: className = sortIcon[type+'_asc'];
-        break;case false: className = sortIcon[type+'_desc'];
-        break;default: className = sortIcon[type];
-    }
-    
-    return (
-        <strong className="">
-            { props.children }
-            <span className={className} aria-hidden="true"></span>
-        </strong>
-    );
-}
+// var sortIcon = {
+//     'sort': 'glyphicon glyphicon-sort',
+//     'sort_asc': 'glyphicon glyphicon-sort-by-attributes',   
+//     'sort_desc': 'glyphicon glyphicon-sort-by-attributes-alt',
+// 
+//     'alphabet': 'glyphicon glyphicon-sort',
+//     'alphabet_asc': 'glyphicon glyphicon-sort-by-alphabet',
+//     'alphabet_desc': 'glyphicon glyphicon-sort-by-alphabet-alt',
+// 
+//     'order': 'glyphicon glyphicon-sort',
+//     'order_asc': 'glyphicon glyphicon-sort-by-order',
+//     'order_desc': 'glyphicon glyphicon-sort-by-order-alt',
+// };
+// 
+// function Sort ( props ) {
+//     var type = sortIcon[props.type] ? props.type : 'sort';
+//     var className;
+//     switch ( props.status ) {
+//         case true: className = sortIcon[type+'_asc'];
+//         break;case false: className = sortIcon[type+'_desc'];
+//         break;default: className = sortIcon[type];
+//     }
+// 
+//     return (
+//         <strong className="">
+//             { props.children }
+//             <span className={className} aria-hidden="true"></span>
+//         </strong>
+//     );
+// }
 
 
 class Measures extends Component {
@@ -147,7 +147,7 @@ class Measures extends Component {
                                         primaryText={"Edit one "+(mesureId || '"No selection"')}
                                         containerElement={<Link to={MESURE_EDIT.LINK({id: mesureId})} />}
                                             />
-                                    <MenuItem value="2" primaryText="Delete" onClick={()=> console.log('Delete', this.state.selected) } />
+                                    <MenuItem value="2" primaryText="Delete" onClick={()=> this.deleteItems(this.state.selected) } />
                                 </IconMenu>
                             </TableHeaderColumn>
                         </TableRow>
@@ -203,6 +203,26 @@ class Measures extends Component {
         }
     }
     
+    deleteItems (list) {
+        if ( !list.length ) return;
+         
+        this.setState({
+            expectAnswer: true,
+            errorMessage: null,
+        });
+        GraphQl.deleteMeasures(list)
+            .then(success => {
+                this.updateTableData(this.props.auth.user.customer_id, this.state.currentStudy.id);
+            })
+            .catch(error => {
+                this.setState({
+                    tableData: [],
+                    expectAnswer: false,
+                    errorMessage: JSON.stringify(error.data),
+                });
+            });
+    }
+    
     updateTableData ( customerId, studyId ) {
         this.setState({
             expectAnswer: true,
@@ -244,13 +264,11 @@ class Measures extends Component {
     
     render() {
         
-        var page = this.state.page;
-        
-        console.log('MEASURES reducer => ()'
-            ,'\n state:', this.state
-            ,'\n props:', this.props
-            ,'\n page:', page
-        );
+        // console.log('MEASURES reducer => ()'
+        //     ,'\n state:', this.state
+        //     ,'\n props:', this.props
+        //     ,'\n page:', page
+        // );
         
         return (
             <div className="custom-content-container">
@@ -282,7 +300,4 @@ class Measures extends Component {
     }
 }
 
-export default connect(state => {
-    console.log('Measures mapSteteToProps', state);
-    return ({page: state.page, auth: state.auth})
-}, null )(Measures);
+export default connect(state =>  ({page: state.page, auth: state.auth}), null )(Measures);
