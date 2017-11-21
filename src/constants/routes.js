@@ -47,7 +47,7 @@ export const MEASURES = {
 
 export const MESURE_EDIT = {
     LINK: linkTo.bind({url: ({id})=> (`/app/measure/${id}`)}),
-    ROUTE: '/app/measures/:id',
+    ROUTE: '/app/measure/:id',
 };
 
 

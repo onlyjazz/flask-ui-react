@@ -13,7 +13,7 @@ export function authRun ( {dispatch} ) {
         if ( action.type === AUTH_RUN ) {
             if ( storage.get('auth') ) {     
                 // set default auth heder
-                Axios.defaults.headers.common['Authorization'] = storage.get('auth').jwtToken;
+                Axios.defaults.headers['Authorization'] = storage.get('auth').jwtToken;
                 // get user
                 Axios.get('/users/self')
                     .then(success => {
@@ -25,7 +25,7 @@ export function authRun ( {dispatch} ) {
                         // remove old tokens
                         storage.remove('auth');
                         // clear default auth heder
-                        delete Axios.defaults.headers.common['Authorization'];
+                        delete Axios.defaults.headers['Authorization'];
                         // try to refresh session
                         Axios
                             .get('/refreshSession', { params: { token: tokens.refresh_token } } )
@@ -39,7 +39,7 @@ export function authRun ( {dispatch} ) {
                                 })
                             })
                             .catch(error => {
-                                next(action);
+                                dispatch( unauthUser() );
                             });
                     });
             } else dispatch( unauthUser() );

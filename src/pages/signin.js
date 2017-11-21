@@ -35,7 +35,7 @@ class Signin extends Component {
                 // store tokens
                 storage.set('auth', success.data);
                 // set default auth heder
-                Axios.defaults.headers.common['Authorization'] = success.data.jwtToken;
+                Axios.defaults.headers['Authorization'] = success.data.jwtToken;
                 // get self
                 Axios
                     .get('/users/self')
@@ -55,7 +55,7 @@ class Signin extends Component {
                         // clear tokens
                         storage.remove('auth');
                         // remove auth heder
-                        delete Axios.defaults.headers.common['Authorization'];
+                        delete Axios.defaults.headers['Authorization'];
                         // show error message
                         var message = 'Somethings went wrong...';
                         this.setState({

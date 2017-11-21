@@ -40,7 +40,7 @@ export function signout () {
 
 function clearSession ( dispatch ) {
     // clear default auth heder
-    delete Axios.defaults.headers.common['Authorization'];
+    delete Axios.defaults.headers['Authorization'];
     // clear authentification tokens
     storage.remove('auth');
     // 
