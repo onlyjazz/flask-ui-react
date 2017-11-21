@@ -8,9 +8,18 @@ import React, { Component } from 'react';
 
 class Preloader extends Component {
     render () {
-        return !this.props.show
-            ? ( <div>{ this.props.children }</div> )
-            : ( <div> Preloader </div> );
+        
+        var { type, expectAnswer, children } = this.props;
+        
+        switch ( type ) {
+            default: return expectAnswer ? ( <div> Preloader </div> ) : ( <div>{ children }</div> );
+            
+            case 'ICON': return expectAnswer ? (<strong>
+                <i className="fa fa-spinner fa-spin fa-fw"></i>
+                <span className="sr-only"> Loading... </span>
+            </strong>) : (<span>{ children }</span>);
+                
+        }
     }
 }
 
