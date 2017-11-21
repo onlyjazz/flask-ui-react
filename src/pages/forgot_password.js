@@ -24,14 +24,14 @@ class ForgotPassword extends Component {
         super(props);
         
         this.state = {
-            expextAnswer: false,
+            expectAnswer: false,
             errorMessage: null,
         };
     }
     
     handleFormSubmit ( values, dispatch, form ) {
         
-        this.setState({expextAnswer: true});
+        this.setState({expectAnswer: true});
         
         Axios
             .get('/forgotPassword')
@@ -39,14 +39,14 @@ class ForgotPassword extends Component {
                 // clear form
                 this.props.reset();
                 // update component
-                this.setState({expextAnswer: false});
+                this.setState({expectAnswer: false});
                 // toastr success message
                 toastr.success('Hello !', 'We glad to see you =)');
             })
             .catch(error => {
                 var message = 'Somethings went wrong...';
                 this.setState({
-                    expextAnswer: false,
+                    expectAnswer: false,
                     errorMessage: message,
                 });
                 // toastr error message
@@ -109,7 +109,7 @@ class ForgotPassword extends Component {
                                                     component={ InputAddon }
                                                     className="form-control"
                                                     label={ <span> @ </span> }
-                                                    disabled={ this.state.expextAnswer }
+                                                    disabled={ this.state.expectAnswer }
                                                         />
                                             </div>
                                         </div>
@@ -120,10 +120,10 @@ class ForgotPassword extends Component {
                                                     type="submit"
                                                     bsSize="large"
                                                     bsStyle="primary"
-                                                    disabled={ invalid || this.state.expextAnswer }
+                                                    disabled={ invalid || this.state.expectAnswer }
                                                         >
                                                     <span> Restore Password </span>
-                                                    { this.state.expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
+                                                    { this.state.expectAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
                                                 </Button>
                                             </div>
         								</div>

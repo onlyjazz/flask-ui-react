@@ -20,14 +20,14 @@ class Signin extends Component {
         super(props);
 
         this.state = {
-            expextAnswer: false,
+            expectAnswer: false,
             errorMessage: null,
         };
     }
     
     handleFormSubmit ( {password, email}, dispatch ) {
         
-        this.setState({expextAnswer: true});
+        this.setState({expectAnswer: true});
         // sign in
         Axios
             .post('/users/signin', { password, email })
@@ -43,7 +43,7 @@ class Signin extends Component {
                         // clear form
                         this.props.reset();
                         // update component
-                        this.setState({expextAnswer: false});
+                        this.setState({expectAnswer: false});
                         // toastr success message
                         toastr.success('Hello !', 'We glad to see you =)');
                         // update state
@@ -59,7 +59,7 @@ class Signin extends Component {
                         // show error message
                         var message = 'Somethings went wrong...';
                         this.setState({
-                            expextAnswer: false,
+                            expectAnswer: false,
                             errorMessage: message,
                         });
                         // toastr error message
@@ -69,7 +69,7 @@ class Signin extends Component {
             .catch(error => {
                 var message = 'Wrong email or password.';
                 this.setState({
-                    expextAnswer: false,
+                    expectAnswer: false,
                     errorMessage: message,
                 });
                 // toastr error message
@@ -131,7 +131,7 @@ class Signin extends Component {
                                                     placeholder="Email"
                                                     component={ InputAddon }
                                                     className="form-control"
-                                                    disabled={ this.state.expextAnswer }
+                                                    disabled={ this.state.expectAnswer }
                                                     label={ <span> @ </span> }
                                                         />
                                             </div>
@@ -145,7 +145,7 @@ class Signin extends Component {
                                                     placeholder="Password"
                                                     component={ InputAddon }
                                                     className="form-control"
-                                                    disabled={ this.state.expextAnswer }
+                                                    disabled={ this.state.expectAnswer }
                                                     label={ <i className="glyphicon glyphicon-lock"></i> }
                                                         />
                                             </div>
@@ -157,10 +157,10 @@ class Signin extends Component {
                                                     type="submit"
                                                     bsSize="large"
                                                     bsStyle="primary"
-                                                    disabled={ invalid || this.state.expextAnswer }
+                                                    disabled={ invalid || this.state.expectAnswer }
                                                         >
                                                     <span> Sign In </span>
-                                                    { this.state.expextAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
+                                                    { this.state.expectAnswer&&(<i className="fa fa-spinner fa-spin fa-fw"></i>) }
                                                 </Button>
                                             </div>
         								</div>
