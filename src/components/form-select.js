@@ -3,10 +3,10 @@
 import React, { Component } from 'react';
 import SelectField from 'material-ui/SelectField';
 // local dependencies
-
+import { is } from '../services';
 // configuration
 
-export default function ({ input, label, meta: { touched, error }, children, ...custom }) {
+export default function ({ input, label, meta: { touched, error }, onChange, children, ...custom }) {
     return (
         <SelectField
             {...input}
@@ -15,7 +15,11 @@ export default function ({ input, label, meta: { touched, error }, children, ...
             children={children}
             floatingLabelText={label}
             errorText={touched && error}
-            onChange={(event, index, value) => input.onChange(value)}
-                />
+            onChange={(event, index, value) => {
+                if ( is.function(onChange) ) {
+                    value = onChange(event, index, value);
+                }
+                input.onChange(value);
+            }}/>
     )
 }
