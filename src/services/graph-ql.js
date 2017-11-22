@@ -175,11 +175,11 @@ export function getMeasure ( id ) {
         //     ,'\n query:', query
         //     ,'\n JSON query:', JSON.stringify({query})
         // );
-        // 
+        
         Axios.post('graphql', JSON.stringify({query}) )
             .then(success => {
                 var measure = success.data.data.allMeasures.nodes[0];
-                resolve(measure||{});
+                resolve( decodeVariables(measure||{}) );
             })
             .catch(error =>  reject(parseError(error)) );
     });
@@ -190,20 +190,20 @@ export function updateMeasure ( id ) {
     // NOTE: native promise can catch the exceptions
     return new Promise(function ( resolve, reject ) {
     // NOTE: from PHP project
-        `
-mutation { fInsertMeasure( input:{
-    id:2918,
-    name:"test info",
-    customerId:54,
-    studyId:2904,
-    variable:"{\"entitytype\":\"study event\",\"item\":\"crf\"}",
-    aggregatef:"COUNT",
-    distinctv:true,
-    dataFilter:"[{}]",
-    statusId:1}
-) {integer}
-}
-        `
+//         `
+// mutation { fInsertMeasure( input:{
+//     id:2918,
+//     name:"test info",
+//     customerId:54,
+//     studyId:2904,
+//     variable:"{\"entitytype\":\"study event\",\"item\":\"crf\"}",
+//     aggregatef:"COUNT",
+//     distinctv:true,
+//     dataFilter:"[{}]",
+//     statusId:1}
+// ) {integer}
+// }
+//         `
         
         var query = `{ allMeasures( condition: { id: ${id} }, first: 1) { nodes {
             id name customerId studyId variable
@@ -219,7 +219,7 @@ mutation { fInsertMeasure( input:{
         Axios.post('graphql', JSON.stringify({query}) )
             .then(success => {
                 var measure = success.data.data.allMeasures.nodes[0];
-                resolve(measure||{});
+                resolve( decodeVariables(measure) );
             })
             .catch(error =>  reject(parseError(error)) );
     });
