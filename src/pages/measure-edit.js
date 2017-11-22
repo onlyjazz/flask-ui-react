@@ -1,16 +1,11 @@
 
 // outsource dependencies
-import _ from 'lodash';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
-// import IconMenu from 'material-ui/IconMenu';
-// import TextField from 'material-ui/TextField';
-// import FlatButton from 'material-ui/FlatButton';
-// import SelectField from 'material-ui/SelectField';
 import RaisedButton from 'material-ui/RaisedButton';
 // local dependencies
 import { GraphQl, is } from '../services';
@@ -59,6 +54,7 @@ class MeasureEdit extends Component {
             aggTypes: aggTypes,
             entityTypes: entityTypes,
             // flags
+            asNew: false,
             errorMessage: '',
             expectAnswer: true,
         };
@@ -98,10 +94,10 @@ class MeasureEdit extends Component {
     submit ( values, dispatch, form ) {
         console.log('MEASURE EDIT submit => ()'
             ,'\n props:', this.props
+            ,'\n state:', this.state
             ,'\n auth:', this.props.auth
             ,'\n values:', values
-            ,'\n dispatch:', values
-            ,'\n form:', values
+            ,'\n asNew:', this.state.asNew
         );
     }
     
@@ -142,7 +138,6 @@ class MeasureEdit extends Component {
                                         type="button"
                                         label="PREVIEW"
                                         labelColor="#FFFFFF"
-                                        style={{float: 'right'}}
                                         backgroundColor="#039BE5"
                                         disabled={ pristine || invalid || expectAnswer }
                                         // containerElement={<Link to={MESURE_EDIT.LINK({id: 'NEW'})} />}
@@ -150,24 +145,22 @@ class MeasureEdit extends Component {
                                 </li>
                                 <li>
                                     <RaisedButton
-                                        type="button"
+                                        type="submit"
                                         label="SAVE AS A NEW MEASURE"
                                         labelColor="#FFFFFF"
-                                        style={{float: 'right'}}
                                         backgroundColor="#039BE5"
                                         disabled={ pristine || invalid || expectAnswer }
-                                        // containerElement={<Link to={MESURE_EDIT.LINK({id: 'NEW'})} />}
+                                        onClick={ ()=> this.setState({'asNew': true}) }
                                             />
                                 </li>
                                 <li>
                                     <RaisedButton
                                         label="SAVE"
                                         type="submit"
-                                        labelColor="#ffffff"
-                                        style={{float: 'right'}}
+                                        labelColor="#FFFFFF"
                                         backgroundColor="#4CAF50"
                                         disabled={ pristine || invalid || expectAnswer }
-                                        // containerElement={<Link to={MESURE_EDIT.LINK({id: 'NEW'})} />}
+                                        onClick={ ()=> this.setState({'asNew': false}) }
                                             />
                                 </li>
                             </ul>
@@ -181,15 +174,7 @@ class MeasureEdit extends Component {
                                     <h2 style={{fontSize: '24px', fontWeight: 'normal'}}> Study of Measure </h2>
                                 </div>
                                 <div className="col-xs-12 offset-bottom-4">
-                                    <Field
-                                        name="studyId"
-                                        label="Studies"
-                                        component={ FormSelect }
-                                        // onChange={value => {
-                                        //     this.setState({study: _.find(studies, {id: value})||{id: 0}});
-                                        //     return value;
-                                        // }}
-                                            >
+                                    <Field name="studyId" label="Studies" component={ FormSelect } >
                                         <MenuItem value={0} disabled={true} primaryText="Studies" />
                                         {(this.state.studies||[]).map( (study, key) => ( <MenuItem key={key} value={study.id} primaryText={study.officialTitle} /> ))}           
                                     </Field>
@@ -202,11 +187,7 @@ class MeasureEdit extends Component {
                                     <h2 style={{fontSize: '24px', fontWeight: 'normal'}}> Measure Info </h2>
                                 </div>
                                 <div className="col-xs-12 offset-bottom-4">
-                                    <Field
-                                        name="name"
-                                        label="Name"
-                                        component={ FormInput }
-                                            />
+                                    <Field name="name" label="Name" component={ FormInput } />
                                 </div>
                             </Paper>
                         </div>
@@ -216,10 +197,7 @@ class MeasureEdit extends Component {
                             <Paper zDepth={2} className="clearfix">
                                 <h2 className="col-xs-12 top-indent-2" style={{fontSize: '24px', fontWeight: 'normal'}}> Choose </h2>
                                 <div className="col-xs-12 offset-bottom-4">
-                                    <Field
-                                        name="entitytype"
-                                        label="Entity type"
-                                        component={ FormSelect }>
+                                    <Field name="entitytype" label="Entity type" component={ FormSelect } >
                                         <MenuItem value={0} disabled={true} primaryText="Entity type" />
                                         {(this.state.entityTypes||[]).map( (type, key) => ( <MenuItem key={key} value={type.value} primaryText={type.name} /> ))}            
                                     </Field>
@@ -241,19 +219,13 @@ class MeasureEdit extends Component {
                                     </Field>
                                 </div>
                                 <div className="col-xs-12 offset-bottom-4">
-                                    <Field
-                                        name="aggregatef"
-                                        label="Aggregation"
-                                        component={ FormSelect }>
+                                    <Field name="aggregatef" label="Aggregation" component={ FormSelect } >
                                         <MenuItem value={0} disabled={true} primaryText="Aggregation" />
                                         {(this.state.aggTypes||[]).map( (type, key) => ( <MenuItem key={key} value={type.value} primaryText={type.name} /> ))}
                                     </Field>
                                 </div>
                                 <div className="col-xs-12 offset-bottom-4">
-                                    <Field
-                                        name="distinctv"
-                                        label="Distinct"
-                                        component={ FormSelect }>
+                                    <Field name="distinctv" label="Distinct" component={ FormSelect } >
                                         <MenuItem value={0} disabled={true} primaryText="Distinct" />
                                         <MenuItem value={true} primaryText="Yes" />
                                         <MenuItem value={false} primaryText="No" />
@@ -270,6 +242,8 @@ class MeasureEdit extends Component {
 
 export default reduxForm({
     form: 'measureEditForm',
+    enableReinitialize: true,
+    keepDirtyOnReinitialize: true,
     /**
      * @param { Object } values - nammed properties of input data
      * @param { Object } meta - information about form status
@@ -277,8 +251,6 @@ export default reduxForm({
      * @function validate
      * @public
      */
-    enableReinitialize: true,
-    keepDirtyOnReinitialize: true,
     validate: ( values, meta ) => {
         var errors = {};
         
@@ -308,11 +280,11 @@ export default reduxForm({
             errors.item = 'Fields is required.';
         }
         
-        console.log('MEASURE EDIT validate => ( values, meta )'
-            ,'\n values:', values
-            ,'\n meta:', meta
-            ,'\n errors:', errors
-        );
+        // console.log('MEASURE EDIT validate => ( values, meta )'
+        //     ,'\n values:', values
+        //     ,'\n meta:', meta
+        //     ,'\n errors:', errors
+        // );
         
         return errors;
     },
