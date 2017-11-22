@@ -15,6 +15,7 @@ export default function ({ input, label, meta: { touched, error }, onChange, chi
             children={children}
             floatingLabelText={label}
             errorText={touched && error}
+            onClick={ e => input.onBlur(e) }
             onChange={(event, index, value) => {
                 if ( is.function(onChange) ) {
                     value = onChange(event, index, value);

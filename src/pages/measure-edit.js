@@ -40,7 +40,7 @@ const entityTypes = [
 
 const emptyMeasure = {
     name: '',
-    studyId: 0,
+    studyId: '',
     aggregatef: '',
     distinctv: '',
     item: '',
@@ -70,27 +70,29 @@ class MeasureEdit extends Component {
         //     ,'\n auth:', auth
         //     ,'\n match:', match
         // );
+        var requests = [ GraphQl.getStudies( auth.user.customer_id ) ];
+        if ( is.countable(match.params.id) ) {
+            requests.push(GraphQl.getMeasure( match.params.id ));
+        }
         
-        Promise.all([
-            GraphQl.getStudies( auth.user.customer_id ),
-            GraphQl.getMeasure( match.params.id )
-        ]).then(all => {
-            var studies = all[0];
-            var measure = all[1];
-            // update state
-            this.setState({
-                expectAnswer: false,
-                studies: studies,
+        Promise.all( requests )
+            .then(all => {
+                var studies = all[0];
+                var measure = all[1];
+                // update state
+                this.setState({
+                    expectAnswer: false,
+                    studies: studies,
+                });
+                // init values on the form
+                initialize({ ...emptyMeasure, ...measure});
+            }).catch(error => {
+                var message = 'Something went wrong ...';
+                this.setState({
+                    expectAnswer: false,
+                    errorMessage: message,
+                });
             });
-            // init values on the form
-            initialize({ ...emptyMeasure, ...measure});
-        }).catch(error => {
-            var message = 'Something went wrong ...';
-            this.setState({
-                expectAnswer: false,
-                errorMessage: message,
-            });
-        });
     }
     
     submit ( values, dispatch, form ) {
@@ -218,7 +220,7 @@ class MeasureEdit extends Component {
                                         name="entitytype"
                                         label="Entity type"
                                         component={ FormSelect }>
-                                        <MenuItem value={''} disabled={true} primaryText="Entity type" />
+                                        <MenuItem value={0} disabled={true} primaryText="Entity type" />
                                         {(this.state.entityTypes||[]).map( (type, key) => ( <MenuItem key={key} value={type.value} primaryText={type.name} /> ))}            
                                     </Field>
                                 </div>
@@ -234,7 +236,7 @@ class MeasureEdit extends Component {
                                         name="item"
                                         label="Fields"
                                         component={ FormSelect }>
-                                        <MenuItem value={''} disabled={true} primaryText="Fields" />
+                                        <MenuItem value={0} disabled={true} primaryText="Fields" />
                                         {(this.state.fields||[]).map( (field, key) => ( <MenuItem key={key} value={field.value} primaryText={field.name} /> ))}
                                     </Field>
                                 </div>
@@ -243,7 +245,7 @@ class MeasureEdit extends Component {
                                         name="aggregatef"
                                         label="Aggregation"
                                         component={ FormSelect }>
-                                        <MenuItem value={''} disabled={true} primaryText="Aggregation" />
+                                        <MenuItem value={0} disabled={true} primaryText="Aggregation" />
                                         {(this.state.aggTypes||[]).map( (type, key) => ( <MenuItem key={key} value={type.value} primaryText={type.name} /> ))}
                                     </Field>
                                 </div>
@@ -252,7 +254,7 @@ class MeasureEdit extends Component {
                                         name="distinctv"
                                         label="Distinct"
                                         component={ FormSelect }>
-                                        <MenuItem value={''} disabled={true} primaryText="Distinct" />
+                                        <MenuItem value={0} disabled={true} primaryText="Distinct" />
                                         <MenuItem value={true} primaryText="Yes" />
                                         <MenuItem value={false} primaryText="No" />
                                     </Field>
@@ -278,18 +280,38 @@ export default reduxForm({
     enableReinitialize: true,
     keepDirtyOnReinitialize: true,
     validate: ( values, meta ) => {
-
         var errors = {};
-        // EMAIL
-        // if ( !values.email ) {
-        //     errors.email = 'Email is required'
-        // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        //     errors.email = 'Invalid email address'
-        // }
+        
+        if ( !values.name ) {
+            errors.name = 'Name is required.';
+        } else if ( values.name.length < 2 ) {
+            errors.name = 'Name should contain at least 2 symbols. ';
+        }
+        
+        if ( !values.studyId ) {
+            errors.studyId = 'Study is required.';
+        }
+        
+        if ( !values.aggregatef ) {
+            errors.aggregatef = 'Aggregation is required.';
+        }
+        
+        if ( !values.distinctv ) {
+            errors.distinctv = 'Distinct is required.';
+        }
+        
+        if ( !values.entitytype ) {
+            errors.entitytype = 'Entity type is required.';
+        }
+        
+        if ( !values.item ) {
+            errors.item = 'Fields is required.';
+        }
         
         console.log('MEASURE EDIT validate => ( values, meta )'
             ,'\n values:', values
             ,'\n meta:', meta
+            ,'\n errors:', errors
         );
         
         return errors;
