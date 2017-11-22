@@ -16,7 +16,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { GraphQl, is } from '../services';
 import { Preloader, FormSelect, FormInput } from '../components';
 
-
 const fields = [
     { name: 'Cohort', value: 'COHORT' },
     { name: 'CRF', value: 'CRF' },
@@ -39,22 +38,69 @@ const entityTypes = [
     { name: 'Alert', value: 'ALERT' },
 ];
 
+const emptyMeasure = {
+    name: '',
+    studyId: 0,
+    aggregatef: '',
+    distinctv: '',
+    item: '',
+    entitytype: '',
+};
+
 class MeasureEdit extends Component {
     
     constructor ( props ) {
-        super( props );
+        super(props);
         
         this.state = {
-            errorMessage: '',
-            expectAnswer: false,
+            // selects
             studies: [],
-            study: { id: 0 },
-            name: null,
-            entitytype: null,
-            fields: null,
-            distinctv: null,
-            aggregatef: null,
+            fields: fields,
+            aggTypes: aggTypes,
+            entityTypes: entityTypes,
+            // flags
+            errorMessage: '',
+            expectAnswer: true,
         };
+        
+        var { auth, match, initialize } = props;
+        
+        // console.log('MEASURE EDIT constructor => ( props )'
+        //     ,'\n props:', props
+        //     ,'\n auth:', auth
+        //     ,'\n match:', match
+        // );
+        
+        Promise.all([
+            GraphQl.getStudies( auth.user.customer_id ),
+            GraphQl.getMeasure( match.params.id )
+        ]).then(all => {
+            var studies = all[0];
+            var measure = all[1];
+            // update state
+            this.setState({
+                expectAnswer: false,
+                studies: studies,
+            });
+            // init values on the form
+            initialize({ ...emptyMeasure, ...measure});
+        }).catch(error => {
+            var message = 'Something went wrong ...';
+            this.setState({
+                expectAnswer: false,
+                errorMessage: message,
+            });
+        });
+    }
+    
+    submit ( values, dispatch, form ) {
+        console.log('MEASURE EDIT submit => ()'
+            ,'\n props:', this.props
+            ,'\n auth:', this.props.auth
+            ,'\n values:', values
+            ,'\n dispatch:', values
+            ,'\n form:', values
+        );
     }
     
     Error () {
@@ -70,63 +116,6 @@ class MeasureEdit extends Component {
         );
     }
     
-    getMeasure ( id ) {
-        GraphQl
-            .getMeasure( id )
-            .then(success => {
-                // console.log('MEASURE EDIT getMeasure => ()'
-                //     ,'\n state:', this.state
-                //     ,'\n props:', this.props
-                // );
-                var study = _.find(this.state.studies, { id: success.studyId })[0]||{id:0};
-                this.setState({
-                    expectAnswer: false,
-                    study: study,
-                    name: success.name,
-                    fields: success.fields,
-                    entitytype: success.entitytype,
-                    distinctv: success.distinctv,
-                    aggregatef: success.aggregatef,
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    expectAnswer: false,
-                    errorMessage: JSON.stringify(error.data),
-                });
-            });
-    }
-    
-    componentWillMount () {
-        // console.log('MEASURE EDIT componentWillMount => ()'
-        //     ,'\n state:', this.state
-        //     ,'\n props:', this.props
-        //     ,'\n match:', this.props.match
-        // );
-        setTimeout(()=> {
-            GraphQl
-                .getStudies( this.props.auth.user.customer_id )
-                .then(success => {
-                    var measureId = this.props.match.params.id;
-                    if ( is.number( measureId ) ) {
-                        this.setState({studies: success});
-                        this.getMeasure( measureId );
-                    } else {
-                        this.setState({
-                            studies: success,
-                            expectAnswer: false,
-                        });
-                    }
-                })
-                .catch(error => {
-                    this.setState({
-                        expectAnswer: false,
-                        errorMessage: JSON.stringify(error.data),
-                    });
-                });
-        }, 10);
-    }
-    
     render() {
         
         // console.log('MEASURE EDIT render => ()'
@@ -134,12 +123,12 @@ class MeasureEdit extends Component {
         //     ,'\n props:', this.props
         //     ,'\n match:', this.props.match
         // );
-        var { studies, expectAnswer } = this.state;
-        var { invalid, handleSubmit } = this.props;
+        var { invalid, pristine, handleSubmit } = this.props;
+        var { expectAnswer } = this.state;
         
         return (
             <div className="custom-content-container">
-                <form name="measureEditForm" onSubmit={ handleSubmit( ()=> console.log('Form submit') ) }>
+                <form name="measureEditForm" onSubmit={ handleSubmit( this.submit.bind(this) ) }>
                     <div className="row top-indent-8 offset-bottom-4">
                         <h1 className="col-xs-12 col-sm-4 offset-bottom-2" style={{fontSize: '45px', fontWeight: 300}}>
                             Measures <Preloader type="ICON" expectAnswer={expectAnswer} />
@@ -153,7 +142,7 @@ class MeasureEdit extends Component {
                                         labelColor="#FFFFFF"
                                         style={{float: 'right'}}
                                         backgroundColor="#039BE5"
-                                        disabled={ invalid || expectAnswer }
+                                        disabled={ pristine || invalid || expectAnswer }
                                         // containerElement={<Link to={MESURE_EDIT.LINK({id: 'NEW'})} />}
                                             />
                                 </li>
@@ -164,7 +153,7 @@ class MeasureEdit extends Component {
                                         labelColor="#FFFFFF"
                                         style={{float: 'right'}}
                                         backgroundColor="#039BE5"
-                                        disabled={ invalid || expectAnswer }
+                                        disabled={ pristine || invalid || expectAnswer }
                                         // containerElement={<Link to={MESURE_EDIT.LINK({id: 'NEW'})} />}
                                             />
                                 </li>
@@ -175,7 +164,7 @@ class MeasureEdit extends Component {
                                         labelColor="#ffffff"
                                         style={{float: 'right'}}
                                         backgroundColor="#4CAF50"
-                                        disabled={ invalid || expectAnswer }
+                                        disabled={ pristine || invalid || expectAnswer }
                                         // containerElement={<Link to={MESURE_EDIT.LINK({id: 'NEW'})} />}
                                             />
                                 </li>
@@ -191,10 +180,16 @@ class MeasureEdit extends Component {
                                 </div>
                                 <div className="col-xs-12 offset-bottom-4">
                                     <Field
-                                        name="study"
+                                        name="studyId"
                                         label="Studies"
-                                        component={ FormSelect }>
-                                        {studies.map( (study, key) => ( <MenuItem key={key} value={study.id} primaryText={study.officialTitle} /> ))}           
+                                        component={ FormSelect }
+                                        // onChange={value => {
+                                        //     this.setState({study: _.find(studies, {id: value})||{id: 0}});
+                                        //     return value;
+                                        // }}
+                                            >
+                                        <MenuItem value={0} disabled={true} primaryText="Studies" />
+                                        {(this.state.studies||[]).map( (study, key) => ( <MenuItem key={key} value={study.id} primaryText={study.officialTitle} /> ))}           
                                     </Field>
                                 </div>
                             </Paper>
@@ -223,7 +218,8 @@ class MeasureEdit extends Component {
                                         name="entitytype"
                                         label="Entity type"
                                         component={ FormSelect }>
-                                        {entityTypes.map( (type, key) => ( <MenuItem key={key} value={type.value} primaryText={type.name} /> ))}            
+                                        <MenuItem value={''} disabled={true} primaryText="Entity type" />
+                                        {(this.state.entityTypes||[]).map( (type, key) => ( <MenuItem key={key} value={type.value} primaryText={type.name} /> ))}            
                                     </Field>
                                 </div>
                             </Paper>
@@ -233,25 +229,13 @@ class MeasureEdit extends Component {
                                 <h2 className="col-xs-12 top-indent-2" style={{fontSize: '24px', fontWeight: 'normal'}}>
                                     Variable
                                 </h2>
-                                {/* <div className="col-xs-12 offset-bottom-4">
-                                    <SelectField
-                                        fullWidth={true}
-                                        value={study.id}
-                                        floatingLabelText="Studies"
-                                        // errorStyle={{color: 'orange'}}
-                                        errorText={'Should not be Night (Custom error style)'}
-                                        onChange={(event, index, value)=> this.setState({study: _.find(studies, {id: value})||{id: 0}}) }
-                                            >
-                                        <MenuItem disabled={true} value={0} style={{ whiteSpace: 'normal', textOverflow: 'unset'}} primaryText="Select Study" />
-                                        {studies.map( (study, key) => ( <MenuItem key={key} value={study.id} primaryText={study.officialTitle} /> ))}
-                                    </SelectField>
-                                </div> */}
                                 <div className="col-xs-12 offset-bottom-4">
                                     <Field
-                                        name="fields"
+                                        name="item"
                                         label="Fields"
                                         component={ FormSelect }>
-                                        {fields.map( (field, key) => ( <MenuItem key={key} value={field.value} primaryText={field.name} /> ))}
+                                        <MenuItem value={''} disabled={true} primaryText="Fields" />
+                                        {(this.state.fields||[]).map( (field, key) => ( <MenuItem key={key} value={field.value} primaryText={field.name} /> ))}
                                     </Field>
                                 </div>
                                 <div className="col-xs-12 offset-bottom-4">
@@ -259,7 +243,8 @@ class MeasureEdit extends Component {
                                         name="aggregatef"
                                         label="Aggregation"
                                         component={ FormSelect }>
-                                        {aggTypes.map( (type, key) => ( <MenuItem key={key} value={type.value} primaryText={type.name} /> ))}
+                                        <MenuItem value={''} disabled={true} primaryText="Aggregation" />
+                                        {(this.state.aggTypes||[]).map( (type, key) => ( <MenuItem key={key} value={type.value} primaryText={type.name} /> ))}
                                     </Field>
                                 </div>
                                 <div className="col-xs-12 offset-bottom-4">
@@ -267,24 +252,12 @@ class MeasureEdit extends Component {
                                         name="distinctv"
                                         label="Distinct"
                                         component={ FormSelect }>
+                                        <MenuItem value={''} disabled={true} primaryText="Distinct" />
                                         <MenuItem value={true} primaryText="Yes" />
                                         <MenuItem value={false} primaryText="No" />
                                     </Field>
                                 </div>
                             </Paper>
-                        </div>
-                    </div>
-                    <div className="col-xs-12">
-                        <div className="row">
-                            <div className="col-xs-12">
-                                Private content for editing Measure.
-                                { JSON.stringify(this.props.match) }
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-xs-12">
-                                { JSON.stringify(this.state.measure) }
-                            </div>
                         </div>
                     </div>
                 </form>
@@ -302,6 +275,8 @@ export default reduxForm({
      * @function validate
      * @public
      */
+    enableReinitialize: true,
+    keepDirtyOnReinitialize: true,
     validate: ( values, meta ) => {
 
         var errors = {};
