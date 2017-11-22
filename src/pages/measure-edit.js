@@ -268,7 +268,7 @@ export default reduxForm({
             errors.aggregatef = 'Aggregation is required.';
         }
         
-        if ( !values.distinctv ) {
+        if ( !is.boolean(values.distinctv) ) {
             errors.distinctv = 'Distinct is required.';
         }
         
