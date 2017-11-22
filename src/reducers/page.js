@@ -6,9 +6,9 @@ import { PAGE_UPDATE_START, PAGE_UPDATE_ERROR, PAGE_UPDATE_SUCCESS } from '../ac
 
 
 var initialState = {
-    expectAnswer: false,
+    expectAnswer: true,
     errorMessage: '',
-    payload: null,
+    resolve: {},
     error: null,
 };
 // configuration
@@ -25,7 +25,7 @@ export default function ( state = initialState, action ) {
     switch ( type ) {
         default: return state;
         //
-        case PAGE_UPDATE_START: return { ...state, ...option, expectAnswer: true };
+        case PAGE_UPDATE_START: return initialState;
         
         case PAGE_UPDATE_ERROR: return { ...state, ...option, expectAnswer: false };
         
