@@ -167,8 +167,8 @@ class MeasureEdit extends Component {
                         </div>
                     </div>
                     { this.Error() }
-                    <div className="row offset-bottom-4">
-                        <div className="col-xs-4">
+                    <div className="row">
+                        <div className="col-xs-12 col-sm-6 col-md-4 offset-bottom-4">
                             <Paper zDepth={2} className="clearfix">
                                 <div className="col-xs-12 top-indent-2">
                                     <h2 style={{fontSize: '24px', fontWeight: 'normal'}}> Study of Measure </h2>
@@ -181,7 +181,7 @@ class MeasureEdit extends Component {
                                 </div>
                             </Paper>
                         </div>
-                        <div className="col-xs-8">
+                        <div className="col-xs-12 col-sm-6 col-md-8 offset-bottom-4">
                             <Paper zDepth={2} className="clearfix">
                                 <div className="col-xs-12 top-indent-2 offset-bottom-1">
                                     <h2 style={{fontSize: '24px', fontWeight: 'normal'}}> Measure Info </h2>
@@ -192,8 +192,8 @@ class MeasureEdit extends Component {
                             </Paper>
                         </div>
                     </div>
-                    <div className="row offset-bottom-4">
-                        <div className="col-xs-6">
+                    <div className="row">
+                        <div className="col-xs-12 col-sm-6 offset-bottom-4">
                             <Paper zDepth={2} className="clearfix">
                                 <h2 className="col-xs-12 top-indent-2" style={{fontSize: '24px', fontWeight: 'normal'}}> Choose </h2>
                                 <div className="col-xs-12 offset-bottom-4">
@@ -204,7 +204,7 @@ class MeasureEdit extends Component {
                                 </div>
                             </Paper>
                         </div>
-                        <div className="col-xs-6">
+                        <div className="col-xs-12 col-sm-6 offset-bottom-4">
                             <Paper zDepth={2} className="clearfix">
                                 <h2 className="col-xs-12 top-indent-2" style={{fontSize: '24px', fontWeight: 'normal'}}>
                                     Variable
