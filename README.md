@@ -23,7 +23,9 @@ Checkout this repo, install dependencies, then start the process
 
 To run preprocessor less
 ```
-> gulp less:watch
+> gulp watch-less
+// or 
+> npm run less:watch
 ```
 
 #### Build
