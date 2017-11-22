@@ -3,22 +3,26 @@
 import { PAGE_UPDATE_START, PAGE_UPDATE_ERROR, PAGE_UPDATE_SUCCESS } from './types';
 
 
-export function pageUpdate ( payload ) {
+export function pageUpdate ( data ) {
     return {
         type: PAGE_UPDATE_START,
-        payload,
+        data,
     }
 }
 
 export function pageUpdateError ( error, errorMessage ) {
+    if ( !errorMessage ) {
+        errorMessage = error.message||error.data;
+    }
     return {
         type: PAGE_UPDATE_ERROR,
+        resolve: {},
         errorMessage,
         error,
     }
 }
 
-export function pageUpdateSuccess ( field = 'payload', data ) {
+export function pageUpdateSuccess ( data, field = 'resolve' ) {
     return {
         type: PAGE_UPDATE_SUCCESS,
         [field]: data

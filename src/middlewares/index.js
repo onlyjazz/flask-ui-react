@@ -3,7 +3,8 @@ import { is } from '../services';
 import { toastr } from 'react-redux-toastr';
 // import { config } from '../constants';
 
-export { authRun } from './authRun';
+export { authRun } from './auth-run';
+export { pageResolve } from './page-resolve';
 
 /**
  * @description determine promisses on properties "payload" and resolve it

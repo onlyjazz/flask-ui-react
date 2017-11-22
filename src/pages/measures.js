@@ -15,6 +15,7 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 
 // local dependencies
 import { GraphQl } from '../services';
+import { Preloader } from '../components';
 import { MESURE_EDIT } from '../constants/routes';
 // import { pageUpdate, pageUpdateError, pageUpdateSuccess } from '../actions';
 
@@ -24,13 +25,6 @@ var cellOverideStyle = {
     textOverflow: 'unset',
     padding: '24px 12px',
 };
-
-function Preloader ( props ) {
-    return props.show ?(<strong>
-        <i className="fa fa-spinner fa-spin fa-fw"></i>
-        <span className="sr-only">Loading...</span>
-    </strong>) : ('');
-}
 
 // var sortIcon = {
 //     'sort': 'glyphicon glyphicon-sort',
@@ -80,10 +74,6 @@ class Measures extends Component {
             
             sort: 'non'
         };
-        
-        this.toggle = ( event, toggled ) => {
-            this.setState({ [event.target.name]: toggled });
-        }
     }
   
     Filter () {
@@ -274,7 +264,7 @@ class Measures extends Component {
             <div className="custom-content-container">
                 <div className="row top-indent-8 offset-bottom-4">
                     <h1 className="col-xs-12 col-sm-8 offset-0 offset-bottom-2" style={{fontSize: '45px', fontWeight: 300}}>
-                        Monitoring Measures <Preloader show={this.state.expectAnswer} />
+                        Monitoring Measures <Preloader type="ICON" expectAnswer={this.state.expectAnswer} />
                     </h1>
                     <div className="col-xs-12 col-sm-4 top-indent-3 offset-bottom-4">
                         <RaisedButton

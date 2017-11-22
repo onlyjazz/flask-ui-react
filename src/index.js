@@ -16,7 +16,7 @@ import './style';
 import reducers from './reducers';
 import * as PATH from './constants/routes';
 import { AUTH_RUN } from './actions/types';
-import { payloads, errors, authRun } from './middlewares';
+import { payloads, errors, authRun, pageResolve } from './middlewares';
 import { Header, SideMenu, Private } from './components';
 import {
     Signin,
@@ -80,7 +80,7 @@ function Root ( props, state ) {
 // NOTE: this API requires redux@>=3.1.0
 var store = createStore(
   reducers,
-  applyMiddleware( authRun, thunk, payloads, errors )
+  applyMiddleware( authRun, thunk, pageResolve, payloads, errors )
 );
 
 // NOTE: actions which will be executed before application was rendered
