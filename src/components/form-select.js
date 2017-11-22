@@ -1,6 +1,6 @@
 
 // outsource dependencies
-import React, { Component } from 'react';
+import React from 'react';
 import SelectField from 'material-ui/SelectField';
 // local dependencies
 import { is } from '../services';
