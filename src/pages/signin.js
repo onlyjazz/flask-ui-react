@@ -11,7 +11,7 @@ import { toastr } from 'react-redux-toastr';
 import { authUser } from '../actions';
 import { LogoBig } from '../components';
 import { InputAddon } from '../components';
-import { Axios, storage } from '../services';
+import { Axios, authenticateServices } from '../services';
 import { SIGN_UP, FORGOT_PASSWORD, MEASURES } from '../constants/routes';
 
 class Signin extends Component {
@@ -31,15 +31,10 @@ class Signin extends Component {
         // sign in
         Axios
             .post('/users/signin', { password, email })
-            .then(success => {
-                // store tokens
-                storage.set('auth', success.data);
-                // set default auth heder
-                Axios.defaults.headers['Authorization'] = success.data.jwtToken;
-                // get self
-                Axios
-                    .get('/users/self')
-                    .then(success => {
+            .then(session => {
+                // all nessary actions to check and store session
+                authenticateServices( session.data )
+                    .then(user => {
                         // clear form
                         this.props.reset();
                         // update component
@@ -47,15 +42,11 @@ class Signin extends Component {
                         // toastr success message
                         toastr.success('Hello !', 'We glad to see you =)');
                         // update state
-                        dispatch( authUser(success.data) );
+                        dispatch( authUser(user.data) );
                         // redirect to app
                         this.props.history.push(MEASURES.LINK()); // does not work if action async
                     })
                     .catch(error => {
-                        // clear tokens
-                        storage.remove('auth');
-                        // remove auth heder
-                        delete Axios.defaults.headers['Authorization'];
                         // show error message
                         var message = 'Somethings went wrong...';
                         this.setState({

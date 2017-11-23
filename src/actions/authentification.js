@@ -5,8 +5,7 @@
 
 // local dependencies
 import { AUTH_USER, UNAUTH_USER, AUTH_ERROR } from './types';
-import { storage } from '../services';
-import { Axios } from '../services';
+import { authenticateServices } from '../services';
 
 export function unauthUser () {
     return {
@@ -17,7 +16,7 @@ export function unauthUser () {
 export function authUser ( user ) {
     return {
         type: AUTH_USER,
-        payload: user || Axios.get('private/self'),
+        payload: user,
     }
 }
 
@@ -31,19 +30,8 @@ export function authError ( error, errorMessage ) {
 
 export function signout () {
     return function ( dispatch ) {
-        Axios
-            .get('/signout')
-            .then(success=>clearSession(dispatch) )
-            .catch(error=>clearSession(dispatch) );
+        authenticateServices( false )
+            .then(success=>dispatch( unauthUser() ) )
+            .catch(error=>dispatch( unauthUser() ) );
     }
 }
-
-function clearSession ( dispatch ) {
-    // clear default auth heder
-    delete Axios.defaults.headers['Authorization'];
-    // clear authentification tokens
-    storage.remove('auth');
-    // 
-    dispatch( unauthUser() );
-}
-
