@@ -8,7 +8,7 @@ import { Button } from 'react-bootstrap';
 import { toastr } from 'react-redux-toastr';
 
 // local dependencies
-import { Axios } from '../services';
+import { API } from '../services';
 import { LogoBig } from '../components';
 import { InputAddon } from '../components';
 import { SIGN_IN } from '../constants/routes';
@@ -28,7 +28,7 @@ class Signup extends Component {
         
         this.setState({expectAnswer: true});
 
-        Axios.post('/signup', values)
+        API.post('/signup', values)
             .then(success => {
                 // clear form
                 this.props.reset();

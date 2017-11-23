@@ -8,7 +8,7 @@ import { Button } from 'react-bootstrap';
 import { toastr } from 'react-redux-toastr';
 
 // local dependencies
-import { Axios } from '../services';
+import { API } from '../services';
 import { LogoBig } from '../components';
 import { InputAddon } from '../components';
 import { SIGN_IN, MEASURES } from '../constants/routes';
@@ -33,8 +33,7 @@ class ForgotPassword extends Component {
         
         this.setState({expectAnswer: true});
         
-        Axios
-            .get('/forgotPassword')
+        API.post('/forgotPassword', values)
             .then(success => {
                 // clear form
                 this.props.reset();

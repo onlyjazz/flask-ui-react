@@ -11,7 +11,7 @@ import { toastr } from 'react-redux-toastr';
 import { authUser } from '../actions';
 import { LogoBig } from '../components';
 import { InputAddon } from '../components';
-import { Axios, authenticateServices } from '../services';
+import { API, authenticateServices } from '../services';
 import { SIGN_UP, FORGOT_PASSWORD, MEASURES } from '../constants/routes';
 
 class Signin extends Component {
@@ -29,8 +29,7 @@ class Signin extends Component {
         
         this.setState({expectAnswer: true});
         // sign in
-        Axios
-            .post('/users/signin', { password, email })
+        API.post('/users/signin', { password, email })
             .then(session => {
                 // all nessary actions to check and store session
                 authenticateServices( session.data )

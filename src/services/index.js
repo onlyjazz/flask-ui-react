@@ -85,5 +85,7 @@ var is = window.is;
 export { is };
 export { storage };
 export { instanceAPI as Axios };
+export { instanceAPI as API };
+// export { instanceAPI as GraphQl };
 export { default as GraphQl } from './graph-ql';
 
