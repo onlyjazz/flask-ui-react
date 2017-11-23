@@ -35,7 +35,7 @@ try {
     localStorage.removeItem('test');
 } catch ( e ) { ok = false; }
 
-export const storage = {
+const storage = {
     isEmulation: !ok,
     localStorage: localStorage,
     cookieStorage: cookieStorage,
@@ -96,3 +96,5 @@ export const storage = {
         cookieStorage.setItem( name, data );
     }
 };
+
+export default storage;
