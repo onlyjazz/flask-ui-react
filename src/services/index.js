@@ -7,9 +7,6 @@ import axios from 'axios';
 import storage from './storage';
 import { config } from '../constants';
 
-// configuration
-
-
 /**
  * @description axios instance with base configuration of app
  * @public
@@ -21,7 +18,6 @@ var instanceAPI = axios.create({
        'Content-Type': 'application/json',
    },
 });
-
 
 /**
  * @description axios instance with base configuration of graphql
@@ -64,7 +60,7 @@ export function authenticateServices ( session ) {
                 resolve( success[0] );
             })
             .catch(error => {
-                console.log('authenticateServices ERROR:', error);
+                // console.log('authenticateServices ERROR:', error);
                 delete instanceAPI.defaults.headers['Authorization'];
                 delete instanceGraphQl.defaults.headers['Token'];
                 storage.remove('auth');
@@ -84,8 +80,9 @@ var is = window.is;
 // aliases for export all services
 export { is };
 export { storage };
-export { instanceAPI as Axios };
+export { instanceGraphQl };
 export { instanceAPI as API };
-// export { instanceAPI as GraphQl };
 export { default as GraphQl } from './graph-ql';
+export { default as MeasureService } from './measure-service';
+export { default as StudyService } from './study-service';
 

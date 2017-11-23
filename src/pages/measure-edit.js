@@ -8,7 +8,7 @@ import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 // local dependencies
-import { GraphQl, is } from '../services';
+import { StudyService, is, MeasureService } from '../services';
 import { Preloader, FormSelect, FormInput } from '../components';
 
 const fields = [
@@ -29,8 +29,8 @@ const aggTypes = [
 ];
 
 const entityTypes = [
-    { name: 'Study event', value: 'STUDY_EVENT' },
-    { name: 'Alert', value: 'ALERT' },
+    { name: 'Study event', value: 'study event'/*'STUDY_EVENT'*/ },
+    { name: 'Alert', value: 'alerts'/*'ALERT'*/ },
 ];
 
 const emptyMeasure = {
@@ -66,9 +66,9 @@ class MeasureEdit extends Component {
         //     ,'\n auth:', auth
         //     ,'\n match:', match
         // );
-        var requests = [ GraphQl.getStudies( auth.user.customer_id ) ];
+        var requests = [ StudyService.getStudyList( auth.user.customer_id ) ];
         if ( is.countable(match.params.id) ) {
-            requests.push(GraphQl.getMeasure( match.params.id ));
+            requests.push( MeasureService.getMeasure( match.params.id ));
         }
         
         Promise.all( requests )
@@ -280,11 +280,11 @@ export default reduxForm({
             errors.item = 'Fields is required.';
         }
         
-        // console.log('MEASURE EDIT validate => ( values, meta )'
-        //     ,'\n values:', values
-        //     ,'\n meta:', meta
-        //     ,'\n errors:', errors
-        // );
+        console.log('MEASURE EDIT validate => ( values, meta )'
+            ,'\n values:', values
+            ,'\n meta:', meta
+            ,'\n errors:', errors
+        );
         
         return errors;
     },

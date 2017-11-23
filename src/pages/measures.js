@@ -14,7 +14,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 // local dependencies
-import { GraphQl } from '../services';
+import { StudyService, MeasureService } from '../services';
 import { Preloader } from '../components';
 import { MESURE_EDIT } from '../constants/routes';
 // import { pageUpdate, pageUpdateError, pageUpdateSuccess } from '../actions';
@@ -200,7 +200,8 @@ class Measures extends Component {
             expectAnswer: true,
             errorMessage: null,
         });
-        GraphQl.deleteMeasures(list)
+        MeasureService
+            .deleteMeasures(list)
             .then(success => {
                 this.updateTableData(this.props.auth.user.customer_id, this.state.currentStudy.id);
             })
@@ -218,7 +219,8 @@ class Measures extends Component {
             expectAnswer: true,
             errorMessage: null,
         });
-        GraphQl.getMeasuresPage(customerId, studyId)
+        MeasureService
+            .getMeasureList(customerId, studyId)
             .then(success => {
                 this.setState({
                     expectAnswer: false,
@@ -237,8 +239,8 @@ class Measures extends Component {
     componentWillMount () {
         var {auth} = this.props;
         setTimeout(()=> {
-            GraphQl
-                .getStudies( auth.user.customer_id )
+            StudyService
+                .getStudyList( auth.user.customer_id )
                 .then(success => {
                     this.setState({studies: success});
                     this.updateTableData(auth.user.customer_id, 0);
@@ -278,10 +280,10 @@ class Measures extends Component {
                 </div>
                 { this.Error() }
                 <div className="row">
-                    <div className="col-xs-12 col-lg-3 offset-bottom-4">
+                    <div className="col-xs-12 col-md-3 offset-bottom-4">
                         <div className="clearfix"> { this.Filter() } </div>
                     </div>
-                    <div className="col-xs-12 col-lg-9 offset-bottom-4">
+                    <div className="col-xs-12 col-md-9 offset-bottom-4">
                         <div className="clearfix"> { this.Table() } </div>
                     </div>
                 </div>
