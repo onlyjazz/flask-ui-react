@@ -20,8 +20,8 @@ class SideMenu extends Component {
         return (
             <ul className="list-unstyled list-menu">
                 <li className="menu-item"> 
-                    <Link className={this.isActive( USERS.LINK() )} to={USERS.LINK()}>
-                        <i className="material-icons" style={{paddingRight: '7px',fontSize: '22px', paddingBottom: '2px'}}>dashboard</i>  Studies
+                    <Link className={this.isActive( STUDIES.LINK() )} to={STUDIES.LINK()}>
+                        <i className="material-icons" style={{paddingRight: '7px',fontSize: '22px', paddingBottom: '2px'}}>people</i>  Studies
                     </Link>
                     <hr/>
                 </li>
@@ -32,8 +32,8 @@ class SideMenu extends Component {
                     <hr/>
                 </li>
                 <li className="menu-item"> 
-                    <Link className={this.isActive( STUDIES.LINK() )} to={STUDIES.LINK()}>
-                        <i className="material-icons" style={{paddingRight: '7px',fontSize: '22px', paddingBottom: '2px'}}>people</i>  Users
+                    <Link className={this.isActive( USERS.LINK() )} to={USERS.LINK()}>
+                        <i className="material-icons" style={{paddingRight: '7px',fontSize: '22px', paddingBottom: '2px'}}>dashboard</i>  Users
                     </Link>
                     <hr/>
                 </li>
