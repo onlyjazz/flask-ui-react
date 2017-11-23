@@ -81,14 +81,29 @@
     opacity:            @opacity;
 }
 
-// .animation( circular, 500ms, infinite, ease-in-out );
-// @-webkit-keyframes circular { from { padding-top: 78px; } to { padding-top: 200px; } }
-// @keyframes circular { from { padding-top: 78px; } to { padding-top: 200px; } }
+// .animation( blink, 500ms, infinite, ease-in-out );
+// .keyframes( blink, { 0% { background: red; } 100%{ background: green; } });
 .animation ( @name, @duration: 300ms, @delay: 0, @ease: ease ) {
     -webkit-animation: @name @duration @delay @ease;
     -moz-animation:    @name @duration @delay @ease;
     -ms-animation:     @name @duration @delay @ease;
     animation:         @name @duration @delay @ease;
+}
+// .animation-delay( .6s );
+.animation-delay ( @delay ) {
+    animation-delay: @delay;
+    -o-animation-delay: @delay;
+    -ms-animation-delay: @delay;
+    -moz-animation-delay: @delay;
+    -webkit-animation-delay: @delay;
+}
+// .keyframes( blink, { 0% { background: red; } 100%{ background: green; } });
+.keyframes( @name; @arguments ) {
+    @keyframes @name { @arguments(); }
+    @-o-keyframes @name { @arguments(); }
+    @-ms-keyframes @name { @arguments(); }
+    @-moz-keyframes @name { @arguments(); }
+    @-webkit-keyframes @name { @arguments(); }
 }
 
 // .transition ( padding-top 0.5s ease );
