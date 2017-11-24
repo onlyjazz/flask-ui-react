@@ -5,8 +5,8 @@ import SelectField from 'material-ui/SelectField';
 // local dependencies
 import { is } from '../services';
 // configuration
-
-export default function ({ input, label, meta: { touched, error }, onChange, children, ...custom }) {
+// "preChange" - redux-form remove method if it name "onChange"
+export default function ({ input, label, meta: { touched, error }, preChange, children, ...custom }) {
     return (
         <SelectField
             {...input}
@@ -17,10 +17,11 @@ export default function ({ input, label, meta: { touched, error }, onChange, chi
             errorText={touched && error}
             onClick={ e => input.onBlur(e) }
             onChange={(event, index, value) => {
-                if ( is.function(onChange) ) {
-                    value = onChange(event, index, value);
+                var v;
+                if ( is.function(preChange) ) {
+                    v = preChange(event, index, value);
                 }
-                input.onChange(value);
+                input.onChange(v||value);
             }}/>
     )
 }

@@ -3,23 +3,24 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { toastr } from 'react-redux-toastr';
 
 import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 // local dependencies
-import { StudyService, is, MeasureService } from '../services';
+import { GraphQl, StudyService, is, MeasureService } from '../services';
 import { Preloader, FormSelect, FormInput } from '../components';
 
-const fields = [
-    { name: 'Cohort', value: 'COHORT' },
-    { name: 'CRF', value: 'CRF' },
-    { name: 'Event', value: 'EVENT' },
-    { name: 'Event date', value: 'DATE' },
-    { name: 'Site', value: 'SITE' },
-    { name: 'Subject', value: 'SUBJECT' },
-];
-
+// const fields = [
+//     { name: 'Cohort', value: 'COHORT' },
+//     { name: 'CRF', value: 'CRF' },
+//     { name: 'Event', value: 'EVENT' },
+//     { name: 'Event date', value: 'DATE' },
+//     { name: 'Site', value: 'SITE' },
+//     { name: 'Subject', value: 'SUBJECT' },
+// ];
+// 
 const aggTypes = [
     { name: 'Count', value: 'COUNT' },
     { name: 'Sum', value: 'SUM' },
@@ -27,7 +28,7 @@ const aggTypes = [
     { name: 'Min', value: 'MIN' },
     { name: 'Max', value: 'MAX' },
 ];
-
+// 
 const entityTypes = [
     { name: 'Study event', value: 'study event'/*'STUDY_EVENT'*/ },
     { name: 'Alert', value: 'alerts'/*'ALERT'*/ },
@@ -35,7 +36,7 @@ const entityTypes = [
 
 const emptyMeasure = {
     name: '',
-    studyId: '',
+    studyId: 0,
     aggregatef: '',
     distinctv: '',
     item: '',
@@ -50,7 +51,11 @@ class MeasureEdit extends Component {
         this.state = {
             // selects
             studies: [],
-            fields: fields,
+            studyId: 0,
+            // fields: []/*fields*/,
+            alerts: [],
+            items: [],
+            events: [],
             aggTypes: aggTypes,
             entityTypes: entityTypes,
             // flags
@@ -61,11 +66,6 @@ class MeasureEdit extends Component {
         
         var { auth, match, initialize } = props;
         
-        // console.log('MEASURE EDIT constructor => ( props )'
-        //     ,'\n props:', props
-        //     ,'\n auth:', auth
-        //     ,'\n match:', match
-        // );
         var requests = [ StudyService.getStudyList( auth.user.customer_id ) ];
         if ( is.countable(match.params.id) ) {
             requests.push( MeasureService.getMeasure( match.params.id ));
@@ -74,14 +74,19 @@ class MeasureEdit extends Component {
         Promise.all( requests )
             .then(all => {
                 var studies = all[0];
-                var measure = all[1];
+                var measure = { ...emptyMeasure, ...all[1]};
                 // update state
                 this.setState({
-                    expectAnswer: false,
                     studies: studies,
+                    type: measure.entitytype, 
                 });
+                // get lists ...
+                this.updateLists( measure.studyId );
+                // console.log('initialize ( measure )'
+                //     ,'\n measure:', measure
+                // );
                 // init values on the form
-                initialize({ ...emptyMeasure, ...measure});
+                initialize( measure );
             }).catch(error => {
                 var message = 'Something went wrong ...';
                 this.setState({
@@ -91,14 +96,80 @@ class MeasureEdit extends Component {
             });
     }
     
+    updateLists ( studyId ) {
+        
+        var { auth } = this.props;
+        
+        // console.log('MEASURE EDIT updateLists => ()'
+        //     ,'\n props:', this.props
+        //     ,'\n state:', this.state
+        //     ,'\n studyId:', studyId
+        // );
+        
+        Promise.all([
+            GraphQl(`mutation{fListOfTableColumns(input:{tn:"alerts"}) {strings}}`),
+            GraphQl(`mutation{fListOfStudyEvents(input:{customerId:${auth.user.customer_id},studyId:${studyId}}) {strings}}`),
+            GraphQl(`mutation{fListOfStudyItems(input:{customerId:${auth.user.customer_id},studyId:${studyId}, event: "", crf: ""}) {strings}}`),
+        ])
+        .then(all => {
+            var alerts = all[0].data.data.fListOfTableColumns.strings;
+            var events = all[1].data.data.fListOfStudyEvents.strings;
+            var items = all[2].data.data.fListOfStudyItems.strings;
+
+            // update state
+            this.setState({
+                alerts: alerts,
+                items: items,
+                events: events,
+                expectAnswer: false,
+            });
+
+        }).catch(error => {
+            var message = error.message||'Something went wrong ...';
+            this.setState({
+                expectAnswer: false,
+                errorMessage: message,
+            });
+        });
+    }
+    
     submit ( values, dispatch, form ) {
+        var query = `mutation {
+            fInsertMeasure( input: {
+                id:null,
+                statusId:1,
+                customerId:54,
+                studyId:2904,
+                dataFilter:"[{}]",
+                distinctv:true,
+                aggregatef:"COUNT",
+                name:"Adverse Events",
+            })
+            {integer}
+        }`
+        // variable:"{\"entitytype\":\"study event\",\"item\":\"cohort\"}"
         console.log('MEASURE EDIT submit => ()'
             ,'\n props:', this.props
             ,'\n state:', this.state
             ,'\n auth:', this.props.auth
             ,'\n values:', values
             ,'\n asNew:', this.state.asNew
+            ,'\n query:', query
         );
+        this.setState({ expectAnswer: true });
+        GraphQl(query)
+            .then(success => {
+                // update state
+                this.setState({ expectAnswer: false });
+                toastr.success('SAVE', 'Measure was updated.');
+                
+            }).catch(error => {
+                var message = error.message||'Something went wrong ...';
+                this.setState({
+                    expectAnswer: false,
+                    errorMessage: message,
+                });
+            });
     }
     
     Error () {
@@ -116,14 +187,22 @@ class MeasureEdit extends Component {
     
     render() {
         
+        var { invalid, pristine, handleSubmit } = this.props;
+        var { expectAnswer, items, alerts, type } = this.state;
+        
+        var fields = [];
+        if ( type == 'alerts' ) {
+            fields = alerts;
+        } else if ( type == 'study event' ) {
+            fields = items;
+        }
+        
         // console.log('MEASURE EDIT render => ()'
         //     ,'\n state:', this.state
         //     ,'\n props:', this.props
+        //     ,'\n fields:', fields
         //     ,'\n match:', this.props.match
         // );
-        var { invalid, pristine, handleSubmit } = this.props;
-        var { expectAnswer } = this.state;
-        
         return (
             <div className="custom-content-container">
                 <form name="measureEditForm" onSubmit={ handleSubmit( this.submit.bind(this) ) }>
@@ -174,8 +253,12 @@ class MeasureEdit extends Component {
                                     <h2 style={{fontSize: '24px', fontWeight: 'normal'}}> Study of Measure </h2>
                                 </div>
                                 <div className="col-xs-12 offset-bottom-4">
-                                    <Field name="studyId" label="Studies" component={ FormSelect } >
-                                        <MenuItem value={0} disabled={true} primaryText="Studies" />
+                                    <Field
+                                        name="studyId"
+                                        label="Studies"
+                                        component={ FormSelect }
+                                        preChange={(event, index, value) =>  this.updateLists( value ) } >
+                                        <MenuItem value={-1} disabled={true} primaryText="Studies" />
                                         {(this.state.studies||[]).map( (study, key) => ( <MenuItem key={key} value={study.id} primaryText={study.officialTitle} /> ))}           
                                     </Field>
                                 </div>
@@ -197,7 +280,11 @@ class MeasureEdit extends Component {
                             <Paper zDepth={2} className="clearfix">
                                 <h2 className="col-xs-12 top-indent-2" style={{fontSize: '24px', fontWeight: 'normal'}}> Choose </h2>
                                 <div className="col-xs-12 offset-bottom-4">
-                                    <Field name="entitytype" label="Entity type" component={ FormSelect } >
+                                    <Field
+                                        name="entitytype"
+                                        label="Entity type"
+                                        component={ FormSelect }
+                                        preChange={(event, index, value) => this.setState({ type: value }) } >
                                         <MenuItem value={0} disabled={true} primaryText="Entity type" />
                                         {(this.state.entityTypes||[]).map( (type, key) => ( <MenuItem key={key} value={type.value} primaryText={type.name} /> ))}            
                                     </Field>
@@ -215,7 +302,7 @@ class MeasureEdit extends Component {
                                         label="Fields"
                                         component={ FormSelect }>
                                         <MenuItem value={0} disabled={true} primaryText="Fields" />
-                                        {(this.state.fields||[]).map( (field, key) => ( <MenuItem key={key} value={field.value} primaryText={field.name} /> ))}
+                                        {(fields).map( (field, key) => ( <MenuItem key={key} value={field} primaryText={field} /> ))}
                                     </Field>
                                 </div>
                                 <div className="col-xs-12 offset-bottom-4">
