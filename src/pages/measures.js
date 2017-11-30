@@ -157,8 +157,8 @@ class Measures extends Component {
                             <TableRow key={index} selected={ this.state.selected.indexOf(row) > -1 }>
                                 <TableRowColumn colSpan="3" style={cellOverideStyle}> {row.officialTitle} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.name} </TableRowColumn>
-                                <TableRowColumn style={cellOverideStyle}> {row.event} </TableRowColumn>
-                                <TableRowColumn style={cellOverideStyle}> {row.crf} </TableRowColumn>
+                                <TableRowColumn style={cellOverideStyle}> {row.event ? row.event : '---'} </TableRowColumn>
+                                <TableRowColumn style={cellOverideStyle}> {row.crf ? row.crf : '---'} </TableRowColumn>
                                 <TableRowColumn style={cellOverideStyle}> {row.item} </TableRowColumn>
                             </TableRow>
                         ))}

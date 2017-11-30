@@ -245,6 +245,11 @@ class MeasureEdit extends Component {
         var { entitytype, item, crf = '', event = '', distinctv, aggregatef, name } = values;
         
         var measureId = !asNew&&is.countable(values.id) ? values.id : null;
+        
+        var variable = `\\"entitytype\\":\\"${entitytype}\\",\\"item\\":\\"${item}\\"`;
+        if ( !isAlert(values.entitytype) ) {
+            variable = `\\"entitytype\\":\\"${entitytype}\\",\\"item\\":\\"${item}\\",\\"event\\":\\"${event}\\",\\"crf\\":\\"${crf}\\"`;
+        }
 
         var query = `mutation { fInsertMeasure( input: { statusId: 1, dataFilter: "[{}]",
             id: ${measureId},
@@ -253,7 +258,7 @@ class MeasureEdit extends Component {
             distinctv: ${distinctv},
             aggregatef: "${aggregatef}",
             name: "${name}",
-            variable:"{\\"entitytype\\":\\"${entitytype}\\",\\"item\\":\\"${item}\\",\\"event\\":\\"${event}\\",\\"crf\\":\\"${crf}\\"}"
+            variable:"{${variable}}"
         }) {integer} }`;
         
         // console.log('MEASURE EDIT submit => ()'
