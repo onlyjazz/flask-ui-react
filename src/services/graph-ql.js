@@ -7,8 +7,8 @@ import { instanceGraphQl, is } from '../services';
  * @returns { Promise }
  * @public
  */
-function GraphQl ( query, variables ) {
-    return instanceGraphQl.post('graphql', JSON.stringify({query, variables: variables||null}) );
+function GraphQl ( query, variables = null ) {
+    return instanceGraphQl.post('graphql', JSON.stringify({ query, variables }) );
 };
 
 GraphQl.parseError = parseError;

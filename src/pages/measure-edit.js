@@ -43,7 +43,7 @@ function getEventsList ( customerId, studyId ) {
             `mutation{fListOfStudyEvents(input:{customerId:${customerId},studyId:${studyId}}) {strings}}`
         ).then(success => {
             var events = success.data.data.fListOfStudyEvents.strings;
-            if ( !events || events.length == 0 ) {
+            if ( !events || events.length === 0 ) {
                 events = ['Study event'];
             }
             resolve(events);
@@ -125,6 +125,7 @@ class MeasureEdit extends Component {
             event: '',
             name: '',
             crf: '',
+            item: '',
             // selects
             studies: [],
             alerts: [],
@@ -186,21 +187,25 @@ class MeasureEdit extends Component {
     }
     
     onStudyChange ( studyId ) {
-        console.log('onStudyChange ( studyId )'
-            ,'\n state:', this.state
-            ,'\n studyId:', studyId
-        );
+        // console.log('onStudyChange ( studyId )'
+        //     ,'\n state:', this.state
+        //     ,'\n studyId:', studyId
+        // );
         this.setState({ studyId });
     }
     
     onEntityTypeChange ( entitytype ) {
-        console.log('onEntityTypeChange ( entitytype )'
-            ,'\n state:', this.state
-            ,'\n entitytype:', entitytype
-        );
+        // console.log('onEntityTypeChange ( entitytype )'
+        //     ,'\n state:', this.state
+        //     ,'\n entitytype:', entitytype
+        // );
         
         if ( isAlert(entitytype) ) {
-            this.setState({ entitytype });
+            this.setState({
+                entitytype,
+                event: '',
+                crf: '',
+            });
         } else {
             this.setState({ entitytype, expectAnswer: true });
             // update events list
@@ -211,10 +216,10 @@ class MeasureEdit extends Component {
     }
     
     onEventChange ( event ) {
-        console.log('onEventChange ( event )'
-            ,'\n state:', this.state
-            ,'\n event:', event
-        );
+        // console.log('onEventChange ( event )'
+        //     ,'\n state:', this.state
+        //     ,'\n event:', event
+        // );
         this.setState({ event, expectAnswer: true });
         // update events list
         getCrfList( this.props.auth.user.customer_id, this.state.studyId, event )
@@ -223,10 +228,10 @@ class MeasureEdit extends Component {
     }
     
     onCRFChange ( crf ) {
-        console.log('onCRFChange ( crf )'
-            ,'\n state:', this.state
-            ,'\n crf:', crf
-        );
+        // console.log('onCRFChange ( crf )'
+        //     ,'\n state:', this.state
+        //     ,'\n crf:', crf
+        // );
         this.setState({ crf, expectAnswer: true });
         // update events list
         getItemsList( this.props.auth.user.customer_id, this.state.studyId, this.state.event, crf )
@@ -235,19 +240,22 @@ class MeasureEdit extends Component {
     }
     
     submit ( values, dispatch, form ) {
-        var query = `mutation {
-            fInsertMeasure( input: {
-                id:null,
-                statusId:1,
-                customerId:54,
-                studyId:2904,
-                dataFilter:"[{}]",
-                distinctv:true,
-                aggregatef:"COUNT",
-                name:"Adverse Events",
-            })
-            {integer}
-        }`
+        
+        var { studyId, asNew } = this.state;
+        var { entitytype, item, crf = '', event = '', distinctv, aggregatef, name } = values;
+        
+        var measureId = !asNew&&is.countable(values.id) ? values.id : null;
+
+        var query = `mutation { fInsertMeasure( input: { statusId: 1, dataFilter: "[{}]",
+            id: ${measureId},
+            customerId: ${this.props.auth.user.customer_id},
+            studyId: ${studyId},
+            distinctv: ${distinctv},
+            aggregatef: "${aggregatef}",
+            name: "${name}",
+            variable:"{\\"entitytype\\":\\"${entitytype}\\",\\"item\\":\\"${item}\\",\\"event\\":\\"${event}\\",\\"crf\\":\\"${crf}\\"}"
+        }) {integer} }`;
+        // variable: "{\"item\":\"cohort\",\"entitytype\":\"study event\"}",
         // variable:"{\"entitytype\":\"study event\",\"item\":\"cohort\"}"
         console.log('MEASURE EDIT submit => ()'
             ,'\n props:', this.props
@@ -257,12 +265,12 @@ class MeasureEdit extends Component {
             ,'\n asNew:', this.state.asNew
             ,'\n query:', query
         );
-        // this.setState({ expectAnswer: true });
-        // GraphQl(query).then(success => {
-        //     toastr.success('SAVE', 'Measure was updated.');
-        //     // update state
-        //     this.setState({ expectAnswer: false });
-        // }).catch( this.showError );
+        this.setState({ expectAnswer: true });
+        GraphQl(query).then(success => {
+            toastr.success('SAVE', 'Measure was updated.');
+            // update state
+            this.setState({ expectAnswer: false });
+        }).catch( this.showError );
     }
     
     Error () {
@@ -285,10 +293,10 @@ class MeasureEdit extends Component {
         var fieldsDisabled = true;
         if ( isAlert(entitytype) ) {
             vars = alerts;
-            var fieldsDisabled = false;
+            fieldsDisabled = false;
         } else if ( entitytype ) {
             vars = items;
-            var fieldsDisabled = !(event&&crf);
+            fieldsDisabled = !(event&&crf);
         }
         
         return (
@@ -299,7 +307,8 @@ class MeasureEdit extends Component {
                         disabled={fieldsDisabled}
                         name="item"
                         label="Fields"
-                        component={ FormSelect }>
+                        component={ FormSelect }
+                        preChange={(event, index, item) => this.setState({item} ) } >
                         <MenuItem value={0} disabled={true} primaryText="Fields" />
                         {(vars||[]).map( (field, key) => ( <MenuItem key={key} value={field} primaryText={field} /> ))}
                     </Field>
@@ -327,7 +336,7 @@ class MeasureEdit extends Component {
     
     EntityType () {
       
-        var { entitytype, event, crf, events, crfList } = this.state;
+        var { entitytype, event, events, crfList } = this.state;
         
         return (
             <Paper className="clearfix">
@@ -486,6 +495,7 @@ export default reduxForm({
      */
     validate: ( values, meta ) => {
         var errors = {};
+        var alerts = isAlert(values.entitytype);
         
         if ( !values.name ) {
             errors.name = 'Name is required.';
@@ -513,11 +523,11 @@ export default reduxForm({
             errors.item = 'Fields is required.';
         }
         
-        if ( !values.event ) {
+        if ( !alerts&&!values.event ) {
             errors.event = 'Event is required.';
         }
         
-        if ( !values.crf ) {
+        if ( !alerts&&!values.crf ) {
             errors.crf = 'CRF is required.';
         }
         
