@@ -255,16 +255,15 @@ class MeasureEdit extends Component {
             name: "${name}",
             variable:"{\\"entitytype\\":\\"${entitytype}\\",\\"item\\":\\"${item}\\",\\"event\\":\\"${event}\\",\\"crf\\":\\"${crf}\\"}"
         }) {integer} }`;
-        // variable: "{\"item\":\"cohort\",\"entitytype\":\"study event\"}",
-        // variable:"{\"entitytype\":\"study event\",\"item\":\"cohort\"}"
-        console.log('MEASURE EDIT submit => ()'
-            ,'\n props:', this.props
-            ,'\n state:', this.state
-            ,'\n auth:', this.props.auth
-            ,'\n values:', values
-            ,'\n asNew:', this.state.asNew
-            ,'\n query:', query
-        );
+        
+        // console.log('MEASURE EDIT submit => ()'
+        //     ,'\n props:', this.props
+        //     ,'\n state:', this.state
+        //     ,'\n auth:', this.props.auth
+        //     ,'\n values:', values
+        //     ,'\n asNew:', this.state.asNew
+        //     ,'\n query:', query
+        // );
         this.setState({ expectAnswer: true });
         GraphQl(query).then(success => {
             toastr.success('SAVE', 'Measure was updated.');
@@ -339,7 +338,7 @@ class MeasureEdit extends Component {
         var { entitytype, event, events, crfList } = this.state;
         
         return (
-            <Paper className="clearfix">
+            <Paper zDepth={2} className="clearfix">
                 <h2 className="col-xs-12 top-indent-2" style={{fontSize: '24px', fontWeight: 'normal'}}> Choose </h2>
                 <div className="col-xs-12 offset-bottom-4">
                     <Field
